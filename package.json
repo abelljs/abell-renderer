@@ -1,0 +1,23 @@
+{
+  "name": "abell-renderer",
+  "version": "0.0.1",
+  "description": "A wrapper arround Mustache that adds some additional features and some syntatic sugar required for abell",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saurabhdaware/abell-renderer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saurabhdaware/abell-renderer/issues"
+  },
+  "homepage": "https://github.com/saurabhdaware/abell-renderer#readme",
+  "dependencies": {
+    "mustache": "^4.0.1"
+  }
+}

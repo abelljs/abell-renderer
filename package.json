@@ -2,7 +2,7 @@
   "name": "abell-renderer",
   "version": "0.0.1",
   "description": "A wrapper arround Mustache that adds some additional features and some syntatic sugar required for abell",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,5 +17,8 @@
     "url": "https://github.com/abelljs/abell-renderer/issues"
   },
   "homepage": "https://github.com/abelljs/abell-renderer#readme",
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "fs-extra": "^9.0.0"
+  }
 }

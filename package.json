@@ -4,7 +4,9 @@
   "description": "A wrapper arround Mustache that adds some additional features and some syntatic sugar required for abell",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --recursive \"./tests/*.js\"",
+    "build": "node build/build.main.js",
+    "dev": "node src/example/example.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,8 @@
   "homepage": "https://github.com/abelljs/abell-renderer#readme",
   "dependencies": {},
   "devDependencies": {
-    "fs-extra": "^9.0.0"
+    "chai": "^4.2.0",
+    "fs-extra": "^9.0.0",
+    "mocha": "^7.1.2"
   }
 }

@@ -20,3 +20,5 @@ const htmlTemplate = abellRenderer.render(
 );
 
 fs.writeFileSync(path.join(__dirname, 'index.html'), htmlTemplate);
+
+console.log("🎉 Output generated at src/example/index.html 🌻");

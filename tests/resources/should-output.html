@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles/global.css">
+  <link rel="stylesheet" href="./styles/index.css">
+  <title>This is my siteName</title>
+</head>
+<body>
+  <header>
+
+    <label class="dark-mode-toggle switch-toggle outer">
+      <span style="display:inline-block;padding:1px 3px">🌙 &nbsp; ☀️</span>
+      <input id="dark-mode-toggle" type="checkbox">
+      <div></div>
+    </label>
+
+    <h1>This is my siteName</h1>
+    <div class="header-bio">
+      Abell Minima is a starter blog for AbellJS. <br/>This template is designed by <b>This is my name</b> you can follow him on <a href="https://twitter.com/saurabhcodes">Twitter @saurabhcodes</a>.
+    </div>
+  </header>
+  <main>
+    <div class="article-container">
+      <div class="article-name">Nice</div>
+<div class="article-name">very cool</div>
+    </div>
+  </main>
+  <footer>
+    <div style="text-align: right;">© <span id="footer-year"></span>, Built with <a href="https://github.com/abelljs/abell">Abell</a></div>
+  </footer>
+  
+  <script src="./js/themeHandler.js"></script>
+  <script>
+    document.querySelector('#footer-year').innerHTML = new Date().getFullYear();
+  </script>
+</body>
+</html>

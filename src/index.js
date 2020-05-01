@@ -1,28 +1,34 @@
 const vm = require('vm');
 
-const sandbox = {
-  $contentList: [
-    {name: 'Nice'},
-    {name: 'very cool'}
-  ],
-  output: ''
-};
+function execute(jsToExecute) {
+  const sandbox = {
+    $contentList: [
+      {name: 'Nice'},
+      {name: 'very cool'}
+    ],
+    meta: {
+      title: 'hey',
+    },
+    output: ''
+  };
+  
+
+  const script = new vm.Script('output = ' + jsToExecute);
+
+  const context = new vm.createContext(sandbox);
+  script.runInContext(context);
+
+  return sandbox.output;
+}
 
 
 const template = `
-output = $contentList
+$contentList
   .map(content => 
     \`<div>\${content.name}</div>\`
   )
   .join('\\n')
 `
 
-const script = new vm.Script(template);
-
-const context = new vm.createContext(sandbox);
-script.runInContext(context);
-
-console.log(sandbox.output);
-// outputs
-// <div>Nice</div>
-// <div>very cool</div>
+console.log(execute(template));
+console.log(execute('meta.title'));

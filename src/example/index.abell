@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles/global.css">
-  <link rel="stylesheet" href="./styles/index.css">
   <title>{{ globalMeta.siteName }}</title>
 </head>
 <body>
@@ -29,6 +27,13 @@
         $contentList.map(content => 
           `<div class="article-name">${content.name}</div>`
         ).join('\n')
+      }}
+    </div>
+    <div>
+      {{
+        () => {
+          return 4 + 5
+        }
       }}
     </div>
   </main>

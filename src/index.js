@@ -12,6 +12,10 @@ function execute(jsToExecute, sandbox) {
   const context = new vm.createContext(sandbox);
   script.runInContext(context);
 
+  if(typeof sandbox.output === 'function') {
+    return sandbox.output();
+  }
+  
   return sandbox.output;
 }
 

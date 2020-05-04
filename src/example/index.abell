@@ -30,6 +30,7 @@
       }}
     </div>
     <div>
+    You can also write functions:
       {{
         () => {
           return 4 + 5

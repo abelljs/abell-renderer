@@ -36,7 +36,9 @@ const template = `
   <h1>{{ globalMeta.siteName }}</h1>
   <div class="article-container">
     {{
-      nameObjects.map(content => '<b>' + content.name + '</b>').join('');
+      nameObjects
+        .map(content => '<b>' + content.name + '</b>')
+        .join('');
     }}
   </div>
 </body>
@@ -71,6 +73,10 @@ Outputs:
 ### Running Tests
 - `npm install` if you haven't already
 - `npm test`
+
+## Changelogs
+
+[CHANGELOG.md](CHANGELOG.md)
 
 
 ---

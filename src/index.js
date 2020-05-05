@@ -28,15 +28,16 @@ function execute(jsToExecute, sandbox) {
  * 
  */
 const execRegexOnAll = (regex, template) => {
-  const allMatches = [];
-  let match = regex.exec(template);
-  const input = match['input'];
+  const allMatches = []; // This array will hold a list of all the JS expressions which are to be compiled
+  let match = regex.exec(template); 
+  const input = match['input']; 
 
   while(match !== null){
     delete match['input'];
     allMatches.push(match);
     match = regex.exec(template);
   }
+
 
   return {matches: allMatches, input};
 }
@@ -50,16 +51,15 @@ const execRegexOnAll = (regex, template) => {
  * 
  */
 function render(abellTemplate, sandbox) {
-  const {matches, input} = execRegexOnAll(/{{(.*?)}}/gs, abellTemplate)
-  let renderedHTML = '';
+  const {matches, input} = execRegexOnAll(/{{(.*?)}}/gs, abellTemplate) // Finds all the JS expressions to be executed.
+  let renderedHTML = ''; 
   let lastIndex = 0;
   
-  for(let match of matches) {
-    const value = execute(match[1], sandbox);
-    const toAddOnIndex = match['index'];
-    renderedHTML += input.slice(lastIndex, toAddOnIndex) + value;
-  
-    lastIndex = toAddOnIndex + match[0].length;
+  for(let match of matches) { // Loops Through all the JS expressions 
+    const value = execute(match[1], sandbox); // Executes the expression value in the sandbox environment
+    const toAddOnIndex = match['index']; // Gets the index where the executed value is to be put.
+    renderedHTML += input.slice(lastIndex, toAddOnIndex) + value; 
+    lastIndex = toAddOnIndex + match[0].length; 
   }
   renderedHTML += input.slice(lastIndex);
   return renderedHTML;

@@ -1,3 +1,6 @@
+{{ const {globalMeta, numberFromJS} = require('./metaInfo.js') }}
+{{ const {numberFromJSON} = require('./meta.json')}}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +14,7 @@
 </head>
 <body>
   <header>
-
+    {{ numberFromJS + numberFromJSON }}
     <label class="dark-mode-toggle switch-toggle outer">
       <span style="display:inline-block;padding:1px 3px">🌙 &nbsp; ☀️</span>
       <input id="dark-mode-toggle" type="checkbox">

@@ -1,14 +1,20 @@
+{{ const {globalMeta, numberFromJS} = require('./siteData.js') }}
+{{ const {numberFromJSON} = require('./meta.json')}}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles/global.css">
+  <link rel="stylesheet" href="./styles/index.css">
   <title>{{ globalMeta.siteName }}</title>
 </head>
 <body>
   <header>
-
+    {{ numberFromJS + numberFromJSON }}
     <label class="dark-mode-toggle switch-toggle outer">
       <span style="display:inline-block;padding:1px 3px">🌙 &nbsp; ☀️</span>
       <input id="dark-mode-toggle" type="checkbox">
@@ -26,14 +32,6 @@
         $contentList.map(content => 
           `<div class="article-name">${content.name}</div>`
         ).join('\n')
-      }}
-    </div>
-    <div>
-    You can also write functions:
-      {{
-        () => {
-          return 4 + 5
-        }
       }}
     </div>
   </main>

@@ -6,7 +6,7 @@ const vm = require('vm');
  * @param {string} jsToExecute - JavaScript code in String to parse and execute
  * @param {any} sandbox - The variables and all the information required by program
  */
-function execute(jsToExecute, sandbox) {
+function execute(jsToExecute, sandbox = {}) {
   const script = new vm.Script('output = ' + jsToExecute);
 
   const context = new vm.createContext(sandbox);
@@ -64,6 +64,54 @@ function render(abellTemplate, sandbox) {
   renderedHTML += input.slice(lastIndex);
   return renderedHTML;
 }
+
+
+// 
+
+
+// const sandbox = {
+//   foo: 'bar'
+// }
+
+// const abellTemplate = `
+// {{  }}
+// <html>
+//   {{ let cool = 'hi' }}
+//   {{ foo }}
+// </html>
+// `
+
+// console.log(render(abellTemplate, sandbox));
+
+
+function executeStatement(statement, sandbox) {
+  const script = new vm.Script(statement.replace(/(?:const|let|var)/g, ''));
+  const context = new vm.createContext(sandbox);
+  script.runInContext(context);
+  return sandbox;
+}
+
+function executeRequire(parseStatement, sandbox) {
+  const requireParseRegex = /require\(['"](.*?)['"]\)/;
+  sandbox[
+    parseStatement
+      .slice(0, parseStatement.indexOf('='))
+      .replace(/(?:const|let|var)/g, '')
+      .trim()
+  ] = require(requireParseRegex.exec(parseStatement)[1]);
+
+  return sandbox;
+}
+
+let sandbox = {
+  foo: 'bar'
+}
+
+sandbox = executeRequire("const globalMeta = require('./abell.config.sample.js')", sandbox);
+sandbox = executeStatement("const a = 3 + globalMeta.add()", sandbox);
+
+console.log(sandbox);
+
 
 
 module.exports = {

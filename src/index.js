@@ -85,7 +85,7 @@ function render(abellTemplate, sandbox) {
 
 
 function executeStatement(statement, sandbox) {
-  const script = new vm.Script(statement.replace(/(?:const|let|var)/g, ''));
+  const script = new vm.Script(statement.replace(/(?:const|let)/g, 'var'));
   const context = new vm.createContext(sandbox);
   script.runInContext(context);
   return sandbox;
@@ -93,26 +93,33 @@ function executeStatement(statement, sandbox) {
 
 function executeRequire(parseStatement, sandbox) {
   const requireParseRegex = /require\(['"](.*?)['"]\)/;
-  sandbox[
+
+  const temp = require(requireParseRegex.exec(parseStatement)[1]);
+  const context = {temp}
+  vm.createContext(context)
+  
+  vm.runInContext(
     parseStatement
       .slice(0, parseStatement.indexOf('='))
-      .replace(/(?:const|let|var)/g, '')
+      .replace(/(?:const|let)/g, 'var')
       .trim()
-  ] = require(requireParseRegex.exec(parseStatement)[1]);
+    + " = temp"
+    , context
+  )
 
-  return sandbox;
+  delete context['temp'];
+
+  return {...sandbox, ...context} 
 }
 
 let sandbox = {
   foo: 'bar'
 }
 
-sandbox = executeRequire("const globalMeta = require('./abell.config.sample.js')", sandbox);
-sandbox = executeStatement("const a = 3 + globalMeta.add()", sandbox);
+sandbox = executeRequire("var {add} = require('./abell.config.sample.js'); var {nice} = globalMeta", sandbox);
+sandbox = executeStatement("const a = add() + 9", sandbox);
 
 console.log(sandbox);
-
-
 
 module.exports = {
   render,

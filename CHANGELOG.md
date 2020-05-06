@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.0-alpha.1
+- Sequential compilation of JavaScript [#2](https://github.com/abelljs/abell-renderer/issues/2)
+- Require values from json/js in .abell files
+
+
 ## v0.0.3
 Ability to add functions inside curly brackets
 

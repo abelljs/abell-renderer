@@ -38,9 +38,9 @@ function render(abellTemplate, sandbox, options = {basePath: ''}) {
   const {matches, input} = execRegexOnAll(/{{(.*?)}}/gs, abellTemplate) // Finds all the JS expressions to be executed.
   let renderedHTML = ''; 
   let lastIndex = 0;
-  let value = '';
   
   for(let match of matches) { // Loops Through JavaScript blocks inside '{{' and '}}'
+    let value = '';
     if(match[1].includes('require(')) {
       // the js block is trying to require
       sandbox = executeRequire(match[1], sandbox, options.basePath);

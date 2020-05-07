@@ -7,6 +7,7 @@
   <title>{{ globalMeta.siteName }}</title>
 </head>
 <body>
+  {{ const a = 3; }}
   <header>
     {{ numberFromJS + numberFromJSON }}
 

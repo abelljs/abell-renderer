@@ -10,15 +10,24 @@
 </p>
 
 
-## Installation
-***Note**: Only works in NodeJS Environment*
+## 🚀 Installation
 ```shell
 npm install --save-dev abell-renderer
 ```
 
+## 📖 Usage
 
-## Usage
+### 💻 CLI 
+```bash
+npx abell-renderer --input src/index.abell --output dist/index.html
+```
+
+Check out [Abell Template Guide](#abell-template-guide) on how to write `.abell` files.
+
+### 💛 JavaScript API
+
 Not to be used in production yet.
+***Note**: Only works in NodeJS Environment*
 
 ```js
 const abellRenderer = require('abell-renderer');
@@ -62,21 +71,125 @@ Outputs:
 */
 ```
 
+## 📘 Abell Template Guide
 
-## Contributing
+`.abell` files are nothing but `.html` files which can contain JavaScript inside double curly brackets `{{` and `}}`.
 
-### Local Setup
+*Note that abell-renderer renders abell files in NodeJS context which means you cannot access DOM inside brackets.*
+
+Simplest example of **.abell** file can look like:
+```jsx
+{{ const siteTitle = "Abell Demo" }}
+<html>
+  <head>
+    <title>{{ siteTitle }}</title>
+  </head>
+  <body>
+    {{ 
+      const a = 3;
+      const b = 5;
+    }}
+    <h1>{{ siteTitle.toUpperCase() }}</h1>
+    <div>Addition of {{ a }} and {{ b }} is {{ a + b }}</div>
+  </body>
+</html>
+``` 
+
+All the JavaScript inside curly brakets will be rendered on virtual instance on NodeJS and you will get the output as completely renderer **.html** file:
+```html
+<html>
+  <head>
+    <title>Abell Demo</title>
+  </head>
+  <body>
+    <h1>ABELL DEMO</h1>
+    <div>Addition of 3 and 5 is 8</div>
+  </body>
+</html>
+```
+### ➿ Loops in Abell
+
+You can use JavaScript Array methods to loop over array. Other JavaScript Array methods like `.filter`, `.map`, `.reduce` can be used as well.
+
+```jsx
+{{ 
+  const users = [
+    {name: 'Saurabh', age: 20}, 
+    {name: 'John Doe', age: 78}
+  ] 
+}}
+
+<main>
+  {{
+    users.map(user => `
+      <div>
+        <h2>${user.name}</h2>
+        <span>Age: ${user.age}</span>
+      </div>
+    `)
+  }}
+</main>
+
+/*
+Ouputs:
+
+<main>
+  <div>
+    <h2>Saurabh</h2>
+    <span>Age: 20</span>
+  </div>
+  <div>
+    <h2>John Doe</h2>
+    <span>Age: 78</span>
+  </div>
+</main>
+
+```
+
+## ⤵️ Import JS/JSON/NPM Modules
+With Abell you can import your Native NodeJS Modules, NPM Modules, JS Files (should export data), and JSON Files with `require()`
+
+
+```jsx
+{{ const MarkdownIt = require('markdown-it') }} 
+<!-- NPM Module to convert markdown to HTML (npm install --save markdown-it) -->
+
+{{ const md = new MarkdownIt(); }}
+<!DOCTYPE html>
+<html>
+  <body>
+    {{ md.render("[Open Google](https://google.com)") }}
+  </body>
+</html>
+
+/*
+Outputs:
+
+<!DOCTYPE html>
+<html>
+  <body>
+    <p><a href="https://google.com">Open Google</a></p>
+  </body>
+</html>
+*/
+```
+
+*Note: fs module or any module that deals with external files cannot be used. The only way to read any external file is require()*
+
+## 🤗 Contributing
+
+### 🖥 Local Setup
 - Fork the repository
 - `git clone https://github.com/<your-github-username>/abell-renderer`
 - `cd abell-renderer`
 - `npm run dev` to run example from `src/example/example.js`
 
 
-### Running Tests
+### 🏃 Run Tests
 - `npm install` if you haven't already
 - `npm test`
 
-## Changelogs
+## 🕑 Changelogs
 
 [CHANGELOG.md](CHANGELOG.md)
 

@@ -19,7 +19,7 @@ npm install --save-dev abell-renderer
 
 ### 💻 CLI 
 ```bash
-npx abell-renderer --input src/index.abell --output dist/index.html
+npx abell-renderer build --input src/index.abell --output dist/index.html
 ```
 
 Check out [Abell Template Guide](#abell-template-guide) on how to write `.abell` files.

@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.1.1
+Bug that stored last value and printed it when assignment was used, fixed.
+
 ## v0.1.0
 Better log messages added in CLI
 

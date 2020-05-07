@@ -8,7 +8,7 @@
 <a href="https://npmjs.org/package/abell-renderer"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/abelljs/abell-renderer?style=for-the-badge&labelColor=black&logo=npm&label=abell%20renderer&color=darkred"></a>&nbsp; <a href="https://join.slack.com/t/abellland/shared_invite/zt-ebklbe8h-FhRgHxNbuO_hvFDf~nZtGQ"><img src="https://img.shields.io/badge/slack-join%20channel-4A154B?style=for-the-badge&logo=slack&logoColor=pink&labelColor=black"/></a>
 </p>
 
-<p align="center">A template parser that parses JavaScript written inside HTML on build time.<br/>Low level library used in <a href="https://github.com/abelljs/abell">abelljs/abell<a></p>
+<p align="left">A template parser that lets you use JavaScript syntax to render loops, conditions, do maths, and require JSONs from HTML on build time. Low level library used in <a href="https://github.com/abelljs/abell">abelljs/abell<a></p>
 
 <br/><br/>
 

@@ -1,77 +1,8 @@
-const vm = require('vm');
-const path = require('path');
-
-/**
- * 
- * @param {string} statement statement to execute (e.g `const a = 3`)
- * @param {object} sandbox variable environtment to execute upon
- * @returns updated sandbox
- */
-function executeAssignment(statement, sandbox) {
-  // to add variable to context, the variable needs to be defined with `var` only so we replace const and let to var before execution
-  const script = new vm.Script(statement.replace(/(?:const |let )/g, 'var '));
-  const context = new vm.createContext(sandbox);
-  script.runInContext(context);
-  return sandbox;
-}
-
-
-/**
- * 
- * @param {string} parseStatement string of require statement (e.g. const a = require('module'))
- * @param {object} sandbox variable environtment to execute upon
- * @returns updated sandbox
- */
-function executeRequire(parseStatement, sandbox, basePath) {
-  const requireParseRegex = /require\(['"](.*?)['"]\)/;
-
-  const temp = require(
-    path.join(
-      basePath,
-      requireParseRegex.exec(parseStatement)[1]
-    )
-  );
-
-
-  const context = {temp}
-  vm.createContext(context)
-  
-  vm.runInContext(
-    parseStatement
-      .slice(0, parseStatement.indexOf('='))
-      .replace(/(?:const |let )/g, 'var ')
-      .trim()
-    + " = temp"
-    , context
-  )
-
-  delete context['temp'];
-
-  return {...sandbox, ...context} 
-}
-
-
-
-
-/**
- * Executes the JavaScript code from string
- * 
- * @param {string} jsToExecute - JavaScript code in String to parse and execute
- * @param {any} sandbox - The variables and all the information required by program
- */
-function execute(jsToExecute, sandbox = {}) {
-  const script = new vm.Script('output = ' + jsToExecute);
-
-  const context = new vm.createContext(sandbox);
-  script.runInContext(context);
-
-  if(typeof sandbox.output === 'function') {
-    return sandbox.output();
-  }
-  
-  return sandbox.output;
-}
-
+const {
+  execute,
+  executeAssignment,
+  executeRequire
+} = require('./execute.js');
 
 /**
  * Captures groups from regex and executes RegEx.exec() function on all.
@@ -101,7 +32,7 @@ const execRegexOnAll = (regex, template) => {
  * 
  * @param {string} abellTemplate - String of Abell File.
  * @param {any} sandbox - Object of variables. The template will be executed in context of this sandbox.
- * 
+ * @param {object} options additional options e.g ({basePath})
  */
 function render(abellTemplate, sandbox, options = {basePath: ''}) {
   const {matches, input} = execRegexOnAll(/{{(.*?)}}/gs, abellTemplate) // Finds all the JS expressions to be executed.
@@ -134,5 +65,6 @@ function render(abellTemplate, sandbox, options = {basePath: ''}) {
 
 module.exports = {
   render,
-  execute
+  execute,
+  executeAssignment
 }

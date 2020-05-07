@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const abellRenderer = require('../index.js');
 
+console.log(">> Running src/example/example.js");
+
 // Sandox holds parameters values are used in abell file
 const sandbox = {
   $contentList: [

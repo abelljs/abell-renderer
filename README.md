@@ -3,73 +3,36 @@
 
 <p align="center"><b>NOT READY FOR PRODUCTION USE</b></p>
 
-<p align="center">A template parser that parses JavaScript written inside HTML on build time.</p>
 
 <p align="center">
 <a href="https://npmjs.org/package/abell-renderer"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/abelljs/abell-renderer?style=for-the-badge&labelColor=black&logo=npm&label=abell%20renderer&color=darkred"></a>&nbsp; <a href="https://join.slack.com/t/abellland/shared_invite/zt-ebklbe8h-FhRgHxNbuO_hvFDf~nZtGQ"><img src="https://img.shields.io/badge/slack-join%20channel-4A154B?style=for-the-badge&logo=slack&logoColor=pink&labelColor=black"/></a>
 </p>
 
+<p align="center">A template parser that parses JavaScript written inside HTML on build time.<br/>Low level library used in <a href="https://github.com/abelljs/abell">abelljs/abell<a></p>
 
-## 🚀 Installation
+<br/><br/>
+
+
+## 🚀 Installation & Usage
+
+Executing directly with [npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b)
+
 ```shell
-npm install --save-dev abell-renderer
-```
-
-## 📖 Usage
-
-### 💻 CLI 
-```bash
 npx abell-renderer build --input src/index.abell --output dist/index.html
 ```
 
-Check out [Abell Template Guide](#abell-template-guide) on how to write `.abell` files.
-
-### 💛 JavaScript API
-
-Not to be used in production yet.
-***Note**: Only works in NodeJS Environment*
-
-```js
-const abellRenderer = require('abell-renderer');
-
-const sandbox = {
-  nameObjects: [
-    {name: 'Nice'},
-    {name: 'very cool'}
-  ],
-  globalMeta: {
-    siteName: 'Abell Renderer Demo',
-  }
-};
-
-const template = `
-<body>
-  <h1>{{ globalMeta.siteName }}</h1>
-  <div class="article-container">
-    {{
-      nameObjects
-        .map(content => '<b>' + content.name + '</b>')
-        .join('');
-    }}
-  </div>
-</body>
-`
-
-const htmlTemplate = abellRenderer.render(template, sandbox);
-
-console.log(htmlTemplate);
-
-/*
-Outputs:
-<body>
-  <h1>Abell Renderer Demo</h1>
-  <div class="article-container">
-    <b>Nice</b>
-    <b>very cool</b>
-  </div>
-</body>
-*/
+or
+```shell
+npm install -g abell-renderer
 ```
+
+```shell
+abell-renderer build --input src/index.abell --output dist/index.html
+```
+
+
+Check out [Abell Template Guide](#-abell-template-guide) for how to write `.abell` files.
+
 
 ## 📘 Abell Template Guide
 
@@ -146,7 +109,7 @@ Ouputs:
 
 ```
 
-## ⤵️ Import JS/JSON/NPM Modules
+### ⤵️ Import JS/JSON/NPM Modules
 With Abell you can import your Native NodeJS Modules, NPM Modules, JS Files (should export data), and JSON Files with `require()`
 
 
@@ -175,6 +138,62 @@ Outputs:
 ```
 
 *Note: fs module or any module that deals with external files cannot be used. The only way to read any external file is require()*
+
+
+## 💛 JavaScript API
+
+```shell
+npm install --save-dev abell-renderer
+```
+
+```js
+const abellRenderer = require('abell-renderer');
+
+const sandbox = {
+  nameObjects: [
+    {name: 'Nice'},
+    {name: 'very cool'}
+  ],
+  globalMeta: {
+    siteName: 'Abell Renderer Demo',
+  }
+};
+
+const template = `
+<body>
+  <h1>{{ globalMeta.siteName }}</h1>
+  <div class="article-container">
+    {{
+      nameObjects
+        .map(content => '<b>' + content.name + '</b>')
+        .join('');
+    }}
+  </div>
+</body>
+`
+
+const htmlTemplate = abellRenderer.render(template, sandbox);
+
+console.log(htmlTemplate);
+
+/*
+Outputs:
+<body>
+  <h1>Abell Renderer Demo</h1>
+  <div class="article-container">
+    <b>Nice</b>
+    <b>very cool</b>
+  </div>
+</body>
+*/
+```
+### 📚 Reference
+`abellRenderer.render(template, sandbox, options)`
+
+`template`: Abell template in String
+`sandbox`: Object over which the scripts execute, Can define variables and inject them into script.
+`options.basePath`: basePath which is prefixed on `require()` paths in abellTemplate. 
+
 
 ## 🤗 Contributing
 

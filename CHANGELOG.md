@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.0-beta.1
+- CLI added to render `.abell` files
+
+## v0.1.0-alpha.2
+- Support for nodejs modules
+
 ## v0.1.0-alpha.1
 - Sequential compilation of JavaScript [#2](https://github.com/abelljs/abell-renderer/issues/2)
 - Require values from json/js in .abell files

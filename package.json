@@ -15,6 +15,7 @@
     "build": "node build/build.main.js",
     "dev": "node src/example/example.js",
     "dev:cli": "node src/bin.js --input src/example/templates/cli_example.abell --output src/example/out/cli_example.html",
+    "cli": "npm run dev:cli",
     "prepublishOnly": "npm test && npm run build"
   },
   "repository": {

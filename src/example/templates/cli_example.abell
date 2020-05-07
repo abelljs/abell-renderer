@@ -1,0 +1,24 @@
+{{ const {globalMeta, numberFromJS} = require('./siteData.js') }}
+{{ const {numberFromJSON} = require('./meta.json')}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>{{ globalMeta.siteName }}</title>
+</head>
+<body>
+  <main>
+    {{ numberFromJS + numberFromJSON }}
+    <label class="dark-mode-toggle switch-toggle outer">
+      <span style="display:inline-block;padding:1px 3px">🌙 &nbsp; ☀️</span>
+      <input id="dark-mode-toggle" type="checkbox">
+      <div></div>
+    </label>
+
+    <h1>{{ globalMeta.siteName }}</h1>
+    <div class="header-bio">
+      Abell Minima is a starter blog for AbellJS. <br/>This template is designed by <b>{{ globalMeta.name }}</b> you can follow him on <a href="https://twitter.com/{{ globalMeta.twitter }}">Twitter @{{ globalMeta.twitter }}</a>.
+    </div>
+  </main>
+</body>
+</html>

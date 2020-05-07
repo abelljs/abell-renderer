@@ -1,0 +1,28 @@
+{{ const {globalMeta, numberFromJS} = require('./siteData.js') }}
+{{ const {numberFromJSON} = require('./meta.json')}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>{{ globalMeta.siteName }}</title>
+</head>
+<body>
+  <header>
+    {{ numberFromJS + numberFromJSON }}
+
+    <h1>{{ globalMeta.siteName }}</h1>
+    <div class="header-bio">
+      Abell Minima is a starter blog for AbellJS. <br/>This template is designed by <b>{{ globalMeta.name }}</b> you can follow him on <a href="https://twitter.com/{{ globalMeta.twitter }}">Twitter @{{ globalMeta.twitter }}</a>.
+    </div>
+  </header>
+  <main>
+    <div class="article-container">
+      {{
+        $contentList.map(content => 
+          `<div class="article-name">${content.name}</div>`
+        ).join('\n')
+      }}
+    </div>
+  </main>
+</body>
+</html>

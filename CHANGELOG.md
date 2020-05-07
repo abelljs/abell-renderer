@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.1.0
+Better log messages added in CLI
+
 ## v0.1.0-beta.1
 - CLI added to render `.abell` files
 

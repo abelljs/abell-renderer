@@ -13,7 +13,7 @@ const basePath = path.join(
   path.dirname(inputFilePath)
 );
 
-console.log(path.basename(inputFilePath, path.extname(inputFilePath)))
+console.log("Rendering started... \n\n")
 
 const indexOfOutput = args.indexOf('--output');
 const outputFileFullPath = (indexOfOutput > -1) 
@@ -33,3 +33,5 @@ const htmlTemplate = abellRenderer.render(
 );
 
 fs.writeFileSync(outputFileFullPath, htmlTemplate);
+
+console.log(">> Abell template rendered at " +outputFileFullPath + " 🌻 \n\n")

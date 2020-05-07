@@ -1,6 +1,6 @@
 {
   "name": "abell-renderer",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A wrapper arround Mustache that adds some additional features and some syntatic sugar required for abell",
   "main": "dist/index.js",
   "bin": {
@@ -14,7 +14,7 @@
     "test": "mocha --recursive \"./tests/*.js\"",
     "build": "node build/build.main.js",
     "dev": "node src/example/example.js",
-    "dev:cli": "node src/bin.js --input src/example/templates/cli_example.abell --output src/example/out/cli_example.html",
+    "dev:cli": "node src/bin.js build --input src/example/templates/cli_example.abell --output src/example/out/cli_example.html",
     "cli": "npm run dev:cli",
     "prepublishOnly": "npm test && npm run build"
   },

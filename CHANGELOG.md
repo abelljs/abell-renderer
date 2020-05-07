@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.2
+BREAKING CHANGE
+- `abell-renderer [flags]` changed to `abell-renderer build [flags]`
+- `help, --version` added.
+
 ## v0.1.1
 Bug that stored last value and printed it when assignment was used, fixed.
 

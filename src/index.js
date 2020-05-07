@@ -1,24 +1,8 @@
-const vm = require('vm');
-
-/**
- * Executes the JavaScript code from string
- * 
- * @param {string} jsToExecute - JavaScript code in String to parse and execute
- * @param {any} sandbox - The variables and all the information required by program
- */
-function execute(jsToExecute, sandbox) {
-  const script = new vm.Script('output = ' + jsToExecute);
-
-  const context = new vm.createContext(sandbox);
-  script.runInContext(context);
-
-  if(typeof sandbox.output === 'function') {
-    return sandbox.output();
-  }
-  
-  return sandbox.output;
-}
-
+const {
+  execute,
+  executeAssignment,
+  executeRequire
+} = require('./execute.js');
 
 /**
  * Captures groups from regex and executes RegEx.exec() function on all.
@@ -48,19 +32,32 @@ const execRegexOnAll = (regex, template) => {
  * 
  * @param {string} abellTemplate - String of Abell File.
  * @param {any} sandbox - Object of variables. The template will be executed in context of this sandbox.
- * 
+ * @param {object} options additional options e.g ({basePath})
  */
-function render(abellTemplate, sandbox) {
+function render(abellTemplate, sandbox, options = {basePath: ''}) {
   const {matches, input} = execRegexOnAll(/{{(.*?)}}/gs, abellTemplate) // Finds all the JS expressions to be executed.
   let renderedHTML = ''; 
   let lastIndex = 0;
+  let value = '';
   
-  for(let match of matches) { // Loops Through all the JS expressions 
-    const value = execute(match[1], sandbox); // Executes the expression value in the sandbox environment
+  for(let match of matches) { // Loops Through JavaScript blocks inside '{{' and '}}'
+    if(match[1].includes('require(')) {
+      // the js block is trying to require
+      sandbox = executeRequire(match[1], sandbox, options.basePath);
+    }else if(match[1].includes("= ")) {
+      // assignment operator
+      sandbox = executeAssignment(match[1], sandbox);
+    }else {
+      value = execute(match[1], sandbox); // Executes the expression value in the sandbox environment
+    }
+
+
+    // removes the javascript line before adding to HTML and if the script returns value, adds it to the HTML
     const toAddOnIndex = match['index']; // Gets the index where the executed value is to be put.
     renderedHTML += input.slice(lastIndex, toAddOnIndex) + value; 
     lastIndex = toAddOnIndex + match[0].length; 
   }
+
   renderedHTML += input.slice(lastIndex);
   return renderedHTML;
 }
@@ -68,5 +65,6 @@ function render(abellTemplate, sandbox) {
 
 module.exports = {
   render,
-  execute
+  execute,
+  executeAssignment
 }

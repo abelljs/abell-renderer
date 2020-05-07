@@ -1,15 +1,17 @@
-# abell-renderer
+<p align="center"><img alt="Abell renderer cover" src="https://res.cloudinary.com/saurabhdaware/image/upload/v1588856252/abell/abellrendererghhead.png"></p>
 
-![GitHub package.json version](https://img.shields.io/github/package-json/v/abelljs/abell-renderer?style=for-the-badge)
 
-*NOT READY FOR PRODUCTION USE*
+<p align="center"><b>NOT READY FOR PRODUCTION USE</b></p>
 
-A template parser that parses JavaScript written inside HTML on build time.
+<p align="center">A template parser that parses JavaScript written inside HTML on build time.</p>
 
-Only works in NodeJS Environment.
+<p align="center">
+<a href="https://npmjs.org/package/abell-renderer"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/abelljs/abell-renderer?style=for-the-badge&labelColor=black&logo=npm&label=abell%20renderer&color=darkred"></a>&nbsp; <a href="https://join.slack.com/t/abellland/shared_invite/zt-ebklbe8h-FhRgHxNbuO_hvFDf~nZtGQ"><img src="https://img.shields.io/badge/slack-join%20channel-4A154B?style=for-the-badge&logo=slack&logoColor=pink&labelColor=black"/></a>
+</p>
+
 
 ## Installation
-
+***Note**: Only works in NodeJS Environment*
 ```shell
 npm install --save-dev abell-renderer
 ```

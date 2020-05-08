@@ -56,8 +56,7 @@ function executeRequire(parseStatement, sandbox, basePath) {
       + " = temp"
       , context
     )
-    console.log("--CONTEXT--");
-    console.log(context);
+
     delete context['temp']; // delete the temporary created variable
     globalContext = {...globalContext,...context};
   

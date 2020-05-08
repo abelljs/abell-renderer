@@ -1,5 +1,4 @@
-{{ 
-const {globalMeta, numberFromJS} = require('./siteData.js') 
+{{ const {globalMeta, numberFromJS} = require('./siteData.js') 
 const {abellNumber} = require('./siteData2.js')
 }}
 {{ const {numberFromJSON} = require('./meta.json')}}

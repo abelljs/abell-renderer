@@ -29,7 +29,7 @@ function executeRequireStatement(parseStatement, sandbox, basePath) {
   const pathToRequire = requireParseRegex.exec(parseStatement)[1];
   let temp;
 
-  if(pathToRequire.startsWith('./')) {
+  if(pathToRequire.startsWith('.')) {
     // path is a local file
     temp = require(
       path.join(

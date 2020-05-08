@@ -42,8 +42,12 @@ function render(abellTemplate, sandbox, options = {basePath: ''}) {
   for(let match of matches) { // Loops Through JavaScript blocks inside '{{' and '}}'
     let value = '';
     if(match[1].includes('require(')) {
-      // the js block is trying to require
-      const lines = match[1].trim().split(/[\n;]/).filter(list => list !== '');
+      // the js block is trying to require (e.g const module1 = require('module1'))
+      const lines = match[1]
+        .trim()
+        .split(/[\n;]/)
+        .filter(list => list !== '');
+
       for(let line of lines){
         // If line does not include require(), execute it as assignment
         if(!line.includes('require(')) {
@@ -54,8 +58,8 @@ function render(abellTemplate, sandbox, options = {basePath: ''}) {
         sandbox = executeRequireStatement(line, sandbox, options.basePath);
       }
 
-    }else if(match[1].includes("= ")) {
-      // assignment operator
+    }else if(match[1].match(/[\w\d ]={1}(?![>=])/g) !== null) {
+      // assignment operator (e.g const a = 4)
       sandbox = executeAssignment(match[1], sandbox);
     }else {
       value = execute(match[1], sandbox); // Executes the expression value in the sandbox environment

@@ -8,6 +8,7 @@ const green = (message) => `\u001b[32m${message}\u001b[39m`;
 
 
 function build() {
+  const startTime = new Date().getTime();
   const inputFilePath = args[args.indexOf('--input') + 1];
   
   const basePath = path.join(
@@ -36,7 +37,8 @@ function build() {
   
   fs.writeFileSync(outputFileFullPath, htmlTemplate);
   
-  console.log(`${green('>>')} Abell template rendered at ${outputFileFullPath.replace(process.cwd(), '')} 🌻 \n\n`)
+  const executionTime = new Date().getTime() - startTime;
+  console.log(`${green('>>')} Abell template built at ${outputFileFullPath.replace(process.cwd(), '')} 🌻 (Built in ${executionTime}ms) \n`)
 }
 
 /** Print Help */

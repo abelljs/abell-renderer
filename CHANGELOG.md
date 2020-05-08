@@ -4,6 +4,9 @@
 - Refactoring of major logic
 - Conditions executed as assignment bug fixed
 - More tests added in Unit Testing.
+- Support for multiple requires in same code block (Thanks to [@Pika1998](https://github.com/Pika1998) for [#5](https://github.com/abelljs/abell-renderer/pull/5))
+- Redesign of Readme
+- Template build time added to CLI
 
 ## v0.1.2
 BREAKING CHANGE

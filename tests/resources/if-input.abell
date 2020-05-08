@@ -1,5 +1,5 @@
 {{ 
-  const { globalMeta, numberFromJS } = require('./metaInfo.js');
+  const { globalMeta, numberFromJS } = require('./siteData.js');
   const { numberFromJSON } = require('./meta.json');
   const siteType = "blog";
 }}
@@ -10,9 +10,17 @@
   <title>{{ globalMeta.siteName }}</title>
 </head>
 <body>
-  This website is of type '{{ siteType }}'
+  This website is of type '{{
+    (() => {
+      if(siteType === 'blog') {
+        return "Personal Blog"
+      }else{
+        return "Unknown"
+      }
+    })();
+  }}'
   <header>
-    {{ numberFromJS + numberFromJSON }}
+    when {{numberFromJS}} is added to {{numberFromJSON}}, we get {{ numberFromJS + numberFromJSON }}
     <h1>{{ globalMeta.siteName }}</h1>
     <div class="header-bio">
       Abell Minima is a starter blog for AbellJS. <br/>This template is designed by <b>{{ globalMeta.name }}</b> you can follow him on <a href="https://twitter.com/{{ globalMeta.twitter }}">Twitter @{{ globalMeta.twitter }}</a>.

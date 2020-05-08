@@ -24,9 +24,10 @@ function executeAssignment(statement, sandbox) {
  * @returns updated sandbox
  */
 function executeRequire(parseStatement, sandbox, basePath) {
-  const lines = parseStatement.trim().split('\n');
+  const lines = parseStatement.trim().split(/[\n;]/).filter(list=>list!=='');
+  console.log(lines)
   var globalContext = {};
-  lines.forEach(line=>{
+  for(let line of lines){
 
     const requireParseRegex = /require\(['"](.*?)['"]\)/;
     const pathToRequire = requireParseRegex.exec(line)[1];
@@ -60,7 +61,7 @@ function executeRequire(parseStatement, sandbox, basePath) {
     delete context['temp']; // delete the temporary created variable
     globalContext = {...globalContext,...context};
   
-  })
+  }
 
   return {...sandbox, ...globalContext} 
 }

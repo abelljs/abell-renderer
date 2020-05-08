@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.3
+- Refactoring of major logic
+- Conditions executed as assignment bug fixed
+- More tests added in Unit Testing.
+
 ## v0.1.2
 BREAKING CHANGE
 - `abell-renderer [flags]` changed to `abell-renderer build [flags]`

@@ -24,40 +24,46 @@ function executeAssignment(statement, sandbox) {
  * @returns updated sandbox
  */
 function executeRequire(parseStatement, sandbox, basePath) {
-  const requireParseRegex = /require\(['"](.*?)['"]\)/;
+  const lines = parseStatement.trim().split('\n');
+  var globalContext = {};
+  lines.forEach(line=>{
 
-  const pathToRequire = requireParseRegex.exec(parseStatement)[1];
-  let temp;
+    const requireParseRegex = /require\(['"](.*?)['"]\)/;
+    const pathToRequire = requireParseRegex.exec(line)[1];
+    let temp;
+    if(pathToRequire.startsWith('./')) {
+      // path is a local file
+      temp = require(
+        path.join(
+          basePath,
+          pathToRequire
+        )
+      );
+    }else{
+      // path is a nodejs module
+      temp = require(pathToRequire);
+    }
 
-  if(pathToRequire.startsWith('./')) {
-    // path is a local file
-    temp = require(
-      path.join(
-        basePath,
-        pathToRequire
-      )
-    );
-  }else{
-    // path is a nodejs module
-    temp = require(pathToRequire);
-  }
 
+    context = {temp}
+    vm.createContext(context)
 
-  const context = {temp}
-  vm.createContext(context)
+    vm.runInContext(
+      line
+        .slice(0, line.indexOf('='))
+        .replace(/(?:const |let )/g, 'var ')
+        .trim()
+      + " = temp"
+      , context
+    )
+    console.log("--CONTEXT--");
+    console.log(context);
+    delete context['temp']; // delete the temporary created variable
+    globalContext = {...globalContext,...context};
   
-  vm.runInContext(
-    parseStatement
-      .slice(0, parseStatement.indexOf('='))
-      .replace(/(?:const |let )/g, 'var ')
-      .trim()
-    + " = temp"
-    , context
-  )
+  })
 
-  delete context['temp']; // delete the temporary created variable
-
-  return {...sandbox, ...context} 
+  return {...sandbox, ...globalContext} 
 }
 
 

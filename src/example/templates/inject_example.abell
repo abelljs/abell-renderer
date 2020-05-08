@@ -1,4 +1,7 @@
-{{ const {globalMeta, numberFromJS} = require('./siteData.js') }}
+{{ 
+const {globalMeta, numberFromJS} = require('./siteData.js') 
+const {abellNumber} = require('./siteData2.js')
+}}
 {{ const {numberFromJSON} = require('./meta.json')}}
 
 <!DOCTYPE html>
@@ -10,7 +13,7 @@
   {{ const a = 3; }}
   <header>
     {{ numberFromJS + numberFromJSON }}
-
+    <p> Abell Number is {{abellNumber}}
     <h1>{{ globalMeta.siteName }}</h1>
     <div class="header-bio">
       Abell Minima is a starter blog for AbellJS. <br/>This template is designed by <b>{{ globalMeta.name }}</b> you can follow him on <a href="https://twitter.com/{{ globalMeta.twitter }}">Twitter @{{ globalMeta.twitter }}</a>.

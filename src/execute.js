@@ -3,21 +3,6 @@ const path = require('path');
 
 /**
  * 
- * @param {string} statement statement to execute (e.g `const a = 3`)
- * @param {object} sandbox variable environtment to execute upon
- * @returns updated sandbox
- */
-function executeAssignment(statement, sandbox) {
-  // to add variable to context, the variable needs to be defined with `var` only so we replace const and let to var before execution
-  const script = new vm.Script(statement.replace(/(?:const |let )/g, 'var '));
-  const context = new vm.createContext(sandbox);
-  script.runInContext(context);
-  return sandbox;
-}
-
-
-/**
- * 
  * @param {string} parseStatement string of require statement (e.g. const a = require('module'))
  * @param {object} sandbox variable environtment to execute upon
  * @param {string} basePath base path to which the require will be relative
@@ -69,20 +54,49 @@ function executeRequireStatement(parseStatement, sandbox, basePath) {
  * @param {any} sandbox - The variables and all the information required by program
  */
 function execute(jsToExecute, sandbox = {}) {
-  const script = new vm.Script('output = ' + jsToExecute);
-
+  const numOfKeysBeforeExecution = Object.keys(sandbox).length;
+  const codeToExecute = "aBellSpecificVariable = " + jsToExecute.replace(/(?:const |let |var )/g, '');
+  const script = new vm.Script(codeToExecute);
   const context = new vm.createContext(sandbox);
   script.runInContext(context);
+  
+  const sandboxVariable = sandbox.aBellSpecificVariable; 
 
-  if(typeof sandbox.output === 'function') {
-    return sandbox.output();
+  if(jsToExecute.includes('=')) {
+    // A chance of script being an assignment
+
+    // if new variable is added to the context, (which means the script added a new variable and was an assignment)
+    if((Object.keys(sandbox).length - 1) > numOfKeysBeforeExecution) {
+      delete sandbox['aBellSpecificVariable'];
+      return {
+        type: 'assignment',
+        sandbox
+      };
+    }
+
+    // if a predefined variable is assigned a new value, it will escape the conditions above
+    const textToLookEqualSignIn = jsToExecute.replace(/`(?:.*?)`|"(?:.*?)"|'(?:.*?)'/gs, "");
+    if(textToLookEqualSignIn.match(/[\w\d ]={1}(?![>=])/g) !== null) {
+      // It is 90% chance that it is assignment
+      delete sandbox['aBellSpecificVariable'];
+      return {
+        type: 'assignment',
+        sandbox
+      }
+    }
+    
   }
   
-  return sandbox.output;
+  // script is not assignment i.e it returns some value that can be printed
+  return {
+    type: 'value',
+    value: sandboxVariable,
+    sandbox
+  };
+
 }
 
 module.exports = {
   execute,
-  executeAssignment,
   executeRequireStatement
 }

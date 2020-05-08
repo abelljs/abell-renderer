@@ -1,6 +1,5 @@
 const {
   execute,
-  executeAssignment,
   executeRequireStatement
 } = require('./execute.js');
 
@@ -51,18 +50,22 @@ function render(abellTemplate, sandbox, options = {basePath: ''}) {
       for(let line of lines){
         // If line does not include require(), execute it as assignment
         if(!line.includes('require(')) {
-          sandbox = executeAssignment(line, sandbox);
+          ({sandbox} = execute(line, sandbox));
           continue;
         }
 
         sandbox = executeRequireStatement(line, sandbox, options.basePath);
       }
 
-    }else if(match[1].match(/[\w\d ]={1}(?![>=])/g) !== null) {
-      // assignment operator (e.g const a = 4)
-      sandbox = executeAssignment(match[1], sandbox);
-    }else {
-      value = execute(match[1], sandbox); // Executes the expression value in the sandbox environment
+    } else {
+      const executionInfo = execute(match[1], sandbox); // Executes the expression value in the sandbox environment
+      if(executionInfo.type === 'assignment') {
+        sandbox = executionInfo.sandbox
+      } else if(executionInfo.type === 'value') {
+        value = executionInfo.value
+      } else {
+        sandbox = executionInfo.sandbox
+      }
     }
 
 
@@ -79,6 +82,5 @@ function render(abellTemplate, sandbox, options = {basePath: ''}) {
 
 module.exports = {
   render,
-  execute,
-  executeAssignment
+  execute
 }

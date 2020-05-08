@@ -12,7 +12,7 @@ const sampleSandbox = {
     {name: 'very cool'}
   ]
 };
-const abellTemplate = fs.readFileSync(path.join(__dirname, 'resources', 'sample.abell'), 'utf-8');
+const abellTemplate = fs.readFileSync(path.join(__dirname, 'resources', 'if-input.abell'), 'utf-8');
 const htmlTemplate = fs.readFileSync(path.join(__dirname, 'resources', 'should-output.html'), 'utf-8');
 
 describe('abellRenderer', () => {

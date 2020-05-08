@@ -1,5 +1,5 @@
 {{ 
-  const { globalMeta, numberFromJS } = require('./siteData.js');
+  const { globalMeta, numberFromJS } = require('./metaInfo.js');
   const { numberFromJSON } = require('./meta.json');
   const siteType = "blog";
 }}

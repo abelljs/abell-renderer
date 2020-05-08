@@ -1,7 +1,7 @@
 const {
   execute,
   executeAssignment,
-  executeRequire
+  executeRequireStatement
 } = require('./execute.js');
 
 /**
@@ -43,7 +43,17 @@ function render(abellTemplate, sandbox, options = {basePath: ''}) {
     let value = '';
     if(match[1].includes('require(')) {
       // the js block is trying to require
-      sandbox = executeRequire(match[1], sandbox, options.basePath);
+      const lines = match[1].trim().split(/[\n;]/).filter(list => list !== '');
+      for(let line of lines){
+        // If line does not include require(), execute it as assignment
+        if(!line.includes('require(')) {
+          sandbox = executeAssignment(line, sandbox);
+          continue;
+        }
+
+        sandbox = executeRequireStatement(line, sandbox, options.basePath);
+      }
+
     }else if(match[1].includes("= ")) {
       // assignment operator
       sandbox = executeAssignment(match[1], sandbox);

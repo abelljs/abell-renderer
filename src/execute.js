@@ -25,7 +25,6 @@ function executeAssignment(statement, sandbox) {
  */
 function executeRequire(parseStatement, sandbox, basePath) {
   const lines = parseStatement.trim().split(/[\n;]/).filter(list=>list!=='');
-  console.log(lines)
   var globalContext = {};
   for(let line of lines){
 

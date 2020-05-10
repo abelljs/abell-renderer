@@ -4,13 +4,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>{{ globalMeta.siteName }}</title>
+  <title>{{globalMeta.siteName}}</title>
 </head>
 <body>
   <main>
-    {{ numberFromJS + numberFromJSON }}
+    {{numberFromJS + numberFromJSON}}
 
-    <h1>{{ globalMeta.siteName }}</h1>
+    <h1>{{globalMeta.siteName}}</h1>
     <div class="header-bio">
       Abell Minima is a starter blog for AbellJS. <br/>This template is designed by <b>{{ globalMeta.name }}</b> you can follow him on <a href="https://twitter.com/{{ globalMeta.twitter }}">Twitter @{{ globalMeta.twitter }}</a>.
     </div>

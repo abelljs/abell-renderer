@@ -16,7 +16,8 @@
     "dev": "node src/example/example.js",
     "dev:cli": "node src/bin.js build --input src/example/templates/cli_example.abell --output src/example/out/cli_example.html",
     "cli": "npm run dev:cli",
-    "prepublishOnly": "npm test && npm run build"
+    "eslint": "eslint .",
+    "prepublishOnly": "npm run eslint && npm test && npm run build"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,8 @@
   "dependencies": {},
   "devDependencies": {
     "chai": "^4.2.0",
+    "eslint": "^7.0.0",
+    "eslint-config-google": "^0.14.0",
     "fs-extra": "^9.0.0",
     "mocha": "^7.1.2"
   }

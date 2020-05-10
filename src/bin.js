@@ -25,8 +25,8 @@ function build() {
   const outputFileFullPath = (indexOfOutput > -1) 
     ? path.join(process.cwd(), args[indexOfOutput + 1]) 
     : path.join(
-        basePath, 
-        path.basename(inputFilePath, path.extname(inputFilePath)) + '.html' // file name of input
+      basePath, 
+      path.basename(inputFilePath, path.extname(inputFilePath)) + '.html' // file name of input
     );
   
   

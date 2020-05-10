@@ -20,13 +20,13 @@ module.exports = {
     'operator-linebreak': [
       'error', 'after', 
       {
-        'overrides': {'?': 'ignore', ':': 'ignore'}
+        'overrides': {'?': 'ignore', ':': 'ignore', '+': 'ignore'}
       }
     ],
     'indent': [
       'error', 2, 
       {
-        'CallExpression': {'arguments': 2}, 
+        'CallExpression': {'arguments': 'first'},
         'ignoredNodes': [
           'CallExpression > CallExpression', 
           'CallExpression > MemberExpression'

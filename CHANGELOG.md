@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.4
+- Error handling when the temlate does not have any `{{` `}}`
+- More tests written for `render()` function
+
 ## v0.1.3
 - Refactoring of major logic
 - Conditions executed as assignment bug fixed

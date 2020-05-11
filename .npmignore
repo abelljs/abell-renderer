@@ -1,4 +1,7 @@
 src/
 tests/
 build/
+.github/
+.eslintrc.js
+.eslintignore
 vm.playground.js

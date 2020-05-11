@@ -38,6 +38,33 @@ describe('render() - renders abellTemplate into HTML Text', () => {
         )
     ).to.equal(htmlTemplate);
   });
+
+  it('should execute w/o error and return same string if template has no JS', () => {
+    expect(
+      abellRenderer.render(
+        'hi there this template does not have JS',
+        {test: 'test'}
+      )
+    ).to.exist.and.to.equal('hi there this template does not have JS');
+  });
+
+  it('should return 7 when a function returning 3 + 4 is passed', () => {
+    expect(
+      abellRenderer.render(
+        '{{add}}',
+        {add: (() => 3 + 4)()}
+      )
+    ).to.equal('7');
+  });
+
+  it('should return "TEST" if "test".toUpperCase() is renderer ', () => {
+    expect(
+      abellRenderer.render(
+        '{{"test".toUpperCase()}}',
+        {}
+      )
+    ).to.equal('TEST');
+  });
 });
 
 

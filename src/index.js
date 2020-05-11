@@ -16,6 +16,10 @@ const execRegexOnAll = (regex, template) => {
   /** allMatches holds all the results of RegExp.exec() */
   const allMatches = [];
   let match = regex.exec(template); 
+  if (!match) {
+    return {matches: [], input: template};
+  }
+
   const {input} = match; 
 
   while (match !== null) {

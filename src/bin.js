@@ -13,8 +13,7 @@ const green = (message) => `\u001b[32m${message}\u001b[39m`;
 function build() {
   const startTime = new Date().getTime();
   const inputFilePath = args[args.indexOf('--input') + 1];
-  console.log("Input file path is");
-  console.log(inputFilePath)
+
   const basePath = path.join(
     process.cwd(), 
     path.dirname(inputFilePath)

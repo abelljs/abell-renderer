@@ -23,7 +23,6 @@ function build() {
 
   if(inputFilePath.split(".").length>1) // Input is a single file
   {
-    console.log(`${ green('-') } Input is a single file ✨ \n`);
     const indexOfOutput = args.indexOf('--output');
     const outputFileFullPath = (indexOfOutput > -1) 
       ? path.join(process.cwd(), args[indexOfOutput + 1]) 
@@ -45,7 +44,6 @@ function build() {
   }
   else // Input is a directory
   {
-    console.log(`${ green('-') } Input is a folder ✨ \n`);
     const indexOfOutput = args.indexOf('--output');
     const outputFileFullPath = (indexOfOutput > -1) 
       ? path.join(process.cwd(), args[indexOfOutput + 1]) 
@@ -53,7 +51,6 @@ function build() {
         basePath, 
         path.basename(inputFilePath, path.extname(inputFilePath))  // file name of input
       );
-    console.log(outputFileFullPath);
     fs.readdirSync(inputFilePath).forEach(file=>{
       console.log(`${ green('-') } 📜 Rendering ${file}`)
       const data = fs.readFileSync(path.join(process.cwd(),inputFilePath,file),{encoding:'utf8', flag:'r'});

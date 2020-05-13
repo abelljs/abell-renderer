@@ -20,7 +20,7 @@ function build() {
   );
   console.log(`${ green('-') } Rendering started ✨ \n`);
 
-  if(inputFilePath.split(".").length>1) // Input is a single file
+  if(!fs.statSync(inputFilePath).isDirectory()) // Input is a single file
   {
     const indexOfOutput = args.indexOf('--output');
     const outputFileFullPath = (indexOfOutput > -1) 
@@ -51,22 +51,28 @@ function build() {
         path.basename(inputFilePath, path.extname(inputFilePath))  // file name of input
       );
     fs.readdirSync(inputFilePath).forEach(file=>{
-      console.log(`${ green('-') } 📜 Rendering ${file}`)
-      const data = fs.readFileSync(path.join(process.cwd(),inputFilePath,file),{encoding:'utf8', flag:'r'});
-      const htmlTemplate = abellRenderer.render(data,{},{basePath})
-      fs.writeFileSync(outputFileFullPath+"/"+file, htmlTemplate);
-      console.log(`${ green('-') } ✅ Rendered ${file}`)
+      generateHTMLFromAbell(file,inputFilePath,outputFileFullPath)
     })
         const executionTime = new Date().getTime() - startTime;
     console.log(`${green('>>')} Abell template built at ${outputFileFullPath.replace(process.cwd(), '')} 🌻 (Built in ${executionTime}ms) \n`); // eslint-disable-line
 
   }
-  
-  
-  
-  
+  /**
+   * @method generateHTMLFromAbell
+   * @return {void}
+   */
+  function generateHTMLFromAbell(file,inputFilePath,outputFileFullPath)
+  {
+    console.log(`${ green('-') } 📜 Rendering ${file}`)
+    const data = fs.readFileSync(path.join(process.cwd(),inputFilePath,file),{encoding:'utf8', flag:'r'});
+    const htmlTemplate = abellRenderer.render(data,{},{basePath})
+    fs.writeFileSync(path.join(outputFileFullPath,file.replace('abell','html')), htmlTemplate);
+    console.log(`${ green('-') } ✅ Rendered ${file}`)
+  }
 
+  
 }
+
 
 /** Print Help */
 function printHelp() {

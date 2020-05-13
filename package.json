@@ -12,6 +12,7 @@
   },
   "scripts": {
     "test": "mocha --recursive \"./tests/*.js\"",
+    "posttest": "npm run eslint",
     "build": "node build/build.main.js",
     "dev": "node src/example/example.js",
     "dev:cli": "node src/bin.js build --input src/example/templates/cli_example.abell --output src/example/out/cli_example.html",

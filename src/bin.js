@@ -38,8 +38,7 @@ function build() {
     
     fs.writeFileSync(outputFileFullPath, htmlTemplate);
     const executionTime = new Date().getTime() - startTime;
-    console.log(`${green('>>')} Abell template built at ${outputFileFullPath.replace(process.cwd(), '')} 🌻 (Built in ${executionTime}ms) \n`);    // eslint-disable-line 
-  }
+    console.log(`${green('>>')} Abell template built at ${outputFileFullPath.replace(process.cwd(), '')} 🌻 (Built in ${executionTime}ms) \n`); }   // eslint-disable-line 
   else {
     const indexOfOutput = args.indexOf('--output');
     const outputFileFullPath = (indexOfOutput > -1) 

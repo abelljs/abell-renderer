@@ -1,0 +1,17 @@
+{{ 
+  const siteName = 'Suppp???'
+  const a = 10; 
+  const b = 1; 
+}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>{{siteName}}</title>
+</head>
+<body>
+  <main>
+    {{a + b}}
+  </main>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{{ 
+  const siteName = 'Hello, There!'
+  const a = 3; 
+  const b = 6; 
+}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>{{siteName}}</title>
+</head>
+<body>
+  <main>
+    {{a + b}}
+  </main>
+</body>
+</html>

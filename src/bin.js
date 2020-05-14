@@ -6,68 +6,71 @@ const abellRenderer = require('./index.js');
 
 const green = (message) => `\u001b[32m${message}\u001b[39m`;  
 
+
+const cwd = process.cwd();
+
+/**
+ * @method generateHTMLFromAbell
+ * @param {string} inputPath - A complete input path of the .abell file
+ * @param {string} outputPath - A complete output path
+ * @param {Object} abellRenderOptions
+ * @param {String} abellRenderOptions.basePath - Base Path to file requires
+ * @return {void}
+ */
+function generateHTMLFromAbell(inputPath, outputPath, abellRenderOptions) {
+  console.log(`${ green('-') } 📜 Rendering ${inputPath.replace(cwd, '')}`);
+
+  const data = fs.readFileSync(
+    inputPath,
+    {encoding: 'utf8', flag: 'r'}
+  );
+
+  const htmlTemplate = abellRenderer.render(data, {}, abellRenderOptions);
+  fs.writeFileSync(
+    outputPath, 
+    htmlTemplate
+  );
+
+  console.log(`${ green('-') } ✔️  Rendered`);
+}
+
 /**
  * @method build
  * @return {void}
  */
 function build() {
   const startTime = new Date().getTime();
-  const inputFilePath = args[args.indexOf('--input') + 1];
+  const inputPath = path.join(cwd, args[args.indexOf('--input') + 1]);
+  const indexOfOutput = args.indexOf('--output');
+  const outputPath = (indexOfOutput > -1) 
+    ? path.join(cwd, args[indexOfOutput + 1]) 
+    : path.join(
+      cwd, 
+      path.replace('.abell', '.html') // file name of input
+    );
+  
+  const basePath = path.dirname(inputPath);
 
-  const basePath = path.join(
-    process.cwd(), 
-    path.dirname(inputFilePath)
-  );
   console.log(`${ green('-') } Rendering started ✨ \n`);
 
-  if (!fs.statSync(inputFilePath).isDirectory()) {
-    const indexOfOutput = args.indexOf('--output');
-    const outputFileFullPath = (indexOfOutput > -1) 
-      ? path.join(process.cwd(), args[indexOfOutput + 1]) 
-      : path.join(
-        basePath, 
-        path.basename(inputFilePath, path.extname(inputFilePath)) + '.html' // file name of input
+  if (!fs.statSync(inputPath).isDirectory()) {
+    // If input is a file
+    generateHTMLFromAbell(inputPath, outputPath, {basePath});
+  } else {
+    // If input is a directory
+    const filesInDirectory = fs.readdirSync(inputPath);
+
+    for (const file of filesInDirectory) {
+      generateHTMLFromAbell(
+        path.join(inputPath, file), 
+        path.join(outputPath, file.replace('.abell', '.html')), 
+        {basePath: inputPath}
       );
-    const htmlTemplate = abellRenderer.render(  
-      fs.readFileSync(path.join(process.cwd(), inputFilePath)), 
-      {},
-      {
-        basePath
-      }
-    );
-    
-    fs.writeFileSync(outputFileFullPath, htmlTemplate);
-    const executionTime = new Date().getTime() - startTime;
-    console.log(`${green('>>')} Abell template built at ${outputFileFullPath.replace(process.cwd(), '')} 🌻 (Built in ${executionTime}ms) \n`); }   // eslint-disable-line 
-  else {
-    const indexOfOutput = args.indexOf('--output');
-    const outputFileFullPath = (indexOfOutput > -1) 
-      ? path.join(process.cwd(), args[indexOfOutput + 1]) 
-      : path.join(
-        basePath, 
-        path.basename(inputFilePath, path.extname(inputFilePath))// file name of input
-      );
-    fs.readdirSync(inputFilePath).forEach(file=>{
-      generateHTMLFromAbell(file, inputFilePath, outputFileFullPath);
-    });
-    const executionTime = new Date().getTime() - startTime;
-    // eslint-disable-line
-    console.log(`${green('>>')} Abell template built at ${outputFileFullPath.replace(process.cwd(), '')} 🌻 (Built in ${executionTime}ms) \n`);   // eslint-disable-line 
+    }
   }
-  /**
-   * @param {string} file
-   * @param {string} inputFilePath
-   * @param {string} outputFileFullPath
-   * @method generateHTMLFromAbell
-   * @return {void}
-   */
-  function generateHTMLFromAbell(file, inputFilePath, outputFileFullPath) {
-    console.log(`${ green('-') } 📜 Rendering ${file}`);
-    const data = fs.readFileSync(path.join(process.cwd(), inputFilePath, file), {encoding: 'utf8', flag: 'r'});   // eslint-disable-line 
-    const htmlTemplate = abellRenderer.render(data, {}, {basePath});
-    fs.writeFileSync(path.join(outputFileFullPath, file.replace('abell', 'html')), htmlTemplate);
-    console.log(`${ green('-') } ✅ Rendered ${file}`);
-  }
+
+  const executionTime = new Date().getTime() - startTime;
+  console.log(`\n\n${green('>>')} Abell template built at ${outputPath.replace(cwd, '')} 🌻 (Built in ${executionTime}ms) \n`); // eslint-disable-line
 }
 
 

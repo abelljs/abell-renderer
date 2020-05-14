@@ -38,7 +38,7 @@ function build() {
     
     fs.writeFileSync(outputFileFullPath, htmlTemplate);
     const executionTime = new Date().getTime() - startTime;
-    console.log(`${green('>>')} Abell template built at ${outputFileFullPath.replace(process.cwd(), '')} 🌻 (Built in ${executionTime}ms) \n`);    // eslint-disable-line
+    console.log(`${green('>>')} Abell template built at ${outputFileFullPath.replace(process.cwd(), '')} 🌻 (Built in ${executionTime}ms) \n`);    // eslint-disable-line 
   }
   else {
     const indexOfOutput = args.indexOf('--output');
@@ -53,7 +53,7 @@ function build() {
     });
     const executionTime = new Date().getTime() - startTime;
     // eslint-disable-line
-    console.log(`${green('>>')} Abell template built at ${outputFileFullPath.replace(process.cwd(), '')} 🌻 (Built in ${executionTime}ms) \n`);
+    console.log(`${green('>>')} Abell template built at ${outputFileFullPath.replace(process.cwd(), '')} 🌻 (Built in ${executionTime}ms) \n`);   // eslint-disable-line 
   }
   /**
    * @param {string} file
@@ -62,10 +62,9 @@ function build() {
    * @method generateHTMLFromAbell
    * @return {void}
    */
-  function generateHTMLFromAbell(file, inputFilePath, outputFileFullPath)
-  {
+  function generateHTMLFromAbell(file, inputFilePath, outputFileFullPath) {
     console.log(`${ green('-') } 📜 Rendering ${file}`);
-    const data = fs.readFileSync(path.join(process.cwd(), inputFilePath, file), {encoding: 'utf8', flag: 'r'});
+    const data = fs.readFileSync(path.join(process.cwd(), inputFilePath, file), {encoding: 'utf8', flag: 'r'});   // eslint-disable-line 
     const htmlTemplate = abellRenderer.render(data, {}, {basePath});
     fs.writeFileSync(path.join(outputFileFullPath, file.replace('abell', 'html')), htmlTemplate);
     console.log(`${ green('-') } ✅ Rendered ${file}`);

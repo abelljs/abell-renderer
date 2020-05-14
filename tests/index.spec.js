@@ -65,6 +65,25 @@ describe('render() - renders abellTemplate into HTML Text', () => {
       )
     ).to.equal('TEST');
   });
+
+  it('should handle multiple assignments and requires in same block', () => {
+    const abellTemplate = `
+      {{
+        const a = 3;
+        const b = 5;
+        const path = require('path');
+        const hiHelloPath = require('path').join('hi', 'hello');
+      }}
+      <div>{{ a + b }} {{ path.join('hi', 'hello') }} {{ hiHelloPath }}</div>
+    `;
+
+    expect(
+      abellRenderer.render(
+        abellTemplate,
+        {}
+      ).trim()
+    ).to.equal('<div>8 hi/hello hi/hello</div>');
+  });
 });
 
 
@@ -94,6 +113,13 @@ describe('executeRequireStatement() - executes the code with require() in its st
     expect(
       executeRequireStatement('const path = require(\'path\')')
         .path.join('test', 'path')
+    ).to.equal(path.join('test', 'path'));
+  });
+
+  it('should handle the case of require(\'module\').property', () => {
+    expect(
+      executeRequireStatement('const testPath = require(\'path\').join(\'test\',\'path\')')
+        .testPath
     ).to.equal(path.join('test', 'path'));
   });
 });

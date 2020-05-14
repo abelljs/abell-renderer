@@ -10,9 +10,14 @@ const path = require('path');
  * @return {object} updated sandbox
  */
 function executeRequireStatement(parseStatement, sandbox, basePath) {
-  const requireParseRegex = /require\(['"](.*?)['"]\)/;
+  const requireParseRegex = /require\(['"](.*?)['"]\)(.*)/;
 
-  const pathToRequire = requireParseRegex.exec(parseStatement)[1];
+  const requireInfo = requireParseRegex.exec(parseStatement);
+  const pathToRequire = requireInfo[1]; // string inside require('')
+
+  // String after require to handle cases like require('module').foo
+  const codeAfterRequire = requireInfo[2] || '';
+
   let temp;
 
   if (pathToRequire.startsWith('.')) {
@@ -37,7 +42,7 @@ function executeRequireStatement(parseStatement, sandbox, basePath) {
       .slice(0, parseStatement.indexOf('='))
       .replace(/(?:const |let )/g, 'var ')
       .trim() + 
-    ' = temp',
+    ' = temp' + codeAfterRequire,
     context
   );
 

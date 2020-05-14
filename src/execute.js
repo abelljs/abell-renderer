@@ -13,7 +13,9 @@ function executeRequireStatement(parseStatement, sandbox, basePath) {
   const requireParseRegex = /require\(['"](.*?)['"]\)(.*)/;
 
   const requireInfo = requireParseRegex.exec(parseStatement);
-  const pathToRequire = requireInfo[1];
+  const pathToRequire = requireInfo[1]; // string inside require('')
+
+  // String after require to handle cases like require('module').foo
   const codeAfterRequire = requireInfo[2] || '';
 
   let temp;

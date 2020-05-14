@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.5
+- Support for expression after `require` (e.g. `require('module1').someProperty`)
+- Build a folder with CLI (Issue: [#6](https://github.com/abelljs/abell-renderer/issues/6), PR: [#8](https://github.com/abelljs/abell-renderer/pull/8), Thanks to [@Pika1998](https://github.com/Pika1998))
+
 ## v0.1.4
 - Error handling when the temlate does not have any `{{` `}}`
 - More tests written for `render()` function

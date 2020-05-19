@@ -104,9 +104,9 @@ function execute(jsToExecute, sandbox = {}) {
   if (jsToExecute.match(/console\.log\(([^)]+)\)/igm)) {
     regexToMatch = /console\.log\(([^)]+)\)/igm;
     m = regexToMatch.exec(jsToExecute);
-    if (m[1][0]=="'" || m[1][0]=="`" || m[1][0]=='"') {
-      console.log(m[1].substring(1,m[1].length-1));
-    }
+    if (m[1][0]=='\'' || m[1][0]=='`' || m[1][0]=='"') {
+      console.log(m[1].substring(1, m[1].length-1));
+    } // eslint-disable-line
     else {
       console.log(sandbox[`${m[1]}`]);
     }

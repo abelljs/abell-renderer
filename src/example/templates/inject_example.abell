@@ -11,7 +11,7 @@
   <title>{{ globalMeta.siteName }}</title>
 </head>
 <body>
-{{ console.log(`Hello World`); }};
+{{ console.log('Hello World'); }};
 {{ console.log(a); }}
   This website is of type '{{
     (() => {

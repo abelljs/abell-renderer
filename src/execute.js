@@ -101,10 +101,15 @@ function execute(jsToExecute, sandbox = {}) {
   }
   
   // Add Console Log Logic
-  if (jsToExecute.match(/console.log\((\w+)\)/g)) {
-    regexToMatch = /console.log\((\w+)\)/g;
+  if (jsToExecute.match(/console\.log\(([^)]+)\)/igm)) {
+    regexToMatch = /console\.log\(([^)]+)\)/igm;
     m = regexToMatch.exec(jsToExecute);
-    console.log(sandbox[`${m[1]}`]);
+    if (m[1][0]=="'" || m[1][0]=="`" || m[1][0]=='"') {
+      console.log(m[1].substring(1,m[1].length-1));
+    }
+    else {
+      console.log(sandbox[`${m[1]}`]);
+    }
     return {
       type: 'log',
       sandbox

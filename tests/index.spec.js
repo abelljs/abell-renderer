@@ -9,26 +9,25 @@ const {
 
 const abellRenderer = require('../src/index.js');
 
-
-const sampleSandbox = {
-  $contentList: [
-    {name: 'Nice'},
-    {name: 'very cool'}
-  ]
-};
-
-const abellTemplate = fs.readFileSync(
-  path.join(__dirname, 'resources', 'if-input.abell'), 
-  'utf-8'
-);
-
-const htmlTemplate = fs.readFileSync(
-  path.join(__dirname, 'resources', 'should-output.html'), 
-  'utf-8'
-);
-
 describe('render() - renders abellTemplate into HTML Text', () => {
   it('should output given htmlTemplate on given abellTemplate', () => {
+    const abellTemplate = fs.readFileSync(
+      path.join(__dirname, 'resources', 'if-input.abell'), 
+      'utf-8'
+    );
+
+    const htmlTemplate = fs.readFileSync(
+      path.join(__dirname, 'resources', 'should-output.html'), 
+      'utf-8'
+    );
+
+    const sampleSandbox = {
+      $contentList: [
+        {name: 'Nice'},
+        {name: 'very cool'}
+      ]
+    };
+
     expect(
       abellRenderer
         .render(

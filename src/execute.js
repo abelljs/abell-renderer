@@ -107,7 +107,6 @@ function execute(jsToExecute, sandbox = {}) {
       };
     } 
   }
-
   // script is not assignment i.e it returns some value that can be printed
   return {
     type: 'value',

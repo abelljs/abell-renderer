@@ -100,6 +100,17 @@ function execute(jsToExecute, sandbox = {}) {
     } 
   }
   
+  // Add Console Log Logic
+  if(jsToExecute.match(/console.log\((\w+)\)/g))
+  {
+    let regexToMatch = /console.log\((\w+)\)/g;
+    let m = regexToMatch.exec(jsToExecute);
+    console.log(sandbox[`${m[1]}`]);
+    return {
+      type: 'log',
+      sandbox
+    }
+  }
   // script is not assignment i.e it returns some value that can be printed
   return {
     type: 'value',

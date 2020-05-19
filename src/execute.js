@@ -73,6 +73,14 @@ function execute(jsToExecute, sandbox = {}) {
   
   const sandboxVariable = sandbox.aBellSpecificVariable; 
 
+
+  // Add Console Log Logic
+  if (jsToExecute.match(/console\.log\((.*?)\)/g)) {
+    regexToMatch = /console\.log\((.*?)\)/g;
+    m = regexToMatch.exec(jsToExecute);
+    console.log(execute(m[1], sandbox).value);
+  }
+
   if (jsToExecute.includes('=')) {
     // A chance of script being an assignment
 
@@ -99,7 +107,6 @@ function execute(jsToExecute, sandbox = {}) {
       };
     } 
   }
-  
   // script is not assignment i.e it returns some value that can be printed
   return {
     type: 'value',

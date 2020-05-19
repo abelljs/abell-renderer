@@ -2,7 +2,7 @@
   const { globalMeta, numberFromJS } = require('./siteData.js');
   const { numberFromJSON } = require('./meta.json');
   const siteType = "blog";
-  const a = 5;
+  const a = 3;
 }}
 
 <!DOCTYPE html>
@@ -11,7 +11,10 @@
   <title>{{ globalMeta.siteName }}</title>
 </head>
 <body>
-{{ console.log(a) }};
+{{ 
+  const b = 5;
+  console.log(a + b);
+}};
   This website is of type '{{
     (() => {
       if(siteType === 'blog') {

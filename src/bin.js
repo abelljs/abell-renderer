@@ -9,6 +9,31 @@ const green = (message) => `\u001b[32m${message}\u001b[39m`;
 
 const cwd = process.cwd();
 
+
+const recursiveFind = (base, ext, inputFiles, inputResult) => {
+  const files = inputFiles || fs.readdirSync(base);
+  let result = inputResult || [];
+
+  for (const file of files) {
+    const newbase = path.join(base, file);
+    if (fs.statSync(newbase).isDirectory()) {
+      result = recursiveFind(newbase, ext, fs.readdirSync(newbase), result);
+    } else {
+      if (file.substr(-1 * ext.length) == ext) {
+        result.push(newbase);
+      }
+    }
+  }
+
+  return result;
+};
+
+const createPathIfAbsent = (pathToCreate) => {
+  if (!fs.existsSync(pathToCreate)) {
+    fs.mkdirSync(pathToCreate);
+  }
+};
+
 /**
  * @method generateHTMLFromAbell
  * @param {string} inputPath - A complete input path of the .abell file
@@ -19,7 +44,7 @@ const cwd = process.cwd();
  */
 function generateHTMLFromAbell(inputPath, outputPath, abellRenderOptions) {
   console.log(`${ green('-') } 📜 Rendering ${inputPath.replace(cwd, '')}`);
-
+  createPathIfAbsent(path.dirname(outputPath));
   const data = fs.readFileSync(
     inputPath,
     {encoding: 'utf8', flag: 'r'}
@@ -55,13 +80,14 @@ function build() {
     generateHTMLFromAbell(inputPath, outputPath, {basePath});
   } else {
     // If input is a directory
-    const filesInDirectory = fs.readdirSync(inputPath);
+    const relativePaths = recursiveFind(inputPath, '.abell')
+      .map(absolutePath => path.relative(inputPath, absolutePath));
 
-    for (const file of filesInDirectory) {
+    for (const filepath of relativePaths) {
       generateHTMLFromAbell(
-        path.join(inputPath, file), 
-        path.join(outputPath, file.replace('.abell', '.html')), 
-        {basePath: path.dirname(path.join(inputPath, file))}
+        path.join(inputPath, filepath), 
+        path.join(outputPath, filepath.replace('.abell', '.html')), 
+        {basePath: path.dirname(path.join(inputPath, filepath))}
       );
     }
   }

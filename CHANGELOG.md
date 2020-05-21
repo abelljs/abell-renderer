@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.1.9
+- Fix to recursively find and create nested `.abell` files
+
 ## v0.1.8
 - basePath is set to paths relative to input files.
 

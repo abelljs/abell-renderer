@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.7
+- **BUG FIX**
+  Allowing CLI to build without output path
+
 ## v0.1.6
 - **MAJOR CHANGE**
   Added ability to escape the brackets with a slash('\')

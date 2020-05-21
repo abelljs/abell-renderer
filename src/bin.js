@@ -46,7 +46,7 @@ function build() {
     ? path.join(cwd, args[indexOfOutput + 1]) 
     : path.join(
       cwd, 
-      path.replace('.abell', '.html') // file name of input
+      inputPath.replace('.abell', '.html') // file name of input
     );
   
   const basePath = path.dirname(inputPath);

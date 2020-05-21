@@ -44,10 +44,7 @@ function build() {
   const indexOfOutput = args.indexOf('--output');
   const outputPath = (indexOfOutput > -1) 
     ? path.join(cwd, args[indexOfOutput + 1]) 
-    : path.join(
-      cwd, 
-      inputPath.replace('.abell', '.html') // file name of input
-    );
+    : inputPath.replace('.abell', '.html'); // file name of input
   
   const basePath = path.dirname(inputPath);
 

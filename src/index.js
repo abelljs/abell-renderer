@@ -44,13 +44,16 @@ const execRegexOnAll = (regex, template) => {
  */
 function render(abellTemplate, sandbox, options = {basePath: ''}) {
   // Finds all the JS expressions to be executed.
-  const {matches, input} = execRegexOnAll(/{{(.*?)}}/gs, abellTemplate); 
+  const {matches, input} = execRegexOnAll(/\\?{{(.+?)}}/gs, abellTemplate); 
   let renderedHTML = ''; 
   let lastIndex = 0;
   
   for (const match of matches) { // Loops Through JavaScript blocks inside '{{' and '}}'
     let value = '';
-    if (match[1].includes('require(')) {
+    if (match[0].startsWith('\\{{')) {
+      // Ignore the match that starts with slash '\' and return the same value without slash
+      value = match[0].slice(1);
+    } else if (match[1].includes('require(')) {
       // the js block is trying to require (e.g const module1 = require('module1'))
       const lines = match[1]
         .trim()

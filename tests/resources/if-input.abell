@@ -23,7 +23,10 @@
     when {{numberFromJS}} is added to {{numberFromJSON}}, we get {{ numberFromJS + numberFromJSON }}
     <h1>{{ globalMeta.siteName }}</h1>
     <div class="header-bio">
-      Abell Minima is a starter blog for AbellJS. <br/>This template is designed by <b>{{ globalMeta.name }}</b> you can follow him on <a href="https://twitter.com/{{ globalMeta.twitter }}">Twitter @{{ globalMeta.twitter }}</a>.
+      Abell Minima is a starter blog for AbellJS. 
+      <br/>This template is designed by <b>{{ globalMeta.name }}</b> 
+      You can follow him on <a href="https://twitter.com/{{ globalMeta.twitter }}">Twitter @{{ globalMeta.twitter }}</a>.
+      \{{This text is ignored}}
     </div>
   </header>
   <main>

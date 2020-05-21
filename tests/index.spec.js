@@ -83,6 +83,24 @@ describe('render() - renders abellTemplate into HTML Text', () => {
       ).trim()
     ).to.equal('<div>8 hi/hello hi/hello</div>');
   });
+
+  it('should not throw error and return same value if blank brackets passed', () => {
+    expect(
+      abellRenderer.render(
+        '{{}}',
+        {}
+      )
+    ).to.equal('{{}}');
+  });
+
+  it('should ignore the brackets when slash is added before the bracket', () => {
+    expect(
+      abellRenderer.render(
+        '\\{{ This is ignored }}',
+        {}
+      )
+    ).to.equal('{{ This is ignored }}');
+  });
 });
 
 

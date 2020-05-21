@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.6
+- **MAJOR CHANGE**
+  Added ability to escape the brackets with a slash('\')
+
 ## v0.1.5
 - Support for expression after `require` (e.g. `require('module1').someProperty`)
 - Build a folder with CLI (Issue: [#6](https://github.com/abelljs/abell-renderer/issues/6), PR: [#8](https://github.com/abelljs/abell-renderer/pull/8), Thanks to [@Pika1998](https://github.com/Pika1998))

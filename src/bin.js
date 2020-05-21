@@ -61,7 +61,7 @@ function build() {
       generateHTMLFromAbell(
         path.join(inputPath, file), 
         path.join(outputPath, file.replace('.abell', '.html')), 
-        {basePath: inputPath}
+        {basePath: path.dirname(path.join(inputPath, file))}
       );
     }
   }

@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.1.8
+- basePath is set to paths relative to input files.
+
 ## v0.1.7
 - **BUG FIX**
   Allowing CLI to build without output path

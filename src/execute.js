@@ -15,24 +15,23 @@ function executeRequireStatement(parseStatement, sandbox, basePath) {
   const requireInfo = requireParseRegex.exec(parseStatement);
   const pathToRequire = requireInfo[1]; // string inside require('')
 
-  // String after require to handle cases like require('module').foo
+  // Code after require to handle cases like require('module').foo
   const codeAfterRequire = requireInfo[2] || '';
 
   let temp;
 
-  if (pathToRequire.startsWith('.')) {
-    // path is a local file
-    temp = require(
-      path.join(
-        basePath,
-        pathToRequire
-      )
-    );
-  } else {
-    // path is a nodejs module
+  try {
     temp = require(pathToRequire);
+  } catch (err) {
+    if (err.code === 'MODULE_NOT_FOUND') {
+      temp = require(
+        path.join(
+          basePath,
+          pathToRequire
+        )
+      );
+    }
   }
-
 
   const context = {temp};
   vm.createContext(context);

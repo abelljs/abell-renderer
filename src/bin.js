@@ -70,6 +70,7 @@ function build() {
   const outputPath = (indexOfOutput > -1) 
     ? path.join(cwd, args[indexOfOutput + 1]) 
     : inputPath.replace('.abell', '.html'); // file name of input
+  const allowRequire = args.includes('--allow-require');
   
   const basePath = path.dirname(inputPath);
 
@@ -77,7 +78,7 @@ function build() {
 
   if (!fs.statSync(inputPath).isDirectory()) {
     // If input is a file
-    generateHTMLFromAbell(inputPath, outputPath, {basePath});
+    generateHTMLFromAbell(inputPath, outputPath, {basePath, allowRequire});
   } else {
     // If input is a directory
     const relativePaths = recursiveFind(inputPath, '.abell')
@@ -87,7 +88,7 @@ function build() {
       generateHTMLFromAbell(
         path.join(inputPath, filepath), 
         path.join(outputPath, filepath.replace('.abell', '.html')), 
-        {basePath: path.dirname(path.join(inputPath, filepath))}
+        {basePath: path.dirname(path.join(inputPath, filepath)), allowRequire}
       );
     }
   }

@@ -92,7 +92,7 @@ You can use JavaScript Array methods to loop over array. Other JavaScript Array 
         <h2>${user.name}</h2>
         <span>Age: ${user.age}</span>
       </div>
-    `)
+    `).join('')
   }}
 </main>
 
@@ -113,6 +113,8 @@ Ouputs:
 ```
 
 ### ⤵️ Import JS/JSON/NPM Modules
+*NOTE: Starting v0.1.10 require() can only be used when `allowRequire: true` is passed from options or `--allow-require` flag is passed in CLI*
+
 With Abell you can import your Native NodeJS Modules, NPM Modules, JS Files (should export data), and JSON Files with `require()`
 
 
@@ -196,6 +198,7 @@ Outputs:
 `template`: Abell template in String
 `sandbox`: Object over which the scripts execute, Can define variables and inject them into script.
 `options.basePath`: basePath which is prefixed on `require()` paths in abellTemplate. 
+`options.allowRequire`: Passing `true` allows using `require()` in templates. Default is `false`.
 
 
 ## 🤗 Contributing

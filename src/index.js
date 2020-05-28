@@ -42,7 +42,7 @@ const execRegexOnAll = (regex, template) => {
  * @param {object} options additional options e.g ({basePath})
  * @return {string} htmlTemplate
  */
-function render(abellTemplate, sandbox, options = {basePath: ''}) {
+function render(abellTemplate, sandbox, options = {basePath: '', allowRequire: false}) {
   // Finds all the JS expressions to be executed.
   const {matches, input} = execRegexOnAll(/\\?{{(.+?)}}/gs, abellTemplate); 
   let renderedHTML = ''; 
@@ -54,6 +54,9 @@ function render(abellTemplate, sandbox, options = {basePath: ''}) {
       // Ignore the match that starts with slash '\' and return the same value without slash
       value = match[0].slice(1);
     } else if (match[1].includes('require(')) {
+      if (!options.allowRequire) {
+        throw new Error('require() is not allowed in the script');
+      }
       // the js block is trying to require (e.g const module1 = require('module1'))
       const lines = match[1]
         .trim()

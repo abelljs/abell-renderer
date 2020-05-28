@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.1.10
+- **BREAKING CHANGE**, **SECURITY UPDATE**
+  To use `require()` in the template, user will have to pass `allowRequire: true` in option. This option is by default set to false. 
+  ```js
+  const newHTMLTemplate = abellRenderer.render(
+    myAbellTemplate, 
+    mySandbox, 
+    {allowRequire: true}
+  );
+  ```
+
 ## v0.1.9
 - Fix to recursively find and create nested `.abell` files
 

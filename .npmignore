@@ -5,3 +5,4 @@ build/
 .eslintrc.js
 .eslintignore
 vm.playground.js
+.vscode/

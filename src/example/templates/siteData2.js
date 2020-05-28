@@ -1,4 +1,3 @@
 module.exports = {
-  abellNumber: 25,
+  abellNumber: 25
 };
-

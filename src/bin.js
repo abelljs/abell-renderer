@@ -4,11 +4,9 @@ const fs = require('fs');
 const path = require('path');
 const abellRenderer = require('./index.js');
 
-const green = (message) => `\u001b[32m${message}\u001b[39m`;  
-
+const green = (message) => `\u001b[32m${message}\u001b[39m`;
 
 const cwd = process.cwd();
-
 
 const recursiveFind = (base, ext, inputFiles, inputResult) => {
   const files = inputFiles || fs.readdirSync(base);
@@ -43,20 +41,14 @@ const createPathIfAbsent = (pathToCreate) => {
  * @return {void}
  */
 function generateHTMLFromAbell(inputPath, outputPath, abellRenderOptions) {
-  console.log(`${ green('-') } 📜 Rendering ${inputPath.replace(cwd, '')}`);
+  console.log(`${green('-')} 📜 Rendering ${inputPath.replace(cwd, '')}`);
   createPathIfAbsent(path.dirname(outputPath));
-  const data = fs.readFileSync(
-    inputPath,
-    {encoding: 'utf8', flag: 'r'}
-  );
+  const data = fs.readFileSync(inputPath, { encoding: 'utf8', flag: 'r' });
 
   const htmlTemplate = abellRenderer.render(data, {}, abellRenderOptions);
-  fs.writeFileSync(
-    outputPath, 
-    htmlTemplate
-  );
+  fs.writeFileSync(outputPath, htmlTemplate);
 
-  console.log(`${ green('-') } ✔️  Rendered`);
+  console.log(`${green('-')} ✔️  Rendered`);
 }
 
 /**
@@ -67,36 +59,43 @@ function build() {
   const startTime = new Date().getTime();
   const inputPath = path.join(cwd, args[args.indexOf('--input') + 1]);
   const indexOfOutput = args.indexOf('--output');
-  const outputPath = (indexOfOutput > -1) 
-    ? path.join(cwd, args[indexOfOutput + 1]) 
-    : inputPath.replace('.abell', '.html'); // file name of input
+  const outputPath =
+    indexOfOutput > -1
+      ? path.join(cwd, args[indexOfOutput + 1])
+      : inputPath.replace('.abell', '.html'); // file name of input
   const allowRequire = args.includes('--allow-require');
-  
+
   const basePath = path.dirname(inputPath);
 
-  console.log(`${ green('-') } Rendering started ✨ \n`);
+  console.log(`${green('-')} Rendering started ✨ \n`);
 
   if (!fs.statSync(inputPath).isDirectory()) {
     // If input is a file
-    generateHTMLFromAbell(inputPath, outputPath, {basePath, allowRequire});
+    generateHTMLFromAbell(inputPath, outputPath, { basePath, allowRequire });
   } else {
     // If input is a directory
-    const relativePaths = recursiveFind(inputPath, '.abell')
-      .map(absolutePath => path.relative(inputPath, absolutePath));
+    const relativePaths = recursiveFind(
+      inputPath,
+      '.abell'
+    ).map((absolutePath) => path.relative(inputPath, absolutePath));
 
     for (const filepath of relativePaths) {
       generateHTMLFromAbell(
-        path.join(inputPath, filepath), 
-        path.join(outputPath, filepath.replace('.abell', '.html')), 
-        {basePath: path.dirname(path.join(inputPath, filepath)), allowRequire}
+        path.join(inputPath, filepath),
+        path.join(outputPath, filepath.replace('.abell', '.html')),
+        { basePath: path.dirname(path.join(inputPath, filepath)), allowRequire }
       );
     }
   }
 
   const executionTime = new Date().getTime() - startTime;
-  console.log(`\n\n${green('>>')} Abell template built at ${outputPath.replace(cwd, '')} 🌻 (Built in ${executionTime}ms) \n`); // eslint-disable-line
+  console.log(
+    `\n\n${green('>>')} Abell template built at ${outputPath.replace(
+      cwd,
+      ''
+    )} 🌻 (Built in ${executionTime}ms) \n`
+  ); // eslint-disable-line
 }
-
 
 /** Print Help */
 function printHelp() {

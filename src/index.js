@@ -90,7 +90,7 @@ function render(
      */
 
     const toAddOnIndex = match.index; // Gets the index where the executed value is to be put.
-    renderedHTML += input.slice(lastIndex, toAddOnIndex) + value;
+    renderedHTML += input.slice(lastIndex, toAddOnIndex) + String(value).trim();
     lastIndex = toAddOnIndex + match[0].length;
   }
 

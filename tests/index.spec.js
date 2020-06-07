@@ -66,6 +66,20 @@ describe('render() - renders abellTemplate into HTML Text', () => {
   });
 
   // eslint-disable-next-line max-len
+  it('should not throw error and return same value if blank brackets passed', () => {
+    expect(abellRenderer.render('{{}}', {})).to.equal('{{}}');
+  });
+
+  // eslint-disable-next-line max-len
+  it('should ignore the brackets when slash is added before the bracket', () => {
+    expect(abellRenderer.render('\\{{ This is ignored }}', {})).to.equal(
+      '{{ This is ignored }}'
+    );
+  });
+
+  // error handlers
+
+  // eslint-disable-next-line max-len
   it('should throw an error if require() is used without allowRequire: true option', () => {
     const abellTemplate = `
       {{
@@ -81,14 +95,18 @@ describe('render() - renders abellTemplate into HTML Text', () => {
   });
 
   // eslint-disable-next-line max-len
-  it('should not throw error and return same value if blank brackets passed', () => {
-    expect(abellRenderer.render('{{}}', {})).to.equal('{{}}');
-  });
-
-  // eslint-disable-next-line max-len
-  it('should ignore the brackets when slash is added before the bracket', () => {
-    expect(abellRenderer.render('\\{{ This is ignored }}', {})).to.equal(
-      '{{ This is ignored }}'
+  it('should throw error at execute when a variable is not defined', () => {
+    expect(() => abellRenderer.render('{{ IamUndefined }}', {})).to.throw(
+      'IamUndefined is not defined'
     );
+
+    // Check if error is thrown at execute
+    let errorStackFirstLine = '';
+    try {
+      abellRenderer.render('{{ IamUndefined }}');
+    } catch (err) {
+      errorStackFirstLine = err.stack.split('at')[1];
+    }
+    expect(errorStackFirstLine.trim().startsWith('execute')).to.equal(true);
   });
 });

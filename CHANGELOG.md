@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.12
+
+- Throw error at `execute` to avoid having vm data in error stack
+
 ## v0.1.11
 
 - Trim value before adding.

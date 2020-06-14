@@ -1,20 +1,15 @@
 <p align="center"><img alt="Abell renderer cover" src="https://res.cloudinary.com/saurabhdaware/image/upload/v1588856971/abell/abellrendererghhead.png"></p>
 
-
 <p align="center"><b>NOT READY FOR PRODUCTION USE</b></p>
 
-
 <p align="center">
-<a href="https://npmjs.org/package/abell-renderer"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/abelljs/abell-renderer?style=for-the-badge&labelColor=black&logo=npm&label=abell%20renderer&color=darkred"></a>&nbsp; <a href="https://join.slack.com/t/abellland/shared_invite/zt-ebklbe8h-FhRgHxNbuO_hvFDf~nZtGQ"><img alt="Join chat badge of slack" src="https://img.shields.io/badge/slack-join%20chat-4A154B?style=for-the-badge&logo=slack&logoColor=pink&labelColor=black"/></a>&nbsp; <a href="https://twitter.com/abellland"><img alt="Twitter profile badge of @abellland" src="https://img.shields.io/badge/follow-@AbellLand-1DA1F2?style=for-the-badge&logo=twitter&logoColor=1DA1F2&labelColor=black"/></a>
-
+<a href="https://npmjs.org/package/abell-renderer"><img alt="GitHub package.json version" src="https://img.shields.io/github/package-json/v/abelljs/abell-renderer/main?style=for-the-badge&labelColor=black&logo=npm&label=abell%20renderer&color=darkred"></a>&nbsp; <a href="https://join.slack.com/t/abellland/shared_invite/zt-ebklbe8h-FhRgHxNbuO_hvFDf~nZtGQ"><img alt="Join chat badge of slack" src="https://img.shields.io/badge/slack-join%20chat-4A154B?style=for-the-badge&logo=slack&logoColor=pink&labelColor=black"/></a>&nbsp; <a href="https://twitter.com/abellland"><img alt="Twitter profile badge of @abellland" src="https://img.shields.io/badge/follow-@AbellLand-1DA1F2?style=for-the-badge&logo=twitter&logoColor=1DA1F2&labelColor=black"/></a>
 
 </p>
 
 <br/><br/>
 
-
 <p align="left">A template parser that lets you use JavaScript syntax to render loops, conditions, do maths, and require JSONs from HTML on build time. Low level library used in <a href="https://github.com/abelljs/abell">abelljs/abell<a></p>
-
 
 ## 🚀 Installation & Usage
 
@@ -25,6 +20,7 @@ npx abell-renderer build --input src/index.abell --output dist/index.html
 ```
 
 or
+
 ```shell
 npm install -g abell-renderer
 ```
@@ -33,17 +29,16 @@ npm install -g abell-renderer
 abell-renderer build --input src/index.abell --output dist/index.html
 ```
 
-
 Check out [Abell Template Guide](#-abell-template-guide) for how to write `.abell` files.
-
 
 ## 📘 Abell Template Guide
 
 `.abell` files are nothing but `.html` files which can contain JavaScript inside double curly brackets `{{` and `}}`.
 
-*Note that abell-renderer renders abell files in NodeJS context which means you cannot access DOM inside brackets.*
+_Note that abell-renderer renders abell files in NodeJS context which means you cannot access DOM inside brackets._
 
 Simplest example of **.abell** file can look like:
+
 ```jsx
 {{ const siteTitle = "Abell Demo" }}
 <html>
@@ -51,7 +46,7 @@ Simplest example of **.abell** file can look like:
     <title>{{ siteTitle }}</title>
   </head>
   <body>
-    {{ 
+    {{
       const a = 3;
       const b = 5;
     }}
@@ -59,9 +54,10 @@ Simplest example of **.abell** file can look like:
     <div>Addition of {{ a }} and {{ b }} is {{ a + b }}</div>
   </body>
 </html>
-``` 
+```
 
 All the JavaScript inside curly brakets will be rendered on virtual instance on NodeJS and you will get the output as completely renderer **.html** file:
+
 ```html
 <html>
   <head>
@@ -73,16 +69,17 @@ All the JavaScript inside curly brakets will be rendered on virtual instance on 
   </body>
 </html>
 ```
+
 ### ➿ Loops in Abell
 
 You can use JavaScript Array methods to loop over array. Other JavaScript Array methods like `.filter`, `.map`, `.reduce` can be used as well.
 
 ```jsx
-{{ 
+{{
   const users = [
-    {name: 'Saurabh', age: 20}, 
+    {name: 'Saurabh', age: 20},
     {name: 'John Doe', age: 78}
-  ] 
+  ]
 }}
 
 <main>
@@ -113,13 +110,13 @@ Ouputs:
 ```
 
 ### ⤵️ Import JS/JSON/NPM Modules
-*NOTE: Starting v0.1.10 require() can only be used when `allowRequire: true` is passed from options or `--allow-require` flag is passed in CLI*
+
+_NOTE: Starting v0.1.10 require() can only be used when `allowRequire: true` is passed from options or `--allow-require` flag is passed in CLI_
 
 With Abell you can import your Native NodeJS Modules, NPM Modules, JS Files (should export data), and JSON Files with `require()`
 
-
 ```jsx
-{{ const MarkdownIt = require('markdown-it') }} 
+{{ const MarkdownIt = require('markdown-it') }}
 <!-- NPM Module to convert markdown to HTML (npm install --save markdown-it) -->
 
 {{ const md = new MarkdownIt(); }}
@@ -142,8 +139,7 @@ Outputs:
 */
 ```
 
-*Note: fs module or any module that deals with external files cannot be used. The only way to read any external file is require()*
-
+_Note: fs module or any module that deals with external files cannot be used. The only way to read any external file is require()_
 
 ## 💛 JavaScript API
 
@@ -155,12 +151,9 @@ npm install --save-dev abell-renderer
 const abellRenderer = require('abell-renderer');
 
 const sandbox = {
-  nameObjects: [
-    {name: 'Nice'},
-    {name: 'very cool'}
-  ],
+  nameObjects: [{ name: 'Nice' }, { name: 'very cool' }],
   globalMeta: {
-    siteName: 'Abell Renderer Demo',
+    siteName: 'Abell Renderer Demo'
   }
 };
 
@@ -175,7 +168,7 @@ const template = `
     }}
   </div>
 </body>
-`
+`;
 
 const htmlTemplate = abellRenderer.render(template, sandbox);
 
@@ -192,32 +185,33 @@ Outputs:
 </body>
 */
 ```
+
 ### 📚 Reference
+
 `abellRenderer.render(template, sandbox, options)`
 
 `template`: Abell template in String
 `sandbox`: Object over which the scripts execute, Can define variables and inject them into script.
-`options.basePath`: basePath which is prefixed on `require()` paths in abellTemplate. 
+`options.basePath`: basePath which is prefixed on `require()` paths in abellTemplate.
 `options.allowRequire`: Passing `true` allows using `require()` in templates. Default is `false`.
-
 
 ## 🤗 Contributing
 
 ### 🖥 Local Setup
+
 - Fork the repository
 - `git clone https://github.com/<your-github-username>/abell-renderer`
 - `cd abell-renderer`
 - `npm run dev` to run example from `src/example/example.js`
 
-
 ### 🏃 Run Tests
+
 - `npm install` if you haven't already
 - `npm test`
 
 ## 🕑 Changelogs
 
 [CHANGELOG.md](CHANGELOG.md)
-
 
 ---
 

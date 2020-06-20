@@ -9,7 +9,7 @@
 
 <br/><br/>
 
-<p align="left">A template parser that lets you use JavaScript syntax to render loops, conditions, do maths, and require JSONs from HTML on build time. Low level library used in <a href="https://github.com/abelljs/abell">abelljs/abell<a></p>
+<p align="left">A template parser that lets you use JavaScript syntax to render loops, conditions, do maths, and require JSONs from HTML. Low level library used in <a href="https://github.com/abelljs/abell">abelljs/abell<a></p>
 
 ## 🚀 Installation & Usage
 
@@ -185,6 +185,31 @@ Outputs:
 </body>
 */
 ```
+
+## 🤖 Server-side Rendering with Abell + Express
+
+You can tell [express](https://expressjs.com/) to use Abell as a template engine, check out following example to know how
+
+```js
+const express = require('express');
+const app = express();
+
+app.engine('abell', require('abell-renderer').engine({ allowRequire: true }));
+app.set('views', './views'); // specify the views directory
+app.set('view engine', 'abell'); // register the template engine
+
+app.get('/', function (req, res) {
+  res.render('index', { foo: 'I am coming from server.js' });
+});
+
+app.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
+});
+```
+
+Then you can have your `index.abell` file in `views/` directory.
+
+Check out [saurabhdaware/abell-ssr-express](https://github.com/saurabhdaware/abell-ssr-express) for full example.
 
 ### 📚 Reference
 

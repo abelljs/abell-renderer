@@ -37,14 +37,6 @@ describe('render() - renders abellTemplate into HTML Text', () => {
     ).to.exist.and.to.equal('hi there this template does not have JS');
   });
 
-  it('should handle null in the input', () => {
-    expect(
-      abellRenderer.render(null, {
-        test: 'test'
-      })
-    ).to.exist.and.to.equal('hi there this template does not have JS');
-  });
-
   it('should return 7 when a function returning 3 + 4 is passed', () => {
     expect(abellRenderer.render('{{add}}', { add: (() => 3 + 4)() })).to.equal(
       '7'

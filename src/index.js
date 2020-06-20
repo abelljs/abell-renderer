@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const { execute, executeRequireStatement } = require('./execute.js');
 
 /**
@@ -98,7 +101,26 @@ function render(
   return renderedHTML;
 }
 
+/**
+ * Creates Express engine with given options
+ * @param {object} options
+ * @param {Boolean} options.allowRequire
+ * @return {Function}
+ */
+function engine({ allowRequire } = { allowRequire: false }) {
+  return (filePath, options, callback) => {
+    // define the template engine
+    const content = fs.readFileSync(filePath);
+    const rendered = render(content, options, {
+      basePath: path.dirname(filePath),
+      allowRequire
+    });
+    return callback(null, rendered);
+  };
+}
+
 module.exports = {
   render,
-  execute
+  execute,
+  engine
 };

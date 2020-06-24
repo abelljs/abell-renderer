@@ -64,7 +64,7 @@ describe('render() - renders abellTemplate into HTML Text', () => {
 
     expect(
       abellRenderer.render(abellTemplate, {}, { allowRequire: true }).trim()
-    ).to.equal('<div>8 hi/hello hi/hello</div>'.replace(/\//g, path.sep));
+    ).to.equal(`<div>8 hi${path.sep}hello hi${path.sep}hello</div>`);
   });
 
   // eslint-disable-next-line max-len

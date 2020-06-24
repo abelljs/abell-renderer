@@ -64,7 +64,7 @@ function render(
       const lines = match[1]
         .trim()
         .split(/[\n;]/)
-        .filter((list) => list !== '');
+        .filter((line) => line.trim() !== '');
 
       for (const line of lines) {
         // If line does not include require(), execute it as assignment

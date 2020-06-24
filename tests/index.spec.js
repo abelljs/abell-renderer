@@ -21,11 +21,13 @@ describe('render() - renders abellTemplate into HTML Text', () => {
     };
 
     expect(
-      abellRenderer.render(abellTemplate, sampleSandbox, {
-        basePath: path.join(__dirname, 'resources'),
-        allowRequire: true
-      })
-    ).to.equal(htmlTemplate);
+      abellRenderer
+        .render(abellTemplate, sampleSandbox, {
+          basePath: path.join(__dirname, 'resources'),
+          allowRequire: true
+        })
+        .replace(/\n|\r/g, '')
+    ).to.equal(htmlTemplate.replace(/\n|\r/g, ''));
   });
 
   // eslint-disable-next-line max-len
@@ -62,7 +64,7 @@ describe('render() - renders abellTemplate into HTML Text', () => {
 
     expect(
       abellRenderer.render(abellTemplate, {}, { allowRequire: true }).trim()
-    ).to.equal('<div>8 hi/hello hi/hello</div>');
+    ).to.equal('<div>8 hi/hello hi/hello</div>'.replace(/\//g, path.sep));
   });
 
   // eslint-disable-next-line max-len

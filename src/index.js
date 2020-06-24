@@ -69,6 +69,7 @@ function render(
       for (const line of lines) {
         // If line does not include require(), execute it as assignment
         if (!line.includes('require(')) {
+          if (line.trim() === '') continue;
           ({ sandbox } = execute(line, sandbox));
           continue;
         }

@@ -14,7 +14,8 @@ const htmlTemplate = abellRenderer.render(
   fs.readFileSync(path.join(__dirname, 'templates', 'inject_example.abell')),
   sandbox,
   {
-    basePath: path.join(__dirname, 'templates')
+    basePath: path.join(__dirname, 'templates'),
+    allowRequire: true
   }
 );
 // The transformed abell file content stored in htmlTemplate is written to index.html

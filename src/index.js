@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { execute, executeRequireStatement } = require('./execute.js');
+const { execute } = require('./execute.js');
 
 /**
  * Captures groups from regex and executes RegEx.exec() function on all.
@@ -32,19 +32,50 @@ const execRegexOnAll = (regex, template) => {
 };
 
 /**
+ *
+ * @param {String} pathToRequire Path to the file that you want to require
+ * @param {Object} options
+ * @return {String}
+ */
+function abellRequire(pathToRequire, options) {
+  if (options.basePath === undefined) {
+    options.basePath = '';
+  }
+
+  const fullPathToRequire = path.join(options.basePath, pathToRequire);
+  if (fs.existsSync(fullPathToRequire)) {
+    // Local file require
+    return require(fullPathToRequire);
+  }
+
+  // NPM Package or NodeJS Module
+  return require(pathToRequire);
+}
+
+/**
  * Outputs vanilla html string when abell template and sandbox is passed.
  *
  * @param {string} abellTemplate - String of Abell File.
- * @param {any} sandbox
+ * @param {any} userSandbox
  * Object of variables. The template will be executed in context of this sandbox.
  * @param {object} options additional options e.g ({basePath})
  * @return {string} htmlTemplate
  */
 function render(
   abellTemplate,
-  sandbox,
+  userSandbox,
   options = { basePath: '', allowRequire: false }
 ) {
+  let sandbox = {
+    ...userSandbox,
+    require: (pathToRequire) => abellRequire(pathToRequire, options),
+    console: { log: console.log }
+  };
+
+  if (!options.allowRequire) {
+    delete sandbox.require;
+  }
+
   // Finds all the JS expressions to be executed.
   const { matches, input } = execRegexOnAll(/\\?{{(.+?)}}/gs, abellTemplate);
   let renderedHTML = '';
@@ -56,28 +87,20 @@ function render(
     if (match[0].startsWith('\\{{')) {
       // Ignore the match that starts with slash '\' and return the same value without slash
       value = match[0].slice(1);
-    } else if (match[1].includes('require(')) {
-      if (!options.allowRequire) {
-        throw new Error('require() is not allowed in the script');
-      }
-      // the js block is trying to require (e.g const module1 = require('module1'))
+    } else if (match[1].match(/} ?=/g) !== null) {
+      // Condition to check if the block has destructuring
+
+      // destructured elements need to be executed line by line.
       const lines = match[1]
         .trim()
         .split(/[\n;]/)
         .filter((line) => line.trim() !== '');
 
       for (const line of lines) {
-        // If line does not include require(), execute it as assignment
-        if (!line.includes('require(')) {
-          if (line.trim() === '') continue;
-          ({ sandbox } = execute(line, sandbox));
-          continue;
-        }
-
-        sandbox = executeRequireStatement(line, sandbox, options.basePath);
+        ({ sandbox } = execute(line, sandbox));
       }
     } else {
-      // Executes the expression value in the sandbox environment
+      // Executes the block directly
       const executionInfo = execute(match[1], sandbox);
       if (executionInfo.type === 'assignment') {
         sandbox = executionInfo.sandbox;

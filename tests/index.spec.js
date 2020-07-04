@@ -92,7 +92,7 @@ describe('render() - renders abellTemplate into HTML Text', () => {
     `;
 
     expect(() => abellRenderer.render(abellTemplate, {})).to.throw(
-      'require() is not allowed in the script'
+      'require is not defined'
     );
   });
 

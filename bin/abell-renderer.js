@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 
+/**
+ * This file includes code for the CLI of abell renderer
+ * The code for the actual library is in 'src'
+ */
+
 const fs = require('fs');
 const path = require('path');
-const abellRenderer = require('./index.js');
+const abellRenderer = require('../src/index.js');
 
 const green = (message) => `\u001b[32m${message}\u001b[39m`;
 

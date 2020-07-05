@@ -1,0 +1,38 @@
+{{
+  const a = 3;
+  const b = 8;
+}}
+
+{{
+  const { numberFromJSON } = require('./data/get-number.json');
+  const { numberFromJS } = require('./data/get-another-number.js');
+}}
+
+{{ const projects = require('./data/projects.json') }}
+
+<html>
+<body>
+  JavaScript check: <span data-test="js-add-check">{{ a + b }}</span> <!-- 3 + 8 -->
+  {{
+    a = 9;
+  }}
+
+  Reassignment: <span data-test="reassignment-check">{{ a }}</span> <!-- 9 -->
+
+  Require Check!
+  Number required from JSON plus Number required from JS 
+  <span data-test="require-check">{{ numberFromJSON + numberFromJS }}</span> <!-- 69 -->
+  <span data-test="comment-check">\{{ print this as it is }}</span>
+
+  <div class="projects">
+    {{
+      projects
+        .map((project, index) => `
+        <div>
+          <span data-test="project-${index}-check">${project.name}</span>
+        </div>
+        `)
+    }}
+  </div>
+</body>
+</html>

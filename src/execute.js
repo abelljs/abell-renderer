@@ -1,50 +1,4 @@
 const vm = require('vm');
-const path = require('path');
-
-/**
- *
- * @param {string} parseStatement
- *  string of require statement (e.g. const a = require('module'))
- * @param {object} sandbox variable environtment to execute upon
- * @param {string} basePath base path to which the require will be relative
- * @return {object} updated sandbox
- */
-function executeRequireStatement(parseStatement, sandbox, basePath) {
-  const requireParseRegex = /require\(['"](.*?)['"]\)(.*)/;
-
-  const requireInfo = requireParseRegex.exec(parseStatement);
-  const pathToRequire = requireInfo[1]; // string inside require('')
-
-  // Code after require to handle cases like require('module').foo
-  const codeAfterRequire = requireInfo[2] || '';
-
-  let temp;
-
-  try {
-    temp = require(pathToRequire);
-  } catch (err) {
-    if (err.code === 'MODULE_NOT_FOUND') {
-      temp = require(path.join(basePath, pathToRequire));
-    }
-  }
-
-  const context = { temp };
-  vm.createContext(context);
-
-  vm.runInContext(
-    parseStatement
-      .slice(0, parseStatement.indexOf('='))
-      .replace(/(?:const |let )/g, 'var ')
-      .trim() +
-      ' = temp' +
-      codeAfterRequire,
-    context
-  );
-
-  delete context.temp; // delete the temporary created variable
-
-  return { ...sandbox, ...context };
-}
 
 /**
  * Executes the JavaScript code from string
@@ -65,19 +19,14 @@ function execute(jsToExecute, sandbox = {}) {
   const context = new vm.createContext(sandbox); // eslint-disable-line
 
   try {
-    script.runInContext(context);
+    script.runInContext(context, {
+      displayErrors: true
+    });
   } catch (err) {
     throw new Error(err);
   }
 
   const sandboxVariable = sandbox.aBellSpecificVariable;
-
-  // Add Console Log Logic
-  if (jsToExecute.match(/console\.log\((.*?)\)/g)) {
-    regexToMatch = /console\.log\((.*?)\)/g;
-    m = regexToMatch.exec(jsToExecute);
-    console.log(execute(m[1], sandbox).value);
-  }
 
   if (jsToExecute.includes('=')) {
     // A chance of script being an assignment
@@ -96,12 +45,15 @@ function execute(jsToExecute, sandbox = {}) {
     }
 
     // if a predefined variable is assigned a new value, it will escape the conditions above
+
     const textToLookEqualSignIn = jsToExecute.replace(
       /`(?:.*?)`|"(?:.*?)"|'(?:.*?)'/gs,
       ''
-    );
+    ); // removes strings to avoid checking equal-to signs inside string
+
+    // Look for word-equalsign-word
     if (textToLookEqualSignIn.match(/[\w\d ]={1}(?![>=])/g) !== null) {
-      // It is 90% chance that it is assignment
+      // 90% chance that this is an assignment
       delete sandbox.aBellSpecificVariable;
       return {
         type: 'assignment',
@@ -117,7 +69,4 @@ function execute(jsToExecute, sandbox = {}) {
   };
 }
 
-module.exports = {
-  execute,
-  executeRequireStatement
-};
+module.exports = execute;

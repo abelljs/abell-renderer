@@ -1,5 +1,6 @@
 const path = require('path');
 const { equalValueChecks } = require('../../tests/utils/baseTestFramework.js');
+const projects = require('./data/projects.json');
 
 const TEST_MAP = [
   {
@@ -21,7 +22,12 @@ const TEST_MAP = [
     desc: 'should test if putting slash before bracket prints content as it is',
     query: '[data-test="comment-check"]',
     toEqual: '{{ print this as it is }}'
-  }
+  },
+  ...projects.map((project, index) => ({
+    desc: `should test if index ${index}, has project name ${project.name}`,
+    query: `[data-test="project-${index}-check"]`,
+    toEqual: project.name
+  }))
 ];
 
 describe('examples/main', () => {

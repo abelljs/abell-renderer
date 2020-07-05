@@ -1,33 +1,9 @@
-const fs = require('fs');
 const path = require('path');
 const expect = require('chai').expect;
 
 const render = require('../src/render.js');
 
 describe('render() - renders abellTemplate into HTML Text', () => {
-  it('should output given htmlTemplate on given abellTemplate', () => {
-    const abellTemplate = fs.readFileSync(
-      path.join(__dirname, 'resources', 'if-input.abell'),
-      'utf-8'
-    );
-
-    const htmlTemplate = fs.readFileSync(
-      path.join(__dirname, 'resources', 'should-output.html'),
-      'utf-8'
-    );
-
-    const sampleSandbox = {
-      $contentList: [{ name: 'Nice' }, { name: 'very cool' }]
-    };
-
-    expect(
-      render(abellTemplate, sampleSandbox, {
-        basePath: path.join(__dirname, 'resources'),
-        allowRequire: true
-      }).replace(/\n|\r/g, '')
-    ).to.equal(htmlTemplate.replace(/\n|\r/g, ''));
-  });
-
   // eslint-disable-next-line max-len
   it('should execute w/o error and return same string if template has no JS', () => {
     expect(

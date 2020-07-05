@@ -10,15 +10,16 @@
 
 <html>
 <body>
- JavaScript check: {{ a + b }} <!-- 3 + 8 -->
+ JavaScript check: <span data-test="js-add-check">{{ a + b }}</span> <!-- 3 + 8 -->
  {{
    a = 9;
  }}
 
- Reassignment: {{ a }} <!-- 9 -->
+ Reassignment: <span data-test="reassignment-check">{{ a }}</span> <!-- 9 -->
 
  Require Check!
- Number required from JSON is {{ numberFromJSON }} <!-- 34 -->
- Number required from JS is {{ numberFromJS }} <!-- 35 -->
+ Number required from JSON plus Number required from JS 
+ <span data-test="require-check">{{ numberFromJSON + numberFromJS }}</span> <!-- 69 -->
+ <span data-test="comment-check">\{{ print this as it is }}</span>
 </body>
 </html>

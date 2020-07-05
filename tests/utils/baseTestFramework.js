@@ -11,13 +11,14 @@ const cheerio = require('cheerio');
  * @param {Array} TEST_MAP map of test queries and equalto values
  * @param {Object} options
  * @param {String} options.outPath - out.html path
+ * @param {String} options.exampleToRun - Name of the folder in example to run
  */
-function equalValueChecks(TEST_MAP, { outPath }) {
+function equalValueChecks(TEST_MAP, { outPath, exampleToRun }) {
   let htmlTemplate;
   let $;
 
   before(async () => {
-    const { stderr } = await exec('npm run example main');
+    const { stderr } = await exec('npm run example ' + exampleToRun);
     if (stderr) {
       throw stderr;
     }

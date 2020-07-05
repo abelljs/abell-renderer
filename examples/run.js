@@ -1,5 +1,5 @@
 /**
- * This is the script that is executed on npm run dev,
+ * This is the script that is executed on npm run example,
  * it is for developers to run and try examples
  *
  * USAGE:

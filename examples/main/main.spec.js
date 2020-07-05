@@ -26,6 +26,7 @@ const TEST_MAP = [
 
 describe('examples/main', () => {
   equalValueChecks(TEST_MAP, {
+    exampleToRun: 'main',
     outPath: path.join(__dirname, 'out.html')
   });
 });

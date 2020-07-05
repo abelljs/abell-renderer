@@ -13,7 +13,7 @@
   "scripts": {
     "test": "mocha --recursive \"./tests/*.js\"",
     "example": "node examples/run.js",
-    "dev": "node src/example/example.js",
+    "dev": "npm run example main",
     "example:cli": "node bin/abell-renderer.js build --input examples/cli-example/src --output examples/cli-example/dist --allow-require",
     "cli": "npm run example:cli",
     "eslint": "eslint . --fix",

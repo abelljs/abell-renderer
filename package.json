@@ -16,7 +16,7 @@
     "dev": "npm run example main",
     "example:cli": "node bin/abell-renderer.js build --input examples/cli-example/src --output examples/cli-example/dist --allow-require",
     "cli": "npm run example:cli",
-    "eslint": "eslint . --fix",
+    "eslint": "eslint .",
     "prettier": "prettier --write \"**/*.js\"",
     "prepublishOnly": "npm run eslint && npm test && npm run build"
   },

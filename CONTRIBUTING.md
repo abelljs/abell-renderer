@@ -27,4 +27,4 @@ E.g: `npm run example main` will render `./examples/main/in.abell`
 
 ---
 
-If you are stuck somewhere, you can drop questions on my [Twitter @saurabhcodes](https://twitter.com/saurabhcodes) or email me at saurabhdaware99@gmail.com
+If you are stuck somewhere, you can reach out with questions on my [Twitter @saurabhcodes](https://twitter.com/saurabhcodes) or email me at saurabhdaware99@gmail.com

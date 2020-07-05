@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 
-const { execute } = require('../src/execute.js');
+const execute = require('../src/execute.js');
 
 // eslint-disable-next-line max-len
 describe('execute() - Executes JavaScript passed to it as string', () => {

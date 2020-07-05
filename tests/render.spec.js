@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const expect = require('chai').expect;
 
-const abellRenderer = require('../src/index.js');
+const render = require('../src/render.js');
 
 describe('render() - renders abellTemplate into HTML Text', () => {
   it('should output given htmlTemplate on given abellTemplate', () => {
@@ -21,34 +21,28 @@ describe('render() - renders abellTemplate into HTML Text', () => {
     };
 
     expect(
-      abellRenderer
-        .render(abellTemplate, sampleSandbox, {
-          basePath: path.join(__dirname, 'resources'),
-          allowRequire: true
-        })
-        .replace(/\n|\r/g, '')
+      render(abellTemplate, sampleSandbox, {
+        basePath: path.join(__dirname, 'resources'),
+        allowRequire: true
+      }).replace(/\n|\r/g, '')
     ).to.equal(htmlTemplate.replace(/\n|\r/g, ''));
   });
 
   // eslint-disable-next-line max-len
   it('should execute w/o error and return same string if template has no JS', () => {
     expect(
-      abellRenderer.render('hi there this template does not have JS', {
+      render('hi there this template does not have JS', {
         test: 'test'
       })
     ).to.exist.and.to.equal('hi there this template does not have JS');
   });
 
   it('should return 7 when a function returning 3 + 4 is passed', () => {
-    expect(abellRenderer.render('{{add}}', { add: (() => 3 + 4)() })).to.equal(
-      '7'
-    );
+    expect(render('{{add}}', { add: (() => 3 + 4)() })).to.equal('7');
   });
 
   it('should return "TEST" if "test".toUpperCase() is renderer ', () => {
-    expect(abellRenderer.render('{{"test".toUpperCase()}}', {})).to.equal(
-      'TEST'
-    );
+    expect(render('{{"test".toUpperCase()}}', {})).to.equal('TEST');
   });
 
   it('should handle multiple assignments and requires in same block', () => {
@@ -62,19 +56,19 @@ describe('render() - renders abellTemplate into HTML Text', () => {
       <div>{{ a + b }} {{ path.join('hi', 'hello') }} {{ hiHelloPath }}</div>
     `;
 
-    expect(
-      abellRenderer.render(abellTemplate, {}, { allowRequire: true }).trim()
-    ).to.equal(`<div>8 hi${path.sep}hello hi${path.sep}hello</div>`);
+    expect(render(abellTemplate, {}, { allowRequire: true }).trim()).to.equal(
+      `<div>8 hi${path.sep}hello hi${path.sep}hello</div>`
+    );
   });
 
   // eslint-disable-next-line max-len
   it('should not throw error and return same value if blank brackets passed', () => {
-    expect(abellRenderer.render('{{}}', {})).to.equal('{{}}');
+    expect(render('{{}}', {})).to.equal('{{}}');
   });
 
   // eslint-disable-next-line max-len
   it('should ignore the brackets when slash is added before the bracket', () => {
-    expect(abellRenderer.render('\\{{ This is ignored }}', {})).to.equal(
+    expect(render('\\{{ This is ignored }}', {})).to.equal(
       '{{ This is ignored }}'
     );
   });
@@ -91,21 +85,19 @@ describe('render() - renders abellTemplate into HTML Text', () => {
       <div>{{ path.join('hi', 'hello') }} {{ hiHelloPath }}</div>
     `;
 
-    expect(() => abellRenderer.render(abellTemplate, {})).to.throw(
-      'require is not defined'
-    );
+    expect(() => render(abellTemplate, {})).to.throw('require is not defined');
   });
 
   // eslint-disable-next-line max-len
   it('should throw error at execute when a variable is not defined', () => {
-    expect(() => abellRenderer.render('{{ IamUndefined }}', {})).to.throw(
+    expect(() => render('{{ IamUndefined }}', {})).to.throw(
       'IamUndefined is not defined'
     );
 
     // Check if error is thrown at execute
     let errorStackFirstLine = '';
     try {
-      abellRenderer.render('{{ IamUndefined }}');
+      render('{{ IamUndefined }}');
     } catch (err) {
       errorStackFirstLine = err.stack.split('at')[1];
     }

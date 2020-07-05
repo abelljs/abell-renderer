@@ -19,7 +19,9 @@ function execute(jsToExecute, sandbox = {}) {
   const context = new vm.createContext(sandbox); // eslint-disable-line
 
   try {
-    script.runInContext(context);
+    script.runInContext(context, {
+      displayErrors: true
+    });
   } catch (err) {
     throw new Error(err);
   }
@@ -67,6 +69,4 @@ function execute(jsToExecute, sandbox = {}) {
   };
 }
 
-module.exports = {
-  execute
-};
+module.exports = execute;

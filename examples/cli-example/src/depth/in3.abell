@@ -1,0 +1,17 @@
+{{ 
+  const siteName = 'I am deeepp'
+  const a = 9283792; 
+  const b = 2132942; 
+}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>{{siteName}}</title>
+</head>
+<body>
+  <main>
+    {{a + b}}
+  </main>
+</body>
+</html>

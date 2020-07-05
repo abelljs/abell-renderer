@@ -1,0 +1,24 @@
+{{
+  const a = 3;
+  const b = 8;
+}}
+
+{{
+  const { numberFromJSON } = require('./data/get-number.json');
+  const { numberFromJS } = require('./data/get-another-number.js');
+}}
+
+<html>
+<body>
+ JavaScript check: {{ a + b }} <!-- 3 + 8 -->
+ {{
+   a = 9;
+ }}
+
+ Reassignment: {{ a }} <!-- 9 -->
+
+ Require Check!
+ Number required from JSON is {{ numberFromJSON }} <!-- 34 -->
+ Number required from JS is {{ numberFromJS }} <!-- 35 -->
+</body>
+</html>

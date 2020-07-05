@@ -1,10 +1,10 @@
 {
   "name": "abell-renderer",
-  "version": "0.1.14",
+  "version": "0.1.15-alpha.1",
   "description": "A wrapper arround Mustache that adds some additional features and some syntatic sugar required for abell",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "bin": {
-    "abell-renderer": "dist/bin.js"
+    "abell-renderer": "bin/abell-renderer.js"
   },
   "funding": {
     "type": "patreon",
@@ -12,12 +12,11 @@
   },
   "scripts": {
     "test": "mocha --recursive \"./tests/*.js\"",
-    "build": "node build/build.main.js",
+    "example": "node examples/run.js",
     "dev": "node src/example/example.js",
-    "dev:cli": "node src/bin.js build --input src/example/templates/cli_example.abell --output src/example/out/cli_example.html --allow-require",
-    "dev:cli-dir": "node src/bin.js build --input src/example/templates/loop_example --output src/example/out/loop_example --allow-require",
-    "cli": "npm run dev:cli",
-    "eslint": "eslint .",
+    "example:cli": "node bin/abell-renderer.js build --input examples/cli-example/src --output examples/cli-example/dist --allow-require",
+    "cli": "npm run example:cli",
+    "eslint": "eslint . --fix",
     "prettier": "prettier --write \"**/*.js\"",
     "prepublishOnly": "npm run eslint && npm test && npm run build"
   },

@@ -222,17 +222,7 @@ Check out [saurabhdaware/abell-ssr-express](https://github.com/saurabhdaware/abe
 
 ## 🤗 Contributing
 
-### 🖥 Local Setup
-
-- Fork the repository
-- `git clone https://github.com/<your-github-username>/abell-renderer`
-- `cd abell-renderer`
-- `npm run dev` to run example from `src/example/example.js`
-
-### 🏃 Run Tests
-
-- `npm install` if you haven't already
-- `npm test`
+Check out [CONTRIBUTING.md](CONTRIBUTING.md) for Local Setup Guide, and Contribution Guidelines.
 
 ## 🕑 Changelogs
 

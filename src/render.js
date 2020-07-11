@@ -37,7 +37,11 @@ function render(
       // Its a comment! e.g. \{{ print this as it is }}
       // Ignore the match that starts with slash '\' and return the same value without slash
       value = match[0].slice(1);
-    } else if (match[1].match(/} ?=/g) !== null) {
+    }else if(match[0].match(/\{{.\s*}}/)){
+      //removes empty brackets. 
+      //e.g. <div>{{ }}</div> renders <div></div>
+      value = '';
+    }else if (match[1].match(/} ?=/g) !== null) {
       // Condition to check if the block has destructuring
 
       // destructured elements need to be executed line by line.

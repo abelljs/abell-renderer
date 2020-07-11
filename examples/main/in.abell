@@ -34,5 +34,7 @@
         `)
     }}
   </div>
+  Empty bracets check:
+  <div>{{ }}</div>
 </body>
 </html>

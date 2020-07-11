@@ -49,6 +49,11 @@ describe('render() - renders abellTemplate into HTML Text', () => {
     );
   });
 
+  // eslint-disable-next-line max-len
+  it('should not throw error and return null value if empty brackets is passed', () => {
+    expect(render('{{ }}', {})).to.equal('');
+  });
+
   // error handlers
 
   // eslint-disable-next-line max-len

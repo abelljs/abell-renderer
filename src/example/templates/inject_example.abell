@@ -11,6 +11,10 @@
   <title>{{ globalMeta.siteName }}</title>
 </head>
 <body>
+{{
+  const abac = require('./abac.json');
+}}
+{{ abac }}
 {{ 
   const b = 5;
   console.log(a + b);

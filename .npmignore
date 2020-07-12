@@ -1,7 +1,9 @@
-src/
 tests/
-build/
+examples/
 .github/
 .eslintrc.js
 .eslintignore
+.prettierrc
+.prettierignore
 vm.playground.js
+.vscode/

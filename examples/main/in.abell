@@ -2,7 +2,6 @@
   const a = 3;
   const b = 8;
 }}
-
 {{
   const { numberFromJSON } = require('./data/get-number.json');
   const { numberFromJS } = require('./data/get-another-number.js');

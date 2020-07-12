@@ -51,18 +51,27 @@ function render(
         .filter((line) => line.trim() !== '');
 
       for (const line of lines) {
-        ({ sandbox } = execute(line, sandbox));
+        try {
+          ({ sandbox } = execute(line, sandbox));
+        } catch (err) {
+          throw new Error(err.message);
+        }
       }
     } else {
-      // Executes the block directly
-      const executionInfo = execute(match[1], sandbox);
-      if (executionInfo.type === 'assignment') {
-        sandbox = executionInfo.sandbox;
-      } else if (executionInfo.type === 'value') {
-        value = executionInfo.value;
-      } else {
-        sandbox = executionInfo.sandbox;
+      try {
+        // Executes the block directly
+        const executionInfo = execute(match[1], sandbox);
+        if (executionInfo.type === 'assignment') {
+          sandbox = executionInfo.sandbox;
+        } else if (executionInfo.type === 'value') {
+          value = executionInfo.value;
+        } else {
+          sandbox = executionInfo.sandbox;
+        }
+      } catch (err) {
+        throw new Error(err.message);
       }
+
     }
 
     /**

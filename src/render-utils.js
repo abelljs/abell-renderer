@@ -41,13 +41,22 @@ function abellRequire(pathToRequire, options) {
   }
 
   const fullPathToRequire = path.join(options.basePath, pathToRequire);
-  if (fs.existsSync(fullPathToRequire)) {
-    // Local file require
-    return require(fullPathToRequire);
+  if (fullPathToRequire.includes(".")) {
+    if (fs.existsSync(fullPathToRequire)) {
+      // Local file require
+      return require(fullPathToRequire);
+    }
+    else {
+      throw new Error("File does not exist" + fullPathToRequire);
+    }
+  }
+  else {
+    // NPM Package or NodeJS Module
+    return require(pathToRequire);
   }
 
-  // NPM Package or NodeJS Module
-  return require(pathToRequire);
+
+
 }
 
 module.exports = { execRegexOnAll, abellRequire };

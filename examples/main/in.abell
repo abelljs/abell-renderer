@@ -6,9 +6,7 @@
   const { numberFromJSON } = require('./data/get-number.json');
   const { numberFromJS } = require('./data/get-another-number.js');
 }}
-
 {{ const projects = require('./data/projects.json') }}
-
 <html>
 <body>
   JavaScript check: <span data-test="js-add-check">{{ a + b }}</span> <!-- 3 + 8 -->

@@ -71,7 +71,6 @@ function render(
       } catch (err) {
         throw new Error(err.message);
       }
-
     }
 
     /**

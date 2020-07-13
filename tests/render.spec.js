@@ -84,4 +84,20 @@ describe('render() - renders abellTemplate into HTML Text', () => {
     }
     expect(errorStackFirstLine.trim().startsWith('execute')).to.equal(true);
   });
+
+  // eslint-disable-next-line max-len
+  it('should throw error at execute when an invalid file is imported', () => {
+    expect(() => render('{{ const a = require("./iDoNotExist.js"); }}', {}, { allowRequire: true })).to.throw(
+      'Error: File does not exist iDoNotExist.js'
+    );
+
+    // Check if error is thrown at execute
+    let errorStackFirstLine = '';
+    try {
+      render('{{ const a = require("./iDoNotExist.js"); }}');
+    } catch (err) {
+      errorStackFirstLine = err.stack.split('at')[1];
+    }
+    expect(errorStackFirstLine.trim().startsWith('execute')).to.equal(true);
+  });
 });

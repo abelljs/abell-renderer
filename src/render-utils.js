@@ -46,7 +46,7 @@ function abellRequire(pathToRequire, options) {
       // Local file require
       return require(fullPathToRequire);
     } else {
-      throw new Error('File does not exist' + fullPathToRequire);
+      throw new Error('File does not exist ' + fullPathToRequire);
     }
   } else {
     // NPM Package or NodeJS Module

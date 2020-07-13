@@ -67,7 +67,6 @@ function render(
       } else {
         sandbox = executionInfo.sandbox;
       }
-
     }
 
     /**

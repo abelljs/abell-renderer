@@ -72,7 +72,7 @@ describe('render() - renders abellTemplate into HTML Text', () => {
   // eslint-disable-next-line max-len
   it('should throw error at execute when a variable is not defined', () => {
     expect(() => render('{{ IamUndefined }}', {})).to.throw(
-      'ReferenceError: IamUndefined is not defined'
+      'IamUndefined is not defined'
     );
 
     // Check if error is thrown at execute

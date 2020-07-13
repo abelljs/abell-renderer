@@ -54,22 +54,18 @@ function render(
         try {
           ({ sandbox } = execute(line, sandbox));
         } catch (err) {
-          throw new Error(err.message);
+          throw new Error(err);
         }
       }
     } else {
-      try {
-        // Executes the block directly
-        const executionInfo = execute(match[1], sandbox);
-        if (executionInfo.type === 'assignment') {
-          sandbox = executionInfo.sandbox;
-        } else if (executionInfo.type === 'value') {
-          value = executionInfo.value;
-        } else {
-          sandbox = executionInfo.sandbox;
-        }
-      } catch (err) {
-        throw new Error(err.message);
+      // Executes the block directly
+      const executionInfo = execute(match[1], sandbox);
+      if (executionInfo.type === 'assignment') {
+        sandbox = executionInfo.sandbox;
+      } else if (executionInfo.type === 'value') {
+        value = executionInfo.value;
+      } else {
+        sandbox = executionInfo.sandbox;
       }
 
     }

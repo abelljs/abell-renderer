@@ -1,0 +1,7 @@
+{{
+  const Nav = require('./nav.abell');
+}}
+<body>
+  <Nav/>
+  <main>Content</main>
+</body>

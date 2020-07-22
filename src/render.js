@@ -1,5 +1,7 @@
+const path = require('path');
 const execute = require('./execute.js');
 const { execRegexOnAll, abellRequire } = require('./render-utils.js');
+const { parseComponent, parseComponentTags } = require('./component-parser.js');
 
 /**
  * Outputs vanilla html string when abell template and sandbox is passed.
@@ -17,9 +19,17 @@ function render(
 ) {
   let sandbox = {
     ...userSandbox,
-    require: (pathToRequire) => abellRequire(pathToRequire, options),
+    require: (pathToRequire) => {
+      if (pathToRequire.endsWith('.abell')) {
+        return (props) =>
+          parseComponent(path.join(options.basePath, pathToRequire), props);
+      }
+      return abellRequire(pathToRequire, options);
+    },
     console: { log: console.log }
   };
+
+  abellTemplate = parseComponentTags(abellTemplate);
 
   if (!options.allowRequire) {
     delete sandbox.require;

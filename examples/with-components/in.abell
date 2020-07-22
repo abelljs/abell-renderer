@@ -1,7 +1,7 @@
 {{
-  const Nav = require('./nav.abell');
+  const Nav = require('./nav.component.abell');
 }}
 <body>
-  <Nav/>
+  <Nav()/>
   <main>Content</main>
 </body>

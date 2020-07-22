@@ -20,7 +20,7 @@ function render(
   let sandbox = {
     ...userSandbox,
     require: (pathToRequire) => {
-      if (pathToRequire.endsWith('.abell')) {
+      if (pathToRequire.endsWith('.component.abell')) {
         return (props) =>
           parseComponent(path.join(options.basePath, pathToRequire), props);
       }

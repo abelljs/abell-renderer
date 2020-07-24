@@ -1,9 +1,11 @@
 const fs = require('fs');
+const path = require('path');
+
 const { execRegexOnAll } = require('./render-utils.js');
 const { compile } = require('./compiler.js');
 
 /**
- * Parses component tags (<Nav/> -> Nav().template.content)
+ * Parses component tags (<Nav/> -> Nav().renderedHTML)
  * @param {String} abellTemplate
  * @return {String}
  */
@@ -41,6 +43,27 @@ function parseComponentTags(abellTemplate) {
 }
 
 /**
+ * Parses attributes with space separate string to object
+ * @param {String} attributeString
+ * @return {Object}
+ */
+const parseAttribute = (attributeString) => {
+  const attributeArr = attributeString
+    .split(/\s/)
+    .filter((attribute) => !!attribute)
+    .reduce((prev, attribute) => {
+      let [key, value] = attribute.split('=');
+      if (value && (value.startsWith("'") || value.startsWith('"'))) {
+        value = value.slice(1, -1);
+      }
+      prev[key] = value ? value : true;
+      return prev;
+    }, {});
+
+  return attributeArr;
+};
+
+/**
  *
  * @param {String} abellComponentPath
  * @param {Object} props
@@ -53,23 +76,27 @@ function parseComponent(abellComponentPath, props) {
     htmlComponentContent
   )[1];
 
-  const styles = /\<style\>(.*?)\<\/style\>/gs.exec(htmlComponentContent)[1];
-  const scripts = /\<script\>(.*?)\<\/script\>/gs.exec(htmlComponentContent)[1];
+  const matchMapper = (contentMatch) => ({
+    component: path.basename(abellComponentPath),
+    componentPath: abellComponentPath,
+    content: contentMatch[2],
+    attributes: parseAttribute(contentMatch[1])
+  });
+
+  const styleMatches = execRegexOnAll(
+    /\<style(.*?)\>(.*?)\<\/style\>/gs,
+    htmlComponentContent
+  ).matches.map(matchMapper);
+
+  const scriptMatches = execRegexOnAll(
+    /\<script(.*?)\>(.*?)\<\/script\>/gs,
+    htmlComponentContent
+  ).matches.map(matchMapper);
 
   return {
     renderedHTML: template,
-    styles: [
-      {
-        content: styles,
-        attributes: []
-      }
-    ],
-    scripts: [
-      {
-        content: scripts,
-        attributes: []
-      }
-    ]
+    styles: styleMatches,
+    scripts: scriptMatches
   };
 }
 

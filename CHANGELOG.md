@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.2.0-alpha.1
+
+- Support for Abell Components when `allowComponents` flag is passed in options. (Does not support nested components yet)
+
 ## v0.1.12
 
 - Throw error at `execute` to avoid having vm data in error stack

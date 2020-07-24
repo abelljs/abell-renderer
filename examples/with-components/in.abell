@@ -6,5 +6,5 @@
 <body>
   <Nav props={ num: 1, num2: a }/>
   <main>Content</main>
-  <Footer props={ hello: a } />
+  <Footer props={ hello: 'hehehe', foo } />
 </body>

@@ -16,23 +16,30 @@ const { parseComponent, parseComponentTags } = require('./component-parser.js');
 /**
  * Outputs vanilla html string when abell template and sandbox is passed.
  *
- * @param {string} abellTemplate - String of Abell File.
- * @param {any} userSandbox
+ * @param {String} abellTemplate - String of Abell File.
+ * @param {Object} userSandbox
  * Object of variables. The template will be executed in context of this sandbox.
- * @param {object} options additional options e.g ({basePath})
- * @return {string} htmlTemplate
+ * @param {Object} options additional options e.g ({basePath})
+ * @return {String|Object} htmlTemplate
  */
 function render(
   abellTemplate,
   userSandbox,
-  options = { basePath: '', allowRequire: false }
+  options = { basePath: '', allowRequire: false, allowComponents: false }
 ) {
+  const components = [];
   const sandbox = {
     ...userSandbox,
     require: (pathToRequire) => {
       if (pathToRequire.endsWith('.component.abell')) {
-        return (props) =>
-          parseComponent(path.join(options.basePath, pathToRequire), props);
+        return (props) => {
+          const component = parseComponent(
+            path.join(options.basePath, pathToRequire),
+            props
+          );
+          components.push(component);
+          return component;
+        };
       }
       return abellRequire(pathToRequire, options);
     },
@@ -45,8 +52,15 @@ function render(
   }
 
   abellTemplate = parseComponentTags(abellTemplate);
+  const compiledAbell = compile(abellTemplate, sandbox);
+  if (options.allowComponents) {
+    return {
+      html: compiledAbell,
+      components
+    };
+  }
 
-  return compile(abellTemplate, sandbox);
+  return compiledAbell;
 }
 
 /**

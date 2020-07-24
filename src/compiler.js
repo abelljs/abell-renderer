@@ -1,40 +1,12 @@
-const path = require('path');
 const execute = require('./execute.js');
-const { execRegexOnAll, abellRequire } = require('./render-utils.js');
-const { parseComponent, parseComponentTags } = require('./component-parser.js');
+const { execRegexOnAll } = require('./render-utils.js');
 
 /**
- * Outputs vanilla html string when abell template and sandbox is passed.
- *
- * @param {string} abellTemplate - String of Abell File.
- * @param {any} userSandbox
- * Object of variables. The template will be executed in context of this sandbox.
- * @param {object} options additional options e.g ({basePath})
- * @return {string} htmlTemplate
+ * @param {String} abellTemplate
+ * @param {Object} sandbox
+ * @return {String}
  */
-function render(
-  abellTemplate,
-  userSandbox,
-  options = { basePath: '', allowRequire: false }
-) {
-  let sandbox = {
-    ...userSandbox,
-    require: (pathToRequire) => {
-      if (pathToRequire.endsWith('.component.abell')) {
-        return (props) =>
-          parseComponent(path.join(options.basePath, pathToRequire), props);
-      }
-      return abellRequire(pathToRequire, options);
-    },
-    console: { log: console.log }
-  };
-
-  abellTemplate = parseComponentTags(abellTemplate);
-
-  if (!options.allowRequire) {
-    delete sandbox.require;
-  }
-
+function compile(abellTemplate, sandbox) {
   // Finds all the JS expressions to be executed.
   const { matches, input } = execRegexOnAll(/\\?{{(.+?)}}/gs, abellTemplate);
   let renderedHTML = '';
@@ -85,4 +57,4 @@ function render(
   return renderedHTML;
 }
 
-module.exports = render;
+module.exports = { compile };

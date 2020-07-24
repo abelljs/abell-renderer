@@ -8,7 +8,46 @@ const fs = require('fs');
 const path = require('path');
 
 const execute = require('./execute.js');
-const render = require('./render.js');
+const { compile } = require('./compiler.js');
+const { abellRequire } = require('./render-utils.js');
+
+const { parseComponent, parseComponentTags } = require('./component-parser.js');
+
+/**
+ * Outputs vanilla html string when abell template and sandbox is passed.
+ *
+ * @param {string} abellTemplate - String of Abell File.
+ * @param {any} userSandbox
+ * Object of variables. The template will be executed in context of this sandbox.
+ * @param {object} options additional options e.g ({basePath})
+ * @return {string} htmlTemplate
+ */
+function render(
+  abellTemplate,
+  userSandbox,
+  options = { basePath: '', allowRequire: false }
+) {
+  const sandbox = {
+    ...userSandbox,
+    require: (pathToRequire) => {
+      if (pathToRequire.endsWith('.component.abell')) {
+        return (props) =>
+          parseComponent(path.join(options.basePath, pathToRequire), props);
+      }
+      return abellRequire(pathToRequire, options);
+    },
+    console: { log: console.log }
+  };
+
+  // delete require function if allow require is false
+  if (!options.allowRequire) {
+    delete sandbox.require;
+  }
+
+  abellTemplate = parseComponentTags(abellTemplate);
+
+  return compile(abellTemplate, sandbox);
+}
 
 /**
  * Creates ExpressJS engine with given options

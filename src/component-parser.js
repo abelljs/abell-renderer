@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { execRegexOnAll } = require('./render-utils.js');
+const { compile } = require('./compiler.js');
 
 /**
  * Parses component tags (<Nav/> -> Nav().template.content)
@@ -7,19 +8,34 @@ const { execRegexOnAll } = require('./render-utils.js');
  * @return {String}
  */
 function parseComponentTags(abellTemplate) {
+  abellTemplate = String(abellTemplate);
   // eslint-disable-next
   const componentVariables = execRegexOnAll(
     /(?:const|var|let) (\w*) *?= *?require\(["'`](.*?)\.abell["'`]\)/g,
     abellTemplate
   ).matches.map((match) => match[1]);
-  let newAbellTemplate = abellTemplate;
-  for (const componentVariable of componentVariables) {
-    const componentParseREGEX = new RegExp(`<${componentVariable}(.*?)/>`, 'g');
-    newAbellTemplate = String(abellTemplate).replace(
-      componentParseREGEX,
-      `{{ ${componentVariable}().template.content }}`
-    );
+
+  let newAbellTemplate = '';
+  const componentParseREGEX = new RegExp(
+    `\<(${componentVariables.join('|')}) *?(?:props=(.*?)?)?\/\>`,
+    'g'
+  );
+
+  const { matches: componentMatches } = execRegexOnAll(
+    componentParseREGEX,
+    abellTemplate
+  );
+
+  let lastIndex = 0;
+  for (const componentMatch of componentMatches) {
+    newAbellTemplate +=
+      abellTemplate.slice(lastIndex, componentMatch.index) +
+      `{{ ${componentMatch[1]}(${componentMatch[2]}).renderedHTML }}`;
+
+    lastIndex = componentMatch[0].length + componentMatch.index;
   }
+
+  newAbellTemplate += abellTemplate.slice(lastIndex);
 
   return newAbellTemplate;
 }
@@ -32,28 +48,23 @@ function parseComponentTags(abellTemplate) {
  */
 function parseComponent(abellComponentPath, props) {
   const abellComponentContent = fs.readFileSync(abellComponentPath, 'utf-8');
+  const htmlComponentContent = compile(abellComponentContent, { props });
   const template = /\<template\>(.*?)\<\/template\>/gs.exec(
-    abellComponentContent
+    htmlComponentContent
   )[1];
 
-  const styles = /\<style\>(.*?)\<\/style\>/gs.exec(abellComponentContent)[1];
-  const scripts = /\<script\>(.*?)\<\/script\>/gs.exec(
-    abellComponentContent
-  )[1];
+  const styles = /\<style\>(.*?)\<\/style\>/gs.exec(htmlComponentContent)[1];
+  const scripts = /\<script\>(.*?)\<\/script\>/gs.exec(htmlComponentContent)[1];
 
-  console.log(props);
   return {
-    template: {
-      content: template,
-      attributes: []
-    },
+    renderedHTML: template,
     styles: [
       {
         content: styles,
         attributes: []
       }
     ],
-    script: [
+    scripts: [
       {
         content: scripts,
         attributes: []

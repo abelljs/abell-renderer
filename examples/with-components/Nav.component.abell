@@ -1,6 +1,6 @@
 <AbellComponent>
 <template>
-  <nav> This is my Navbar </nav>
+  <nav> This is my Navbar {{ props.num + props.num2 }} </nav>
 </template>
 <style>
   nav {

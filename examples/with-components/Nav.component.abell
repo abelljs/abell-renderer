@@ -1,0 +1,13 @@
+<AbellComponent>
+<template>
+  <nav> This is my Navbar {{ props.num + props.num2 }} </nav>
+</template>
+<style>
+  nav {
+    color: #f30;
+  }
+</style>
+<script>
+  document.querySelector('nav').innerHTML = 'This is from JS';
+</script>
+</AbellComponent>

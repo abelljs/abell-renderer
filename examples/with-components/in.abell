@@ -1,0 +1,10 @@
+{{
+  const Nav = require('./Nav.component.abell');
+  const Footer = require('./Footer.component.abell');
+}}
+{{ const a = 3 }}
+<body>
+  <Nav props={ num: 1, num2: a }/>
+  <main>Content</main>
+  <Footer props={ hello: 'hehehe', foo } />
+</body>

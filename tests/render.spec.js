@@ -1,7 +1,7 @@
 const path = require('path');
 const expect = require('chai').expect;
 
-const render = require('../src/render.js');
+const { render } = require('../src/index.js');
 
 describe('render() - renders abellTemplate into HTML Text', () => {
   // eslint-disable-next-line max-len

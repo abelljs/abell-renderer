@@ -35,7 +35,8 @@ function render(
         return (props) => {
           const component = parseComponent(
             path.join(options.basePath, pathToRequire),
-            props
+            props,
+            options
           );
           components.push(component);
           return component;

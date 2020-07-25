@@ -19,5 +19,7 @@ const { html, components } = abellRenderer.render(
     basePath: __dirname
   }
 );
-console.log(components[1].styles);
+
+console.log(components);
+
 fs.writeFileSync(path.join(__dirname, 'out.html'), html);

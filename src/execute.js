@@ -18,14 +18,9 @@ function execute(jsToExecute, sandbox = {}) {
   const script = new vm.Script(codeToExecute);
   const context = new vm.createContext(sandbox); // eslint-disable-line
 
-  try {
-    script.runInContext(context, {
-      displayErrors: true
-    });
-  } catch (err) {
-    throw new Error(err);
-  }
-
+  script.runInContext(context, {
+    displayErrors: true
+  });
   const sandboxVariable = sandbox.aBellSpecificVariable;
 
   if (jsToExecute.includes('=')) {

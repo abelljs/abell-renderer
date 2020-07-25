@@ -1,6 +1,6 @@
 {
   "name": "abell-renderer",
-  "version": "0.2.0-alpha.2",
+  "version": "0.2.0-alpha.3",
   "description": "A wrapper arround Mustache that adds some additional features and some syntatic sugar required for abell",
   "main": "src/index.js",
   "bin": {

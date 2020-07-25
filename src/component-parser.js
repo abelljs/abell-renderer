@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { execRegexOnAll } = require('./render-utils.js');
+const { execRegexOnAll, abellRequire } = require('./render-utils.js');
 const { compile } = require('./compiler.js');
 
 /**
@@ -67,11 +67,33 @@ const parseAttribute = (attributeString) => {
  *
  * @param {String} abellComponentPath
  * @param {Object} props
+ * @param {Object} options
  * @return {Object}
  */
-function parseComponent(abellComponentPath, props) {
-  const abellComponentContent = fs.readFileSync(abellComponentPath, 'utf-8');
-  const htmlComponentContent = compile(abellComponentContent, { props });
+function parseComponent(abellComponentPath, props, options) {
+  let abellComponentContent = fs.readFileSync(abellComponentPath, 'utf-8');
+  abellComponentContent = parseComponentTags(abellComponentContent);
+
+  const components = [];
+  const sandbox = {
+    props,
+    require: (pathToRequire) => {
+      if (pathToRequire.endsWith('.component.abell')) {
+        return (userProps) => {
+          const component = parseComponent(
+            path.join(options.basePath, pathToRequire),
+            userProps,
+            options
+          );
+          components.push(component);
+          return component;
+        };
+      }
+      return abellRequire(pathToRequire, options);
+    },
+    console: { log: console.log }
+  };
+  const htmlComponentContent = compile(abellComponentContent, sandbox);
   const template = /\<template\>(.*?)\<\/template\>/gs.exec(
     htmlComponentContent
   )[1];
@@ -95,6 +117,7 @@ function parseComponent(abellComponentPath, props) {
 
   return {
     renderedHTML: template,
+    components,
     styles: styleMatches,
     scripts: scriptMatches
   };

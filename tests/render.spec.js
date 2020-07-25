@@ -66,24 +66,45 @@ describe('render() - renders abellTemplate into HTML Text', () => {
       <div>{{ path.join('hi', 'hello') }} {{ hiHelloPath }}</div>
     `;
 
-    expect(() => render(abellTemplate, {})).to.throw(
-      'Error in .abell file. More logs above || require is not defined'
-    );
+    expect(() => render(abellTemplate, {})).to.throw('require is not defined');
   });
 
   // eslint-disable-next-line max-len
   it('should throw error at execute when a variable is not defined', () => {
     expect(() => render('{{ IamUndefined }}', {})).to.throw(
-      'Error in .abell file. More logs above || IamUndefined is not defined'
+      'IamUndefined is not defined'
     );
 
-    // Check if error is thrown at execute
+    // Check if error is thrown at given filename
     let errorStackFirstLine = '';
     try {
-      render('{{ IamUndefined }}');
+      render('{{ IamUndefined }}', {}, { filename: 'render.spec.abell' });
     } catch (err) {
       errorStackFirstLine = err.stack.split('at')[1];
     }
-    expect(errorStackFirstLine.trim().startsWith('execute')).to.equal(true);
+    expect(
+      errorStackFirstLine.trim().startsWith('render.spec.abell:1')
+    ).to.equal(true);
+  });
+
+  // eslint-disable-next-line max-len
+  it('should be able to handle multiple destructuring assignments', () => {
+    const abellTemplate = `
+      {{
+        const { a } = {a: 3};
+        const {b} = {b: 9};
+        const e = 10;
+        const {c, d} = {c: 6, d:69};
+      }}
+      {{ a }} {{ b }} {{ c }} {{  d  }} {{ e }}
+    `;
+
+    expect(render(abellTemplate, {}).trim()).to.equal('3 9 6 69 10');
+  });
+
+  it('should handle the case when there is no space around brackets', () => {
+    const abellTemplate = `{{a}}`;
+
+    expect(render(abellTemplate, { a: 9 }).trim()).to.equal('9');
   });
 });

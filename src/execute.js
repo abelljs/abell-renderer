@@ -1,5 +1,4 @@
 const vm = require('vm');
-const { cleanErrorStack } = require('./render-utils.js');
 
 /**
  * Executes the JavaScript code from string
@@ -8,32 +7,22 @@ const { cleanErrorStack } = require('./render-utils.js');
  *  JavaScript code in String to parse and execute
  * @param {any} sandbox
  *  The variables and all the information required by program
+ * @param {Object} options
  * @return {object} {type, sandbox, value?}
  */
-function execute(jsToExecute, sandbox = {}) {
+function execute(jsToExecute, sandbox = {}, options) {
   const numOfKeysBeforeExecution = Object.keys(sandbox).length;
-  const codeToExecute =
-    'aBellSpecificVariable = ' +
-    jsToExecute.replace(/(?:const |let |var )/g, '');
+  const codeToExecute = jsToExecute.replace(/(?:const |let )/g, 'var ');
 
-  const script = new vm.Script(codeToExecute);
+  const script = new vm.Script(codeToExecute, {
+    filename: options.filename,
+    lineOffset: options.lineOffset || 0
+  });
   const context = new vm.createContext(sandbox); // eslint-disable-line
 
-  try {
-    script.runInContext(context, {
-      displayErrors: true
-    });
-  } catch (err) {
-    if (!err.stack.includes('Error in .abell file.')) {
-      console.log('\n>> .abell Error:');
-      console.log('='.repeat(process.stdout.columns));
-      console.error(cleanErrorStack(err.stack));
-      console.log('='.repeat(process.stdout.columns));
-      console.log('\n');
-    }
-    throw new Error('Error in .abell file. More logs above || ' + err.message);
-  }
-  const sandboxVariable = sandbox.aBellSpecificVariable;
+  const sandboxVariable = script.runInContext(context, {
+    displayErrors: true
+  });
 
   if (jsToExecute.includes('=')) {
     // A chance of script being an assignment
@@ -44,7 +33,6 @@ function execute(jsToExecute, sandbox = {}) {
      */
 
     if (Object.keys(sandbox).length - 1 > numOfKeysBeforeExecution) {
-      delete sandbox.aBellSpecificVariable;
       return {
         type: 'assignment',
         sandbox
@@ -61,7 +49,6 @@ function execute(jsToExecute, sandbox = {}) {
     // Look for word-equalsign-word
     if (textToLookEqualSignIn.match(/[\w\d ]={1}(?![>=])/g) !== null) {
       // 90% chance that this is an assignment
-      delete sandbox.aBellSpecificVariable;
       return {
         type: 'assignment',
         sandbox

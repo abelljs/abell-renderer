@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.0-alpha.4
+
+- Filename and error line in error stack 🎉
+- Error when brackets and value had no space, fixed (e.g. `{{a}}`)
+
 ## v0.2.0-alpha.3
 
 - Nested Components

@@ -51,7 +51,11 @@ const htmlTemplate = abellRenderer.render(
   sandbox,
   {
     basePath: path.join(__dirname, exampleToRun),
-    allowRequire: true
+    allowRequire: true,
+    filename: path.relative(
+      process.cwd(),
+      path.join(__dirname, exampleToRun, 'in.abell')
+    )
   }
 );
 

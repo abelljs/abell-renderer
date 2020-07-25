@@ -25,7 +25,12 @@ const { parseComponent, parseComponentTags } = require('./component-parser.js');
 function render(
   abellTemplate,
   userSandbox,
-  options = { basePath: '', allowRequire: false, allowComponents: false }
+  options = {
+    basePath: '',
+    allowRequire: false,
+    allowComponents: false,
+    filename: '.abell'
+  }
 ) {
   const components = [];
   const sandbox = {
@@ -53,7 +58,7 @@ function render(
   }
 
   abellTemplate = parseComponentTags(abellTemplate);
-  const compiledAbell = compile(abellTemplate, sandbox);
+  const compiledAbell = compile(abellTemplate, sandbox, options);
   if (options.allowComponents) {
     return {
       html: compiledAbell,

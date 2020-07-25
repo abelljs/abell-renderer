@@ -1,4 +1,5 @@
 const vm = require('vm');
+const { cleanErrorStack } = require('./render-utils.js');
 
 /**
  * Executes the JavaScript code from string
@@ -18,9 +19,20 @@ function execute(jsToExecute, sandbox = {}) {
   const script = new vm.Script(codeToExecute);
   const context = new vm.createContext(sandbox); // eslint-disable-line
 
-  script.runInContext(context, {
-    displayErrors: true
-  });
+  try {
+    script.runInContext(context, {
+      displayErrors: true
+    });
+  } catch (err) {
+    if (!err.stack.includes('Error in .abell file.')) {
+      console.log('\n>> .abell Error:');
+      console.log('='.repeat(process.stdout.columns));
+      console.error(cleanErrorStack(err.stack));
+      console.log('='.repeat(process.stdout.columns));
+      console.log('\n');
+    }
+    throw new Error('Error in .abell file. More logs above || ' + err.message);
+  }
   const sandboxVariable = sandbox.aBellSpecificVariable;
 
   if (jsToExecute.includes('=')) {

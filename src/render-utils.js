@@ -2,6 +2,25 @@ const fs = require('fs');
 const path = require('path');
 
 /**
+ * Clean Error
+ * @param {String} errorStack
+ * @return {String}
+ */
+function cleanErrorStack(errorStack) {
+  const stackLines = errorStack.split('\n');
+  const removeAbellVariable = stackLines[1]
+    .replace('aBellSpecificVariable =', '')
+    .trim();
+
+  const newError = [
+    `${removeAbellVariable ? removeAbellVariable : ''}`,
+    stackLines[4]
+  ];
+
+  return newError.filter((errLine) => !!errLine).join('\n');
+}
+
+/**
  * Captures groups from regex and executes RegEx.exec() function on all.
  *
  * @param {regex} regex - Regular Expression to execute on.
@@ -50,4 +69,4 @@ function abellRequire(pathToRequire, options) {
   return require(pathToRequire);
 }
 
-module.exports = { execRegexOnAll, abellRequire };
+module.exports = { execRegexOnAll, abellRequire, cleanErrorStack };

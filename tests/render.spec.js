@@ -66,13 +66,15 @@ describe('render() - renders abellTemplate into HTML Text', () => {
       <div>{{ path.join('hi', 'hello') }} {{ hiHelloPath }}</div>
     `;
 
-    expect(() => render(abellTemplate, {})).to.throw('require is not defined');
+    expect(() => render(abellTemplate, {})).to.throw(
+      'Error in .abell file. More logs above || require is not defined'
+    );
   });
 
   // eslint-disable-next-line max-len
   it('should throw error at execute when a variable is not defined', () => {
     expect(() => render('{{ IamUndefined }}', {})).to.throw(
-      'IamUndefined is not defined'
+      'Error in .abell file. More logs above || IamUndefined is not defined'
     );
 
     // Check if error is thrown at execute

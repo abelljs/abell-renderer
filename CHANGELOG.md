@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.0-alpha.3
+
+- Nested Components
+- Better Error logs
+
 ## v0.2.0-alpha.1
 
 - Support for Abell Components when `allowComponents` flag is passed in options. (Does not support nested components yet)

@@ -59,14 +59,31 @@ function abellRequire(pathToRequire, options) {
     options.basePath = '';
   }
 
-  const fullPathToRequire = path.join(options.basePath, pathToRequire);
-  if (fs.existsSync(fullPathToRequire)) {
-    // Local file require
-    return require(fullPathToRequire);
-  }
+  try {
+    const fullPathToRequire = path.join(options.basePath, pathToRequire);
+    if (fs.existsSync(fullPathToRequire)) {
+      // Local file require
+      return require(fullPathToRequire);
+    }
 
-  // NPM Package or NodeJS Module
-  return require(pathToRequire);
+    // NPM Package or NodeJS Module
+    return require(pathToRequire);
+  } catch (err) {
+    const positionOfAbellFileInStack = err.stack.indexOf(
+      'at ' + options.filename
+    );
+    console.log('Error: ' + err.message);
+    console.log(
+      `     ` +
+        err.stack.slice(
+          positionOfAbellFileInStack,
+          err.stack.indexOf('\n', positionOfAbellFileInStack)
+        )
+    );
+
+    console.log('\n\nStack:');
+    throw err;
+  }
 }
 
 module.exports = { execRegexOnAll, abellRequire, cleanErrorStack };

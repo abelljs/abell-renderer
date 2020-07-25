@@ -47,6 +47,7 @@ function render(
           return component;
         };
       }
+
       return abellRequire(pathToRequire, options);
     },
     console: { log: console.log }

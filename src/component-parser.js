@@ -73,7 +73,7 @@ const parseAttribute = (attributeString) => {
 function parseComponent(abellComponentPath, props, options) {
   let abellComponentContent = fs.readFileSync(abellComponentPath, 'utf-8');
   abellComponentContent = parseComponentTags(abellComponentContent);
-
+  const basePath = path.dirname(abellComponentPath);
   const components = [];
   const sandbox = {
     props,
@@ -81,7 +81,7 @@ function parseComponent(abellComponentPath, props, options) {
       if (pathToRequire.endsWith('.component.abell')) {
         return (userProps) => {
           const component = parseComponent(
-            path.join(options.basePath, pathToRequire),
+            path.join(basePath, pathToRequire),
             userProps,
             options
           );

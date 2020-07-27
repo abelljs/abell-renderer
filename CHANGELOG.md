@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.2.0-alpha.5
+
+- Naming rule of having `.component.abell` extension, removed. Any file that ends with `.abell`, can be a component.
+
 ## v0.2.0-alpha.4
 
 - Filename and error line in error stack 🎉

@@ -72,13 +72,18 @@ const parseAttribute = (attributeString) => {
  */
 function parseComponent(abellComponentPath, props, options) {
   let abellComponentContent = fs.readFileSync(abellComponentPath, 'utf-8');
+  if (!abellComponentContent.trim().startsWith('<AbellComponent>')) {
+    throw new Error( // eslint-disable-next-line max-len
+      `Abell Component should be wrap inside <AbellComponent></AbellComponent>. \n >> Error requiring ${abellComponentPath}\n`
+    );
+  }
   abellComponentContent = parseComponentTags(abellComponentContent);
   const basePath = path.dirname(abellComponentPath);
   const components = [];
   const sandbox = {
     props,
     require: (pathToRequire) => {
-      if (pathToRequire.endsWith('.component.abell')) {
+      if (pathToRequire.endsWith('.abell')) {
         return (userProps) => {
           const component = parseComponent(
             path.join(basePath, pathToRequire),

@@ -36,5 +36,7 @@
   </div>
   Empty bracets check:
   <div>{{ }}</div>
+
+  {{ [1, 2, 3, 67] }}
 </body>
 </html>

@@ -107,4 +107,14 @@ describe('render() - renders abellTemplate into HTML Text', () => {
 
     expect(render(abellTemplate, { a: 9 }).trim()).to.equal('9');
   });
+
+  it('should join array and turn it into a string', () => {
+    const abellTemplate = `
+    {{
+      const a = [1, 2, 3];
+    }}
+    {{ a }}
+    `;
+    expect(render(abellTemplate, {}).trim()).to.equal('123');
+  });
 });

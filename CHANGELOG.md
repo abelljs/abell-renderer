@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.0-alpha.7
+
+- Convert Array into String by joining the values.
+- Now devs would not have to write `.join` next to map, to remove commas.
+
 ## v0.2.0-alpha.5
 
 - Naming rule of having `.component.abell` extension, removed. Any file that ends with `.abell`, can be a component.

@@ -44,6 +44,9 @@ function compile(abellTemplate, sandbox, options) {
      * Removes the JavaScript line before adding to HTML
      * if the script returns value, adds it to the HTML
      */
+    if (Array.isArray(value)) {
+      value = value.join('');
+    }
 
     const toAddOnIndex = match.index; // Gets the index where the executed value is to be put.
     renderedHTML += input.slice(lastIndex, toAddOnIndex) + String(value).trim();

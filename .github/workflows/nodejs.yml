@@ -5,9 +5,9 @@ name: Unit Tests and ESLint
 
 on:
   push:
-    branches: [main]
+    branches: [main, next]
   pull_request:
-    branches: [main]
+    branches: [main, next]
 
 jobs:
   test:

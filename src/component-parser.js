@@ -17,6 +17,10 @@ function parseComponentTags(abellTemplate) {
     abellTemplate
   ).matches.map((match) => match[1]);
 
+  if (componentVariables.length <= 0) {
+    return abellTemplate;
+  }
+
   let newAbellTemplate = '';
   const componentParseREGEX = new RegExp(
     `\<(${componentVariables.join('|')}).*?(?:props=(.*?))?\/\>`,

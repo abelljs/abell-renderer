@@ -102,7 +102,9 @@ function parseComponent(abellComponentPath, props, options) {
     },
     console: { log: console.log }
   };
-  const htmlComponentContent = compile(abellComponentContent, sandbox);
+  const htmlComponentContent = compile(abellComponentContent, sandbox, {
+    filename: path.relative(process.cwd(), abellComponentPath)
+  });
   const template = /\<template\>(.*?)\<\/template\>/gs.exec(
     htmlComponentContent
   )[1];

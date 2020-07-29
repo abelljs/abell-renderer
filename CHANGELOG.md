@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.2.0-alpha.8
+
+- Multi-line support for writing component tag.
+
 ## v0.2.0-alpha.7
 
 - Convert Array into String by joining the values.

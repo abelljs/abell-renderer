@@ -19,8 +19,8 @@ function parseComponentTags(abellTemplate) {
 
   let newAbellTemplate = '';
   const componentParseREGEX = new RegExp(
-    `\<(${componentVariables.join('|')}) *?(?:props=(.*?)?)?\/\>`,
-    'g'
+    `\<(${componentVariables.join('|')}).*?(?:props=(.*?))?\/\>`,
+    'gs'
   );
 
   const { matches: componentMatches } = execRegexOnAll(
@@ -74,7 +74,7 @@ function parseComponent(abellComponentPath, props, options) {
   let abellComponentContent = fs.readFileSync(abellComponentPath, 'utf-8');
   if (!abellComponentContent.trim().startsWith('<AbellComponent>')) {
     throw new Error( // eslint-disable-next-line max-len
-      `Abell Component should be wrap inside <AbellComponent></AbellComponent>. \n >> Error requiring ${abellComponentPath}\n`
+      `Abell Component should be wrapped inside <AbellComponent></AbellComponent>. \n >> Error requiring ${abellComponentPath}\n`
     );
   }
   abellComponentContent = parseComponentTags(abellComponentContent);

@@ -3,6 +3,11 @@
 }}
 {{ const a = 3 }}
 <body>
-  <Nav props={ num: 1, num2: a }/>
+  <Nav 
+    props={ 
+      num: 10, 
+      num2: a 
+    }
+  />
   <main>Content</main>
 </body>

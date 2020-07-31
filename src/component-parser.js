@@ -74,7 +74,7 @@ const parseAttribute = (attributeString) => {
  * @param {Object} options
  * @return {Object}
  */
-function parseComponent(abellComponentPath, props, options) {
+function parseComponent(abellComponentPath, props = {}, options) {
   let abellComponentContent = fs.readFileSync(abellComponentPath, 'utf-8');
   if (!abellComponentContent.trim().startsWith('<AbellComponent>')) {
     throw new Error( // eslint-disable-next-line max-len

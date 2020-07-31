@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.2.0-alpha.10
+
+- Default value of props in components is now empty object instead of undefined.
+
 ## v0.2.0-alpha.8
 
 - Multi-line support for writing component tag.

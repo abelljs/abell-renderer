@@ -98,7 +98,8 @@ function parseComponent(abellComponentPath, props = {}, options) {
           return component;
         };
       }
-      return abellRequire(pathToRequire, options);
+
+      return abellRequire(pathToRequire, { ...options, basePath });
     },
     console: { log: console.log }
   };

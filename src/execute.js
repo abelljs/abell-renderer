@@ -55,6 +55,15 @@ function execute(jsToExecute, sandbox = {}, options) {
       };
     }
   }
+
+  // Return blank string instead of undefined or null
+  if (sandboxVariable === undefined || sandboxVariable === null) {
+    return {
+      type: 'value',
+      value: '',
+      sandbox
+    };
+  }
   // script is not assignment i.e it returns some value that can be printed
   return {
     type: 'value',

@@ -70,9 +70,20 @@ function abellRequire(pathToRequire, options) {
     return require(pathToRequire);
   } catch (err) {
     const positionOfAbellFileInStack = err.stack.indexOf(
-      'at ' + options.filename
+      '\nat ' + options.filename
     );
-    console.log('Error: ' + err.message);
+
+    if (err.code === 'MODULE_NOT_FOUND') {
+      const moduleName = path.join(
+        path.dirname(options.filename),
+        err.message.match(/'(.*?)'/)[1]
+      );
+
+      console.log(`\n\nError: Cannot find module '${moduleName}'`);
+    } else {
+      console.log(`\n\nError: ${err.message}`);
+    }
+
     console.log(
       `     ` +
         err.stack.slice(
@@ -81,7 +92,7 @@ function abellRequire(pathToRequire, options) {
         )
     );
 
-    console.log('\n\nStack:');
+    console.log('\nStack:');
     throw err;
   }
 }

@@ -56,11 +56,21 @@ const parseAttribute = (attributeString) => {
     .split(/\s/)
     .filter((attribute) => !!attribute)
     .reduce((prev, attribute) => {
-      let [key, value] = attribute.split('=');
-      if (value && (value.startsWith("'") || value.startsWith('"'))) {
-        value = value.slice(1, -1);
+      const indexOfEqual = attribute.indexOf('=');
+      let key;
+      let value;
+      if (indexOfEqual < 0) {
+        // does not have a value so we give 'true' as a default value
+        key = attribute;
+        value = true;
+      } else {
+        key = attribute.slice(0, indexOfEqual);
+        value = attribute.slice(indexOfEqual + 1);
+        if (value && (value.startsWith("'") || value.startsWith('"'))) {
+          value = value.slice(1, -1);
+        }
       }
-      prev[key] = value ? value : true;
+      prev[key] = value;
       return prev;
     }, {});
 
@@ -135,4 +145,4 @@ function parseComponent(abellComponentPath, props = {}, options) {
   };
 }
 
-module.exports = { parseComponent, parseComponentTags };
+module.exports = { parseComponent, parseComponentTags, parseAttribute };

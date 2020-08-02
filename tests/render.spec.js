@@ -4,6 +4,48 @@ const expect = require('chai').expect;
 const { render } = require('../src/index.js');
 
 describe('render() - renders abellTemplate into HTML Text', () => {
+  describe('# v0.1.x API', () => {
+    it('should work.', () => {
+      expect(render('{{ 34 + 100 }}', {}, { basePath: '' })).to.equal('134');
+    });
+  });
+
+  describe('# v0.2.x API', () => {
+    it('should parse and render components', () => {
+      const code = `
+        {{
+          const Sample = require('./Sample.abell');
+        }}
+        <body>
+          <Sample props={foo: 123}/>
+        </body>
+      `;
+
+      const { html, components } = render(
+        code,
+        {},
+        {
+          basePath: path.join(__dirname, 'resources'),
+          allowComponents: true,
+          allowRequire: true
+        }
+      );
+
+      expect(html.trim().replace(/\n|\r|\s/g, '')).to.equal(
+        `<body><div>Component to test abell. 123</div></body>`
+          .trim()
+          .replace(/\n|\r|\s/g, '')
+      );
+
+      expect(components[0]).to.have.keys(
+        'components',
+        'renderedHTML',
+        'styles',
+        'scripts'
+      );
+    });
+  });
+
   describe('# JavaScript execution checks', () => {
     it('should return 7 when a function returning 3 + 4 is passed', () => {
       expect(render('{{add}}', { add: (() => 3 + 4)() })).to.equal('7');

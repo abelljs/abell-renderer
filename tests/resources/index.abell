@@ -1,0 +1,8 @@
+{{
+  const Sample = require('./Sample.abell');
+}}
+<html>
+<body>
+  <Sample props={foo: 123}/>
+</body>
+</html>

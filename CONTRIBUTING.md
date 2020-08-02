@@ -9,7 +9,7 @@
 ```sh
 git clone https://github.com/<your-github-username>/abell-renderer
 cd abell-renderer
-npm run example main # to run example `main` from `examples/main
+npm run example main # to run example `main` from `examples/main`
 ```
 
 ## Running Examples

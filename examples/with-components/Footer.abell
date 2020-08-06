@@ -1,6 +1,6 @@
 <AbellComponent>
 <template>
-  <footer> This is my Footer {{ props.foo }}</footer>
+  <footer data-test="footer-component"> This is my Footer {{ props.foo }}</footer>
 </template>
 <style inlined>
   nav {

@@ -9,5 +9,5 @@
       num2: a 
     }
   />
-  <main>Content</main>
+  <main data-test="main-content">Content</main>
 </body>

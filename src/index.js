@@ -32,20 +32,29 @@ function render(
     filename: '.abell'
   }
 ) {
+  options.basePath = options.basePath || '';
+  options.allowRequire = options.allowRequire || false;
+  options.allowComponents = options.allowComponents || false;
+  options.filename = options.filename || '.abell';
+
   const components = [];
   const sandbox = {
     ...userSandbox,
     require: (pathToRequire) => {
       if (pathToRequire.endsWith('.abell')) {
-        return (props) => {
-          const component = parseComponent(
-            path.join(options.basePath, pathToRequire),
-            props,
-            options
-          );
-          components.push(component);
-          return component;
-        };
+        if (options.allowComponents) {
+          return (props) => {
+            const component = parseComponent(
+              path.join(options.basePath, pathToRequire),
+              props,
+              options
+            );
+            components.push(component);
+            return component;
+          };
+        } else {
+          return;
+        }
       }
 
       return abellRequire(pathToRequire, options);
@@ -58,7 +67,9 @@ function render(
     delete sandbox.require;
   }
 
-  abellTemplate = parseComponentTags(abellTemplate);
+  if (options.allowComponents) {
+    abellTemplate = parseComponentTags(abellTemplate);
+  }
   const compiledAbell = compile(abellTemplate, sandbox, options);
   if (options.allowComponents) {
     return {

@@ -116,9 +116,16 @@ function parseComponent(abellComponentPath, props = {}, options) {
   const htmlComponentContent = compile(abellComponentContent, sandbox, {
     filename: path.relative(process.cwd(), abellComponentPath)
   });
-  const template = /\<template\>(.*?)\<\/template\>/gs.exec(
+
+  const templateTag = /\<template\>(.*?)\<\/template\>/gs.exec(
     htmlComponentContent
-  )[1];
+  );
+
+  let template = '';
+
+  if (templateTag) {
+    template = templateTag[1];
+  }
 
   const matchMapper = (contentMatch) => ({
     component: path.basename(abellComponentPath),

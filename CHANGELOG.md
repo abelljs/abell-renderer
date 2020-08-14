@@ -1,34 +1,16 @@
 # Changelog
 
-## v0.2.0-alpha.10
+## v0.2.0
 
 - Default value of props in components is now empty object instead of undefined.
-
-## v0.2.0-alpha.8
-
 - Multi-line support for writing component tag.
-
-## v0.2.0-alpha.7
-
 - Convert Array into String by joining the values.
 - Now devs would not have to write `.join` next to map, to remove commas.
-
-## v0.2.0-alpha.5
-
 - Naming rule of having `.component.abell` extension, removed. Any file that ends with `.abell`, can be a component.
-
-## v0.2.0-alpha.4
-
 - Filename and error line in error stack 🎉
 - Error when brackets and value had no space, fixed (e.g. `{{a}}`)
-
-## v0.2.0-alpha.3
-
 - Nested Components
 - Better Error logs
-
-## v0.2.0-alpha.1
-
 - Support for Abell Components when `allowComponents` flag is passed in options. (Does not support nested components yet)
 
 ## v0.1.12

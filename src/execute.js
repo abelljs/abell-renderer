@@ -7,26 +7,22 @@ const vm = require('vm');
  *  JavaScript code in String to parse and execute
  * @param {any} sandbox
  *  The variables and all the information required by program
+ * @param {Object} options
  * @return {object} {type, sandbox, value?}
  */
-function execute(jsToExecute, sandbox = {}) {
+function execute(jsToExecute, sandbox = {}, options) {
   const numOfKeysBeforeExecution = Object.keys(sandbox).length;
-  const codeToExecute =
-    'aBellSpecificVariable = ' +
-    jsToExecute.replace(/(?:const |let |var )/g, '');
+  const codeToExecute = jsToExecute.replace(/(?:const |let )/g, 'var ');
 
-  const script = new vm.Script(codeToExecute);
+  const script = new vm.Script(codeToExecute, {
+    filename: options.filename,
+    lineOffset: options.lineOffset || 0
+  });
   const context = new vm.createContext(sandbox); // eslint-disable-line
 
-  try {
-    script.runInContext(context, {
-      displayErrors: true
-    });
-  } catch (err) {
-    throw new Error(err);
-  }
-
-  const sandboxVariable = sandbox.aBellSpecificVariable;
+  const sandboxVariable = script.runInContext(context, {
+    displayErrors: true
+  });
 
   if (jsToExecute.includes('=')) {
     // A chance of script being an assignment
@@ -37,7 +33,6 @@ function execute(jsToExecute, sandbox = {}) {
      */
 
     if (Object.keys(sandbox).length - 1 > numOfKeysBeforeExecution) {
-      delete sandbox.aBellSpecificVariable;
       return {
         type: 'assignment',
         sandbox
@@ -54,12 +49,20 @@ function execute(jsToExecute, sandbox = {}) {
     // Look for word-equalsign-word
     if (textToLookEqualSignIn.match(/[\w\d ]={1}(?![>=])/g) !== null) {
       // 90% chance that this is an assignment
-      delete sandbox.aBellSpecificVariable;
       return {
         type: 'assignment',
         sandbox
       };
     }
+  }
+
+  // Return blank string instead of undefined or null
+  if (sandboxVariable === undefined || sandboxVariable === null) {
+    return {
+      type: 'value',
+      value: '',
+      sandbox
+    };
   }
   // script is not assignment i.e it returns some value that can be printed
   return {

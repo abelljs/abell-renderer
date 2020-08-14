@@ -31,11 +31,22 @@ const recursiveFind = (base, ext, inputFiles, inputResult) => {
   return result;
 };
 
-const createPathIfAbsent = (pathToCreate) => {
-  if (!fs.existsSync(pathToCreate)) {
-    fs.mkdirSync(pathToCreate);
-  }
-};
+/**
+ * Recursively creates the path
+ * @param {String} pathToCreate path that you want to create
+ */
+function createPathIfAbsent(pathToCreate) {
+  // prettier-ignore
+  pathToCreate
+    .split(path.sep)
+    .reduce((prevPath, folder) => {
+      const currentPath = path.join(prevPath, folder, path.sep);
+      if (!fs.existsSync(currentPath)) {
+        fs.mkdirSync(currentPath);
+      }
+      return currentPath;
+    }, '');
+}
 
 /**
  * @method generateHTMLFromAbell

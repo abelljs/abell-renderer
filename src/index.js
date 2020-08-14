@@ -8,7 +8,78 @@ const fs = require('fs');
 const path = require('path');
 
 const execute = require('./execute.js');
-const render = require('./render.js');
+const { compile } = require('./compiler.js');
+const { abellRequire } = require('./render-utils.js');
+
+const { parseComponent, parseComponentTags } = require('./component-parser.js');
+
+/**
+ * Outputs vanilla html string when abell template and sandbox is passed.
+ *
+ * @param {String} abellTemplate - String of Abell File.
+ * @param {Object} userSandbox
+ * Object of variables. The template will be executed in context of this sandbox.
+ * @param {Object} options additional options e.g ({basePath})
+ * @return {String|Object} htmlTemplate
+ */
+function render(
+  abellTemplate,
+  userSandbox,
+  options = {
+    basePath: '',
+    allowRequire: false,
+    allowComponents: false,
+    filename: '.abell'
+  }
+) {
+  options.basePath = options.basePath || '';
+  options.allowRequire = options.allowRequire || false;
+  options.allowComponents = options.allowComponents || false;
+  options.filename = options.filename || '.abell';
+
+  const components = [];
+  const sandbox = {
+    ...userSandbox,
+    require: (pathToRequire) => {
+      if (pathToRequire.endsWith('.abell')) {
+        if (options.allowComponents) {
+          return (props) => {
+            const component = parseComponent(
+              path.join(options.basePath, pathToRequire),
+              props,
+              options
+            );
+            components.push(component);
+            return component;
+          };
+        } else {
+          return;
+        }
+      }
+
+      return abellRequire(pathToRequire, options);
+    },
+    console: { log: console.log }
+  };
+
+  // delete require function if allow require is false
+  if (!options.allowRequire) {
+    delete sandbox.require;
+  }
+
+  if (options.allowComponents) {
+    abellTemplate = parseComponentTags(abellTemplate);
+  }
+  const compiledAbell = compile(abellTemplate, sandbox, options);
+  if (options.allowComponents) {
+    return {
+      html: compiledAbell,
+      components
+    };
+  }
+
+  return compiledAbell;
+}
 
 /**
  * Creates ExpressJS engine with given options

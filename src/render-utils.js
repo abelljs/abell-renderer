@@ -2,6 +2,25 @@ const fs = require('fs');
 const path = require('path');
 
 /**
+ * Clean Error
+ * @param {String} errorStack
+ * @return {String}
+ */
+function cleanErrorStack(errorStack) {
+  const stackLines = errorStack.split('\n');
+  const removeAbellVariable = stackLines[1]
+    .replace('aBellSpecificVariable =', '')
+    .trim();
+
+  const newError = [
+    `${removeAbellVariable ? removeAbellVariable : ''}`,
+    stackLines[4]
+  ];
+
+  return newError.filter((errLine) => !!errLine).join('\n');
+}
+
+/**
  * Captures groups from regex and executes RegEx.exec() function on all.
  *
  * @param {regex} regex - Regular Expression to execute on.
@@ -40,14 +59,42 @@ function abellRequire(pathToRequire, options) {
     options.basePath = '';
   }
 
-  const fullPathToRequire = path.join(options.basePath, pathToRequire);
-  if (fs.existsSync(fullPathToRequire)) {
-    // Local file require
-    return require(fullPathToRequire);
-  }
+  try {
+    const fullPathToRequire = path.join(options.basePath, pathToRequire);
+    if (fs.existsSync(fullPathToRequire)) {
+      // Local file require
+      return require(fullPathToRequire);
+    }
 
-  // NPM Package or NodeJS Module
-  return require(pathToRequire);
+    // NPM Package or NodeJS Module
+    return require(pathToRequire);
+  } catch (err) {
+    const positionOfAbellFileInStack = err.stack.indexOf(
+      '\nat ' + options.filename
+    );
+
+    if (err.code === 'MODULE_NOT_FOUND') {
+      const moduleName = path.join(
+        path.dirname(options.filename),
+        err.message.match(/'(.*?)'/)[1]
+      );
+
+      console.log(`\n\nError: Cannot find module '${moduleName}'`);
+    } else {
+      console.log(`\n\nError: ${err.message}`);
+    }
+
+    console.log(
+      `     ` +
+        err.stack.slice(
+          positionOfAbellFileInStack,
+          err.stack.indexOf('\n', positionOfAbellFileInStack)
+        )
+    );
+
+    console.log('\nStack:');
+    throw err;
+  }
 }
 
-module.exports = { execRegexOnAll, abellRequire };
+module.exports = { execRegexOnAll, abellRequire, cleanErrorStack };

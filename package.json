@@ -1,7 +1,7 @@
 {
   "name": "abell-renderer",
-  "version": "0.1.15",
-  "description": "A wrapper arround Mustache that adds some additional features and some syntatic sugar required for abell",
+  "version": "0.2.0",
+  "description": "JavaScript based Template Engine. Compiles .abell files to .html",
   "main": "src/index.js",
   "bin": {
     "abell-renderer": "bin/abell-renderer.js"
@@ -24,7 +24,12 @@
     "type": "git",
     "url": "git+https://github.com/abelljs/abell-renderer.git"
   },
-  "keywords": [],
+  "keywords": [
+    "ejs",
+    "template-engine",
+    "template",
+    "compiler"
+  ],
   "author": "",
   "license": "MIT",
   "bugs": {

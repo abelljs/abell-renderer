@@ -1,0 +1,13 @@
+<AbellComponent>
+<template>
+  <div>Component to test abell. {{ props.foo }}</div>
+</template>
+<style bundle="main.css">
+  div {
+    color: #f30;
+  }
+</style>
+<script inlined>
+  console.log(3);
+</script>
+</AbellComponent>

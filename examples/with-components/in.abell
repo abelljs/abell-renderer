@@ -1,0 +1,13 @@
+{{
+  const Nav = require('./Nav.abell');
+}}
+{{ const a = 3 }}
+<body>
+  <Nav 
+    props={ 
+      num: 10, 
+      num2: a 
+    }
+  />
+  <main data-test="main-content">Content</main>
+</body>

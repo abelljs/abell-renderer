@@ -14,6 +14,7 @@
 const fs = require('fs');
 const path = require('path');
 const abellRenderer = require('../src/index.js');
+const { exec } = require('child_process');
 
 const args = process.argv.slice(2);
 const exampleToRun = args[0];
@@ -23,6 +24,21 @@ if (!fs.existsSync(path.join(__dirname, exampleToRun))) {
 
 if (exampleToRun === 'cli-example') {
   throw new Error('Use npm run example:cli to run CLI example');
+}
+
+/**
+ * if example has index.js, then execute index.js instead of this file.
+ */
+if (fs.existsSync(path.join(__dirname, exampleToRun, 'index.js'))) {
+  console.log(
+    `>> Found index.js in the examples/${exampleToRun}, running index.js`
+  );
+
+  exec(`node examples/${exampleToRun}/index.js`, (err, stdout, stderr) => {
+    console.log(stdout);
+    console.log(stderr);
+  });
+  return;
 }
 
 console.log('>> Running ' + exampleToRun);
@@ -38,7 +54,11 @@ const htmlTemplate = abellRenderer.render(
   sandbox,
   {
     basePath: path.join(__dirname, exampleToRun),
-    allowRequire: true
+    allowRequire: true,
+    filename: path.relative(
+      process.cwd(),
+      path.join(__dirname, exampleToRun, 'in.abell')
+    )
   }
 );
 

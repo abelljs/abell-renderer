@@ -1,0 +1,8 @@
+<AbellComponent>
+{{
+  const Sample = require('./Sample.abell');
+}}
+<template>
+  <div><Sample props={foo: 'Woop Woop!'} /></div>
+</template>
+</AbellComponent>

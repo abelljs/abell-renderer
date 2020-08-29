@@ -36,7 +36,10 @@
     "url": "https://github.com/abelljs/abell-renderer/issues"
   },
   "homepage": "https://github.com/abelljs/abell-renderer#readme",
-  "dependencies": {},
+  "dependencies": {
+    "postcss-selector-parser": "^6.0.2",
+    "stylis": "^4.0.2"
+  },
   "devDependencies": {
     "chai": "^4.2.0",
     "cheerio": "^1.0.0-rc.3",

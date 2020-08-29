@@ -3,6 +3,7 @@ const path = require('path');
 
 const { execRegexOnAll, abellRequire } = require('./render-utils.js');
 const { compile } = require('./compiler.js');
+const cssSerializer = require('./parsers/css');
 
 /**
  * Parses component tags (<Nav/> -> Nav().renderedHTML)
@@ -130,7 +131,7 @@ function parseComponent(abellComponentPath, props = {}, options) {
   const matchMapper = (contentMatch) => ({
     component: path.basename(abellComponentPath),
     componentPath: abellComponentPath,
-    content: contentMatch[2],
+    content: cssSerializer(contentMatch[2], 'sakdfjlknfas'),
     attributes: parseAttribute(contentMatch[1])
   });
 

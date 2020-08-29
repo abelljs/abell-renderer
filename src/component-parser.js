@@ -128,22 +128,24 @@ function parseComponent(abellComponentPath, props = {}, options) {
     template = templateTag[1];
   }
 
-  const matchMapper = (contentMatch) => ({
+  const matchMapper = (isCss) => (contentMatch) => ({
     component: path.basename(abellComponentPath),
     componentPath: abellComponentPath,
-    content: cssSerializer(contentMatch[2], 'sakdfjlknfas'),
+    content: isCss
+      ? cssSerializer(contentMatch[2], 'sakdfjlknfas')
+      : contentMatch[2],
     attributes: parseAttribute(contentMatch[1])
   });
 
   const styleMatches = execRegexOnAll(
     /\<style(.*?)\>(.*?)\<\/style\>/gs,
     htmlComponentContent
-  ).matches.map(matchMapper);
+  ).matches.map(matchMapper(true));
 
   const scriptMatches = execRegexOnAll(
     /\<script(.*?)\>(.*?)\<\/script\>/gs,
     htmlComponentContent
-  ).matches.map(matchMapper);
+  ).matches.map(matchMapper(false));
 
   return {
     renderedHTML: template,

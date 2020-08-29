@@ -30,7 +30,6 @@ describe('render() - renders abellTemplate into HTML Text', () => {
           allowRequire: true
         }
       );
-
       expect(html.trim().replace(/\n|\r|\s/g, '')).to.equal(
         `<body><div>Component to test abell. 123</div></body>`
           .trim()

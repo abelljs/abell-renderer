@@ -23,4 +23,5 @@ const cssSerializer = (cssString, hash) => {
   );
 };
 
-module.exports = cssSerializer;
+exports.cssSerializer = cssSerializer;
+exports.ABELL_CSS_DATA_PREFIX = ABELL_CSS_DATA_PREFIX;

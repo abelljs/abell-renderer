@@ -3,8 +3,8 @@ const path = require('path');
 
 const { execRegexOnAll, abellRequire } = require('./render-utils.js');
 const { compile } = require('./compiler.js');
-const cssSerializer = require('./parsers/css');
-
+const { cssSerializer } = require('./parsers/css');
+const { prefixHtmlTags } = require('./post-compilation');
 /**
  * Parses component tags (<Nav/> -> Nav().renderedHTML)
  * @param {String} abellTemplate
@@ -103,7 +103,7 @@ function parseComponent(abellComponentPath, props = {}, options) {
           const component = parseComponent(
             path.join(basePath, pathToRequire),
             userProps,
-            options
+            { ...options, skipHTMLHash: true }
           );
           components.push(component);
           return component;
@@ -127,15 +127,22 @@ function parseComponent(abellComponentPath, props = {}, options) {
   if (templateTag) {
     template = templateTag[1];
   }
+  if (!options.skipHTMLHash) {
+    template = prefixHtmlTags(template, 'testhash');
+  }
 
-  const matchMapper = (isCss) => (contentMatch) => ({
-    component: path.basename(abellComponentPath),
-    componentPath: abellComponentPath,
-    content: isCss
-      ? cssSerializer(contentMatch[2], 'sakdfjlknfas')
-      : contentMatch[2],
-    attributes: parseAttribute(contentMatch[1])
-  });
+  const matchMapper = (isCss) => (contentMatch) => {
+    const attributes = parseAttribute(contentMatch[1]);
+    const shouldPrefix = isCss && !attributes.global;
+    return {
+      component: path.basename(abellComponentPath),
+      componentPath: abellComponentPath,
+      content: shouldPrefix
+        ? cssSerializer(contentMatch[2], 'testhash')
+        : contentMatch[2],
+      attributes: parseAttribute(contentMatch[1])
+    };
+  };
 
   const styleMatches = execRegexOnAll(
     /\<style(.*?)\>(.*?)\<\/style\>/gs,

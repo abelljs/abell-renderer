@@ -1,8 +1,8 @@
 <AbellComponent>
 <template>
-  <footer data-test="footer-component"> This is my Footer {{ props.foo }}</footer>
+  <footer data-test="footer-component"> This is my <b>Footer</b> {{ props.foo }}</footer>
 </template>
-<style inlined>
+<style global>
   nav {
     color: #f30;
   }

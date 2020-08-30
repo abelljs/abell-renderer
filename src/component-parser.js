@@ -5,6 +5,7 @@ const { execRegexOnAll, abellRequire } = require('./render-utils.js');
 const { compile } = require('./compiler.js');
 const { cssSerializer } = require('./parsers/css');
 const { prefixHtmlTags } = require('./post-compilation');
+const hash = require('./hash');
 /**
  * Parses component tags (<Nav/> -> Nav().renderedHTML)
  * @param {String} abellTemplate
@@ -122,13 +123,15 @@ function parseComponent(abellComponentPath, props = {}, options) {
     htmlComponentContent
   );
 
+  const componentHash = hash(abellComponentPath);
+
   let template = '';
 
   if (templateTag) {
     template = templateTag[1];
   }
   if (!options.skipHTMLHash) {
-    template = prefixHtmlTags(template, 'testhash');
+    template = prefixHtmlTags(template, componentHash);
   }
 
   const matchMapper = (isCss) => (contentMatch) => {
@@ -138,7 +141,7 @@ function parseComponent(abellComponentPath, props = {}, options) {
       component: path.basename(abellComponentPath),
       componentPath: abellComponentPath,
       content: shouldPrefix
-        ? cssSerializer(contentMatch[2], 'testhash')
+        ? cssSerializer(contentMatch[2], componentHash)
         : contentMatch[2],
       attributes: parseAttribute(contentMatch[1])
     };

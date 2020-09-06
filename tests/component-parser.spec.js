@@ -1,7 +1,5 @@
 const path = require('path');
 
-const expect = require('chai').expect;
-
 const {
   parseAttribute,
   parseComponentTags,
@@ -10,14 +8,14 @@ const {
 
 describe('parseAttribute()', () => {
   it('should turn string attributes into object', () => {
-    expect(parseAttribute('inlined bundle="app.js"')).to.eql({
+    expect(parseAttribute('inlined bundle="app.js"')).toEqual({
       inlined: true,
       bundle: 'app.js'
     });
   });
 
   it('should allow inlined=false in attribute', () => {
-    expect(parseAttribute('inlined=false')).to.eql({
+    expect(parseAttribute('inlined=false')).toEqual({
       inlined: 'false'
     });
   });
@@ -29,7 +27,7 @@ describe('parseAttribute()', () => {
         as="style" 
         onload="this.rel=\"stylesheet\";this.onload=null"`
       )
-    ).to.eql({
+    ).toEqual({
       rel: 'preload',
       as: 'style',
       onload: 'this.rel="stylesheet";this.onload=null'
@@ -52,18 +50,7 @@ describe('parseComponentTags()', () => {
     </div>
     `;
 
-    expect(
-      parseComponentTags(code)
-        .trim()
-        .replace(/\s|\n|\r/g, '')
-    ).to.equal(
-      `
-      var Nav = require('./components/Nav.abell');
-      <div>{{ Nav({foo: 'bar'}).renderedHTML }} <NotComponent/></div>
-      `
-        .trim()
-        .replace(/\s|\n|\r/g, '')
-    );
+    expect(parseComponentTags(code)).toMatchSnapshot();
   });
 });
 
@@ -77,29 +64,27 @@ describe('parseComponent()', () => {
       { filename: 'component-parser.spec.js' }
     );
 
-    expect(componentTree.renderedHTML.trim().replace(/\n|\r|\s/g, '')).to.equal(
-      '<div>Component to test abell. 123TEST</div>'
-        .trim()
-        .replace(/\n|\r|\s/g, '')
+    expect(componentTree.renderedHTML).toMatchSnapshot();
+
+    expect(componentTree.styles[0].content).toMatchSnapshot();
+    expect(Object.keys(componentTree.styles[0])).toEqual(
+      expect.arrayContaining([
+        'component',
+        'attributes',
+        'componentPath',
+        'content'
+      ])
     );
 
-    expect(componentTree.styles[0].content).to.exist.and.include('div');
-    expect(componentTree.styles[0]).to.have.keys(
-      'component',
-      'attributes',
-      'componentPath',
-      'content'
-    );
+    expect(componentTree.scripts[0].content).toMatchSnapshot();
 
-    expect(componentTree.scripts[0].content).to.exist.and.include(
-      'console.log(3)'
-    );
-
-    expect(componentTree.scripts[0]).to.have.keys(
-      'component',
-      'attributes',
-      'componentPath',
-      'content'
+    expect(Object.keys(componentTree.scripts[0])).toEqual(
+      expect.arrayContaining([
+        'component',
+        'attributes',
+        'componentPath',
+        'content'
+      ])
     );
   });
 
@@ -112,23 +97,19 @@ describe('parseComponent()', () => {
       }
     );
 
-    expect(componentTree.renderedHTML.trim().replace(/\n|\r|\s/g, '')).to.equal(
-      '<div><div>Component to test abell. Woop Woop!</div></div>'
-        .trim()
-        .replace(/\n|\r|\s/g, '')
+    expect(componentTree.renderedHTML).toMatchSnapshot();
+
+    expect(componentTree.components[0].styles[0].content).toMatchSnapshot();
+    expect(Object.keys(componentTree.components[0].styles[0])).toEqual(
+      expect.arrayContaining([
+        'component',
+        'attributes',
+        'componentPath',
+        'content'
+      ])
     );
 
-    expect(componentTree.components[0].styles[0].content).to.exist.and.include(
-      'div'
-    );
-    expect(componentTree.components[0].styles[0]).to.have.keys(
-      'component',
-      'attributes',
-      'componentPath',
-      'content'
-    );
-
-    expect(componentTree.styles.length).to.equal(0);
-    expect(componentTree.scripts.length).to.equal(0);
+    expect(componentTree.styles.length).toBe(0);
+    expect(componentTree.scripts.length).toBe(0);
   });
 });

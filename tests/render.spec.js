@@ -1,12 +1,11 @@
 const path = require('path');
-const expect = require('chai').expect;
 
 const { render } = require('../src/index.js');
 
 describe('render() - renders abellTemplate into HTML Text', () => {
   describe('# v0.1.x API', () => {
     it('should work.', () => {
-      expect(render('{{ 34 + 100 }}', {}, { basePath: '' })).to.equal('134');
+      expect(render('{{ 34 + 100 }}', {}, { basePath: '' })).toBe('134');
     });
   });
 
@@ -30,28 +29,26 @@ describe('render() - renders abellTemplate into HTML Text', () => {
           allowRequire: true
         }
       );
-      expect(html.trim().replace(/\n|\r|\s/g, '')).to.equal(
-        `<body><div>Component to test abell. 123</div></body>`
-          .trim()
-          .replace(/\n|\r|\s/g, '')
-      );
+      expect(html).toMatchSnapshot();
 
-      expect(components[0]).to.have.keys(
-        'components',
-        'renderedHTML',
-        'styles',
-        'scripts'
+      expect(Object.keys(components[0])).toEqual(
+        expect.arrayContaining([
+          'components',
+          'renderedHTML',
+          'styles',
+          'scripts'
+        ])
       );
     });
   });
 
   describe('# JavaScript execution checks', () => {
     it('should return 7 when a function returning 3 + 4 is passed', () => {
-      expect(render('{{add}}', { add: (() => 3 + 4)() })).to.equal('7');
+      expect(render('{{add}}', { add: (() => 3 + 4)() })).toBe('7');
     });
 
     it('should return "TEST" if "test".toUpperCase() is renderer ', () => {
-      expect(render('{{"test".toUpperCase()}}', {})).to.equal('TEST');
+      expect(render('{{"test".toUpperCase()}}', {})).toBe('TEST');
     });
   });
 
@@ -62,17 +59,17 @@ describe('render() - renders abellTemplate into HTML Text', () => {
         render('hi there this template does not have JS', {
           test: 'test'
         })
-      ).to.exist.and.to.equal('hi there this template does not have JS');
+      ).toBe('hi there this template does not have JS');
     });
 
     // eslint-disable-next-line max-len
     it('should not throw error and return same value if blank brackets passed', () => {
-      expect(render('{{}}', {})).to.equal('{{}}');
+      expect(render('{{}}', {})).toBe('{{}}');
     });
 
     // eslint-disable-next-line max-len
     it('should ignore the brackets when slash is added before the bracket', () => {
-      expect(render('\\{{ This is ignored }}', {})).to.equal(
+      expect(render('\\{{ This is ignored }}', {})).toBe(
         '{{ This is ignored }}'
       );
     });
@@ -89,14 +86,14 @@ describe('render() - renders abellTemplate into HTML Text', () => {
       <div>{{ path.join('hi', 'hello') }} {{ hiHelloPath }}</div>
     `;
 
-      expect(() => render(abellTemplate, {})).to.throw(
+      expect(() => render(abellTemplate, {})).toThrowError(
         'require is not defined'
       );
     });
 
     // eslint-disable-next-line max-len
     it('should throw error at given filename when a variable is not defined', () => {
-      expect(() => render('{{ IamUndefined }}', {})).to.throw(
+      expect(() => render('{{ IamUndefined }}', {})).toThrowError(
         'IamUndefined is not defined'
       );
 
@@ -107,24 +104,24 @@ describe('render() - renders abellTemplate into HTML Text', () => {
       } catch (err) {
         errorStackFirstLine = err.stack.split('at')[1];
       }
-      expect(
-        errorStackFirstLine.trim().startsWith('render.spec.abell:1')
-      ).to.equal(true);
+      expect(errorStackFirstLine.trim().startsWith('render.spec.abell:1')).toBe(
+        true
+      );
     });
 
     describe('## No undefined', () => {
       it('should not return undefined on calling console.log', () => {
-        expect(render('{{ console.log(123) }}', {}).trim()).to.not.equal(
+        expect(render('{{ console.log(123) }}', {}).trim()).not.toBe(
           'undefined'
         );
       });
 
       it('should print empty brackets on undefined', () => {
-        expect(render('{{ undefined }}', {}).trim()).to.equal('');
+        expect(render('{{ undefined }}', {}).trim()).toBe('');
       });
 
       it('should print empty brackets on null', () => {
-        expect(render('{{ undefined }}', {}).trim()).to.equal('');
+        expect(render('{{ undefined }}', {}).trim()).toBe('');
       });
     });
   });
@@ -141,7 +138,7 @@ describe('render() - renders abellTemplate into HTML Text', () => {
         <div>{{ a + b }} {{ path.join('hi', 'hello') }} {{ hiHelloPath }}</div>
       `;
 
-      expect(render(abellTemplate, {}, { allowRequire: true }).trim()).to.equal(
+      expect(render(abellTemplate, {}, { allowRequire: true }).trim()).toBe(
         `<div>8 hi${path.sep}hello hi${path.sep}hello</div>`
       );
     });
@@ -158,18 +155,18 @@ describe('render() - renders abellTemplate into HTML Text', () => {
         {{ a }} {{ b }} {{ c }} {{  d  }} {{ e }}
       `;
 
-      expect(render(abellTemplate, {}).trim()).to.equal('3 9 6 69 10');
+      expect(render(abellTemplate, {}).trim()).toBe('3 9 6 69 10');
     });
 
     it('should handle the case when there is no space around brackets', () => {
       const abellTemplate = `{{a}}`;
 
-      expect(render(abellTemplate, { a: 9 }).trim()).to.equal('9');
+      expect(render(abellTemplate, { a: 9 }).trim()).toBe('9');
     });
 
     // eslint-disable-next-line max-len
     it('should not throw error and return null value if space is passed', () => {
-      expect(render('{{ }}', {})).to.equal('');
+      expect(render('{{ }}', {})).toBe('');
     });
   });
 
@@ -180,6 +177,6 @@ describe('render() - renders abellTemplate into HTML Text', () => {
     }}
     {{ a }}
     `;
-    expect(render(abellTemplate, {}).trim()).to.equal('123');
+    expect(render(abellTemplate, {}).trim()).toBe('123');
   });
 });

@@ -130,7 +130,7 @@ function parseComponent(abellComponentPath, props = {}, options) {
   if (templateTag) {
     template = templateTag[1];
   }
-  if (!options.skipHTMLHash) {
+  if (options && !options.skipHTMLHash) {
     template = prefixHtmlTags(template, componentHash);
   }
 

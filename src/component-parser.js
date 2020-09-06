@@ -123,7 +123,8 @@ function parseComponent(abellComponentPath, props = {}, options) {
     htmlComponentContent
   );
 
-  const componentHash = hash(abellComponentPath);
+  // we use the relative path here so that hash doesn't change across machines
+  const componentHash = hash(path.relative(process.cwd(), abellComponentPath));
 
   let template = '';
 

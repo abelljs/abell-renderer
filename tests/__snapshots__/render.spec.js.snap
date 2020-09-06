@@ -4,7 +4,7 @@ exports[`render() - renders abellTemplate into HTML Text # v0.2.x API should par
 "
         
         <body>
-          <div data-abell-hTqYVP>Component to test abell. 123</div>
+          <div data-abell-hKYKjJ>Component to test abell. 123</div>
         </body>
       "
 `;

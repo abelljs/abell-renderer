@@ -2,11 +2,11 @@
 
 exports[`parseComponent() should parse component and return a componentTree - Sample.abell 1`] = `
 "
-  <div data-abell-hTqYVP>Component to test abell. 123TEST</div>
+  <div data-abell-hKYKjJ>Component to test abell. 123TEST</div>
 "
 `;
 
-exports[`parseComponent() should parse component and return a componentTree - Sample.abell 2`] = `"div[data-abell-hTqYVP]{color:#f30;}"`;
+exports[`parseComponent() should parse component and return a componentTree - Sample.abell 2`] = `"div[data-abell-hKYKjJ]{color:#f30;}"`;
 
 exports[`parseComponent() should parse component and return a componentTree - Sample.abell 3`] = `
 "
@@ -20,7 +20,7 @@ exports[`parseComponent() should work for nested components - Parent.abell 1`] =
 "
 `;
 
-exports[`parseComponent() should work for nested components - Parent.abell 2`] = `"div[data-abell-hTqYVP]{color:#f30;}"`;
+exports[`parseComponent() should work for nested components - Parent.abell 2`] = `"div[data-abell-hKYKjJ]{color:#f30;}"`;
 
 exports[`parseComponentTags() should parse Abell Component Tag to Component Object before execution 1`] = `
 "

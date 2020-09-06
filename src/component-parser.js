@@ -1,7 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-const { execRegexOnAll, abellRequire } = require('./render-utils.js');
+const {
+  execRegexOnAll,
+  abellRequire,
+  normalizePath
+} = require('./render-utils.js');
 const { compile } = require('./compiler.js');
 const { cssSerializer } = require('./parsers/css');
 const { prefixHtmlTags } = require('./post-compilation');
@@ -124,7 +128,9 @@ function parseComponent(abellComponentPath, props = {}, options) {
   );
 
   // we use the relative path here so that hash doesn't change across machines
-  const componentHash = hash(path.relative(process.cwd(), abellComponentPath));
+  const componentHash = hash(
+    normalizePath(path.relative(process.cwd(), abellComponentPath))
+  );
 
   let template = '';
 

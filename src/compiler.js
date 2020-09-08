@@ -64,4 +64,4 @@ function compile(abellTemplate, sandbox, options) {
   return renderedHTML;
 }
 
-module.exports = compile;
+module.exports = { compile, evaluateAbellBlock };

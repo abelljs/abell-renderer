@@ -1,5 +1,5 @@
 const { getAbellInBuiltSandbox } = require('./utils.js');
-const compile = require('./compiler.js');
+const { compile } = require('./compiler.js');
 
 /**
  * Outputs vanilla html string when abell template and sandbox is passed.
@@ -21,11 +21,18 @@ const abellCode = `
   const Nav = require('Nav.abell');
   const a = 3;
   const b = 9;
+  let d = 9;
+  let e = 6;
 }}
 
 <body>
   {{ Nav('hehe').renderedHTML }}
   {{ a + b }}
+  {{ 
+    e = 3
+    d = 10 
+  }}
+  {{ d + 9 }}
   {{ c }}
 </body>
 `;

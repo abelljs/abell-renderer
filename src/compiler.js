@@ -31,11 +31,13 @@ function evaluateAbellBlock(jsCode, context, options) {
 /**
  * Turns Abell Template to HTML Code
  * @param {string} abellTemplate
- * @param {Context} context
+ * @param {object} sandbox
  * @param {object} options
  * @return {string}
  */
-function compile(abellTemplate, context, options) {
+function compile(abellTemplate, sandbox, options) {
+  const context = new vm.createContext(sandbox); // eslint-disable-line
+
   const { matches, input } = execRegexOnAll(/\\?{{(.+?)}}/gs, abellTemplate);
   let renderedHTML = '';
   let lastIndex = 0;

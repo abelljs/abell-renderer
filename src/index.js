@@ -1,5 +1,3 @@
-const vm = require('vm');
-
 const { getAbellInBuiltSandbox } = require('./utils.js');
 const compile = require('./compiler.js');
 
@@ -14,23 +12,24 @@ const compile = require('./compiler.js');
  */
 function render(abellTemplate, userSandbox = {}, options = {}) {
   userSandbox = { ...userSandbox, ...getAbellInBuiltSandbox(options) };
-  const context = new vm.createContext(userSandbox); // eslint-disable-line
-  const htmlOutput = compile(abellTemplate, context, options);
+  const htmlOutput = compile(abellTemplate, userSandbox, options);
   return htmlOutput;
 }
 
 const abellCode = `
-{{ 
+{{
+  const Nav = require('Nav.abell');
   const a = 3;
   const b = 9;
 }}
 
 <body>
+  {{ Nav('hehe').renderedHTML }}
   {{ a + b }}
   {{ c }}
 </body>
 `;
 
-console.log(render(abellCode, { c: 'Hello' }));
+console.log(render(abellCode, { c: 'Hello' }, { allowRequire: true }));
 
 module.exports = { render };

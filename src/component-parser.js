@@ -1,3 +1,5 @@
+const { getAbellInBuiltSandbox } = require('./utils');
+
 /**
  * Turns <Nav props={hello: 'hi'}/> to {{ Nav({hello: 'hi}).renderedHTML }}
  */
@@ -37,10 +39,20 @@ function parseAttributes(attrString) {
 /**
  * Turns Given Abell Component into JavaScript Component Tree
  * @param {string} abellPath path of abell component file
+ * @param {object} options
  * @return {object}
  */
-function parseComponent(abellPath) {
-  return {};
+function parseComponent(abellPath, options) {
+  return (props) => {
+    const sandbox = {
+      props,
+      ...getAbellInBuiltSandbox(options)
+    };
+
+    return {
+      renderedHTML: `We have received ${sandbox.props}`
+    };
+  };
 }
 
 module.exports = { parseComponent, parseAttributes, componentTagTranspiler };

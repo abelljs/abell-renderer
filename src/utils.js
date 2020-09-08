@@ -16,6 +16,13 @@ function getAbellInBuiltSandbox(options) {
 
   if (options.allowRequire) {
     builtInFunctions.require = (pathToRequire) => {
+      if (pathToRequire.endsWith('.abell')) {
+        return require('./component-parser.js').parseComponent(
+          pathToRequire,
+          options
+        );
+      }
+
       const fullRequirePath = path.join(
         options.basePath ||
           (options.filename && path.dirname(options.filename)) ||
@@ -31,6 +38,7 @@ function getAbellInBuiltSandbox(options) {
       return require(pathToRequire);
     };
   }
+
   return builtInFunctions;
 }
 

@@ -8,9 +8,20 @@ const path = require('path');
  * @return {any}
  */
 function getAbellInBuiltSandbox(options) {
-  return {
-    require: (pathToRequire) => {
-      const fullRequirePath = path.join(options.basePath || '', pathToRequire);
+  const builtInFunctions = {
+    console: {
+      log: console.log
+    }
+  };
+
+  if (options.allowRequire) {
+    builtInFunctions.require = (pathToRequire) => {
+      const fullRequirePath = path.join(
+        options.basePath ||
+          (options.filename && path.dirname(options.filename)) ||
+          '',
+        pathToRequire
+      );
       if (fs.existsSync(fullRequirePath)) {
         // Local file require
         return require(fullRequirePath);
@@ -18,11 +29,9 @@ function getAbellInBuiltSandbox(options) {
 
       // NPM Package or NodeJS Module
       return require(pathToRequire);
-    },
-    console: {
-      log: console.log
-    }
-  };
+    };
+  }
+  return builtInFunctions;
 }
 
 /**

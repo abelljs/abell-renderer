@@ -10,10 +10,13 @@ const { execRegexOnAll } = require('./utils');
  * Evaluates Abell Block value
  * @param {string} jsCode JavaScript code in string
  * @param {Context} context
+ * @param {Object} options
  * @return {object}
  */
-function evaluateAbellBlock(jsCode, context) {
-  const script = new vm.Script(jsCode, { filename: 'hello.abell' });
+function evaluateAbellBlock(jsCode, context, options) {
+  const script = new vm.Script(jsCode, {
+    filename: options.filename || '.abell'
+  });
   const jsOutput = script.runInContext(context, {
     displayErrors: true
   });
@@ -45,7 +48,7 @@ function compile(abellTemplate, context, options) {
       // if block is comment (e.g \{{ I want to print this as it is }})
       evaluatedValue = abellBlock.slice(1);
     } else {
-      evaluatedValue = evaluateAbellBlock(jsCode, context);
+      evaluatedValue = evaluateAbellBlock(jsCode, context, options);
     }
 
     const toAddOnIndex = match.index; // Gets the index where the executed value is to be put.

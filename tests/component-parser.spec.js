@@ -3,36 +3,43 @@ const path = require('path');
 const expect = require('chai').expect;
 
 const {
-  parseAttribute,
+  parseAttributes,
   parseComponentTags,
   parseComponent
 } = require('../src/component-parser.js');
 
-describe('parseAttribute()', () => {
+describe('parseAttributes()', () => {
   it('should turn string attributes into object', () => {
-    expect(parseAttribute('inlined bundle="app.js"')).to.eql({
+    expect(parseAttributes('inlined bundle="app.js"')).to.eql({
+      inlined: true,
+      bundle: 'app.js'
+    });
+  });
+
+  it('should handle attribute values in single quotes', () => {
+    expect(parseAttributes("inlined bundle='app.js'")).to.eql({
       inlined: true,
       bundle: 'app.js'
     });
   });
 
   it('should allow inlined=false in attribute', () => {
-    expect(parseAttribute('inlined=false')).to.eql({
+    expect(parseAttributes('inlined=false')).to.eql({
       inlined: 'false'
     });
   });
 
   it('should handle custom attributes as well', () => {
     expect(
-      parseAttribute(
+      parseAttributes(
         `rel="preload" 
         as="style" 
-        onload="this.rel=\"stylesheet\";this.onload=null"`
+        onload="this.rel=\"stylesheet\"; this.onload = null"`
       )
     ).to.eql({
       rel: 'preload',
       as: 'style',
-      onload: 'this.rel="stylesheet";this.onload=null'
+      onload: 'this.rel="stylesheet"; this.onload = null'
     });
   });
 });
@@ -43,7 +50,7 @@ describe('parseComponentTags()', () => {
     const code = `
     var Nav = require('./components/Nav.abell');
     <div>
-      <Nav 
+      <Nav
         props={
           foo: 'bar'
         }

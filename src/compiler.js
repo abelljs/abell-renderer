@@ -1,9 +1,29 @@
-const { evaluateAbellBlock } = require('./evaluator');
+const vm = require('vm');
+
 const { execRegexOnAll } = require('./utils');
 
 /**
  * @typedef {import('vm').Context} Context
  */
+
+/**
+ * Evaluates Abell Block value
+ * @param {string} jsCode JavaScript code in string
+ * @param {Context} context
+ * @return {object}
+ */
+function evaluateAbellBlock(jsCode, context) {
+  const script = new vm.Script(jsCode, { filename: 'hello.abell' });
+  const jsOutput = script.runInContext(context, {
+    displayErrors: true
+  });
+
+  if (Array.isArray(jsOutput)) {
+    return jsOutput.join('');
+  }
+
+  return jsOutput || '';
+}
 
 /**
  * Turns Abell Template to HTML Code

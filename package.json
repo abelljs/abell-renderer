@@ -36,7 +36,9 @@
     "url": "https://github.com/abelljs/abell-renderer/issues"
   },
   "homepage": "https://github.com/abelljs/abell-renderer#readme",
-  "dependencies": {},
+  "dependencies": {
+    "acorn": "^8.0.1"
+  },
   "devDependencies": {
     "chai": "^4.2.0",
     "cheerio": "^1.0.0-rc.3",

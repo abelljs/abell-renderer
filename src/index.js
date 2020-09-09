@@ -37,6 +37,8 @@ const abellCode = `
 </body>
 `;
 
+const startTime = new Date().getTime();
 console.log(render(abellCode, { c: 'Hello' }, { allowRequire: true }));
+console.log(new Date().getTime() - startTime);
 
 module.exports = { render };

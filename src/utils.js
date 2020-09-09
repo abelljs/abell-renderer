@@ -43,6 +43,20 @@ function getAbellInBuiltSandbox(options) {
 }
 
 /**
+ * Extension to default error class to customize stack for abell files
+ */
+class AbellSyntaxError extends Error {
+  /** Error message contructor
+   * @param {string} message
+   */
+  constructor(message) {
+    super(message);
+    this.message = message;
+    this.stack = `Error: ${message}\n\tat src/example.abell:3`;
+  }
+}
+
+/**
  * Captures groups from regex and executes RegEx.exec() function on all.
  *
  * @param {regex} regex - Regular Expression to execute on.
@@ -70,4 +84,4 @@ const execRegexOnAll = (regex, template) => {
   return { matches: allMatches, input };
 };
 
-module.exports = { execRegexOnAll, getAbellInBuiltSandbox };
+module.exports = { execRegexOnAll, getAbellInBuiltSandbox, AbellSyntaxError };

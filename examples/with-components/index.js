@@ -20,6 +20,6 @@ const { html, components } = abellRenderer.render(
   }
 );
 
-console.log(components);
+console.log(html);
 
 fs.writeFileSync(path.join(__dirname, 'out.html'), html);

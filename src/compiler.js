@@ -2,7 +2,7 @@ const vm = require('vm');
 
 const acorn = require('acorn');
 
-const { execRegexOnAll, AbellSyntaxError } = require('./utils');
+const { execRegexOnAll, logWarning } = require('./utils.js');
 
 /**
  * @typedef {import('vm').Context} Context
@@ -11,15 +11,20 @@ const { execRegexOnAll, AbellSyntaxError } = require('./utils');
 /**
  * Validates the Abell Block
  * @param {[string]} statementTypeMap
+ * @param {string} jsCode
+ * @param {string} filename
  */
-function validateAbellBlock(statementTypeMap) {
+function validateAbellBlock(statementTypeMap, jsCode, filename) {
   if (
     !statementTypeMap.includes('VariableDeclaration') &&
     !statementTypeMap.includes('AssignmentExpression') &&
     statementTypeMap.length > 1
   ) {
-    throw new AbellSyntaxError(
-      'An Abell Block cannot have multiple expressions'
+    console.log('\nWARNING:');
+    console.log('{{\n>' + jsCode + '\n}}');
+    logWarning(
+      'SYNTAX WARN: An Abell Block should not have multiple expressions that output value', // eslint-disable-line
+      filename
     );
   }
 }
@@ -52,7 +57,7 @@ function getStatementTypeMap(jsCode) {
  */
 function evaluateAbellBlock(jsCode, context, options) {
   const statementTypeMap = getStatementTypeMap(jsCode);
-  validateAbellBlock(statementTypeMap);
+  validateAbellBlock(statementTypeMap, jsCode, options.filename);
   const script = new vm.Script(jsCode, {
     filename: options.filename || '.abell'
   });
@@ -66,6 +71,10 @@ function evaluateAbellBlock(jsCode, context, options) {
   ) {
     // for {{ a = 3 }} it should not print anything so we return blank string
     return '';
+  }
+
+  if (typeof jsOutput === 'function') {
+    return jsOutput();
   }
 
   if (Array.isArray(jsOutput)) {

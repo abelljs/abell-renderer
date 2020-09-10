@@ -16,19 +16,20 @@ function getAbellInBuiltSandbox(options) {
 
   if (options.allowRequire) {
     builtInFunctions.require = (pathToRequire) => {
-      if (pathToRequire.endsWith('.abell')) {
-        return require('./component-parser.js').parseComponent(
-          pathToRequire,
-          options
-        );
-      }
-
       const fullRequirePath = path.join(
         options.basePath ||
           (options.filename && path.dirname(options.filename)) ||
           '',
         pathToRequire
       );
+
+      if (fullRequirePath.endsWith('.abell')) {
+        return require('./component-parser.js').parseComponent(
+          fullRequirePath,
+          options
+        );
+      }
+
       if (fs.existsSync(fullRequirePath)) {
         // Local file require
         return require(fullRequirePath);
@@ -40,20 +41,6 @@ function getAbellInBuiltSandbox(options) {
   }
 
   return builtInFunctions;
-}
-
-/**
- * Extension to default error class to customize stack for abell files
- */
-class AbellSyntaxError extends Error {
-  /** Error message contructor
-   * @param {string} message
-   */
-  constructor(message) {
-    super(message);
-    this.message = message;
-    this.stack = `Error: ${message}\n\tat src/example.abell:3`;
-  }
 }
 
 /**
@@ -84,4 +71,16 @@ const execRegexOnAll = (regex, template) => {
   return { matches: allMatches, input };
 };
 
-module.exports = { execRegexOnAll, getAbellInBuiltSandbox, AbellSyntaxError };
+/**
+ * console.log for warnings, logs with warning styles
+ * @param {String} errorMessage message to log
+ * @param {string} filename name of the file and line numbers that throw error
+ */
+const logWarning = (errorMessage, filename = '') => {
+  console.log(`\u001b[1m\u001b[33m>>\u001b[39m\u001b[22m ${errorMessage}`);
+  if (filename) {
+    console.log('\tat ' + filename);
+  }
+};
+
+module.exports = { execRegexOnAll, getAbellInBuiltSandbox, logWarning };

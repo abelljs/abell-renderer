@@ -1,4 +1,6 @@
-const { getAbellInBuiltSandbox } = require('./utils');
+const fs = require('fs');
+const { getAbellInBuiltSandbox } = require('./utils.js');
+const { compile } = require('./compiler.js');
 
 /**
  * Turns <Nav props={hello: 'hi'}/> to {{ Nav({hello: 'hi}).renderedHTML }}
@@ -38,16 +40,32 @@ function parseAttributes(attrString) {
 
 /**
  * Turns Given Abell Component into JavaScript Component Tree
- * @param {string} abellPath path of abell component file
+ * @param {string} abellComponentPath path of abell component file
  * @param {object} options
  * @return {object}
  */
-function parseComponent(abellPath, options) {
+function parseComponent(abellComponentPath, options) {
+  /**
+   * TODO: Memoize Abell Component file content
+   */
+  const abellComponentContent = fs.readFileSync(abellComponentPath, 'utf-8');
+  if (!abellComponentContent.trim().startsWith('<AbellComponent')) {
+    throw new Error( // eslint-disable-next-line max-len
+      `Abell Component should be wrapped inside <AbellComponent></AbellComponent>. \n >> Error requiring ${abellComponentPath}\n`
+    );
+  }
+
   return (props) => {
     const sandbox = {
       props,
       ...getAbellInBuiltSandbox(options)
     };
+
+    const htmlComponentContent = compile(abellComponentContent, sandbox, {
+      filename: path.relative(process.cwd(), abellComponentPath)
+    });
+
+    console.log(htmlComponentContent);
 
     return {
       renderedHTML: `We have received ${sandbox.props}`

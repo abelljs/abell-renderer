@@ -13,32 +13,49 @@ const { compile } = require('./compiler.js');
 function render(abellTemplate, userSandbox = {}, options = {}) {
   userSandbox = { ...userSandbox, ...getAbellInBuiltSandbox(options) };
   const htmlOutput = compile(abellTemplate, userSandbox, options);
+  if (options.allowComponents) {
+    return { html: htmlOutput };
+  }
   return htmlOutput;
 }
 
-const abellCode = `
-{{
-  const Nav = require('Nav.abell');
-  const a = 3;
-  const b = 9;
-  let d = 9;
-  let e = 6;
-}}
+// const abellCode = `
+// {{
+//   const Nav = require('Nav.abell');
+//   const a = 3;
+//   const b = 9;
+//   let d = 9;
+//   let e = 6;
+// }}
 
-<body>
-  {{ Nav('hehe').renderedHTML }}
-  {{ a + b }}
-  {{ 
-    e = 3
-    d = 10 
-  }}
-  {{ d + 9 }}
-  {{ c }}
-</body>
-`;
+// <body>
+//   {{ Nav('hehe').renderedHTML }}
+//   {{ a + b }}
+//   {{
+//     e = 3
+//     d = 10
+//   }}
+//   {{
+//     () => {
+//       if (d === 0) {
+//         return d
+//       } else {
+//         return 'Beep'
+//       }
+//     }
+//   }}
+//   {{ c }}
+// </body>
+// `;
 
-const startTime = new Date().getTime();
-console.log(render(abellCode, { c: 'Hello' }, { allowRequire: true }));
-console.log(new Date().getTime() - startTime);
+// const startTime = new Date().getTime();
+// console.log(
+//   render(
+//     abellCode,
+//     { c: 'Hello' },
+//     { allowRequire: true, filename: 'src/index.abell' }
+//   )
+// );
+// console.log(new Date().getTime() - startTime);
 
 module.exports = { render };

@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`scoped css should have a stable html snapshot 1`] = `
+"
+<html>
+<body>
+  <div data-abell-efDpsM>This is a test component for testing scoped css.123</div>
+  <div data-abell-kZbbBm>This is a test component for testing global css.</div>
+</body>
+</html>"
+`;
+
+exports[`scoped css should have the global component 1`] = `null`;
+
+exports[`scoped css should have the scoped component 1`] = `"This is a test component for testing scoped css.123"`;

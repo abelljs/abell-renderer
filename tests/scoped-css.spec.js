@@ -32,7 +32,7 @@ describe('scoped css', () => {
       path.join(basePath, 'Scoped.abell')
     );
     // we normalize the path for windows so that hash is stable across OS
-    const componentHash = normalizePath(hash(scopedPath));
+    const componentHash = hash(normalizePath(scopedPath));
 
     const scopedComponent = renderedComponent.components[0];
     expect(scopedComponent).toBeDefined();
@@ -56,7 +56,7 @@ describe('scoped css', () => {
       path.join(basePath, 'Global.abell')
     );
     // we normalize the path for windows
-    const componentHash = normalizePath(hash(globalComponentPath));
+    const componentHash = hash(normalizePath(globalComponentPath));
 
     const globalComponent = renderedComponent.components[1];
     expect(globalComponent).toBeDefined();

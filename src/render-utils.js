@@ -97,4 +97,26 @@ function abellRequire(pathToRequire, options) {
   }
 }
 
-module.exports = { execRegexOnAll, abellRequire, cleanErrorStack };
+// copied from https://github.com/sindresorhus/slash/blob/master/index.js
+/**
+ * Convert Windows backslash paths to slash paths: foo\\bar ➔ foo/bar
+ * @param {String} path  input path string
+ * @return {String}
+ */
+const normalizePath = (path) => {
+  const isExtendedLengthPath = /^\\\\\?\\/.test(path);
+  const hasNonAscii = /[^\u0000-\u0080]+/.test(path); // eslint-disable-line no-control-regex
+
+  if (isExtendedLengthPath || hasNonAscii) {
+    return path;
+  }
+
+  return path.replace(/\\/g, '/');
+};
+
+module.exports = {
+  execRegexOnAll,
+  abellRequire,
+  cleanErrorStack,
+  normalizePath
+};

@@ -3,7 +3,6 @@ const util = require('util');
 
 const exec = util.promisify(require('child_process').exec);
 
-const { expect } = require('chai');
 const cheerio = require('cheerio');
 
 /**
@@ -17,7 +16,7 @@ function equalValueChecks(TEST_MAP, { outPath, exampleToRun }) {
   let htmlTemplate;
   let $;
 
-  before(async () => {
+  beforeAll(async () => {
     const { stderr } = await exec('npm run example ' + exampleToRun);
     if (stderr) {
       throw stderr;
@@ -29,7 +28,7 @@ function equalValueChecks(TEST_MAP, { outPath, exampleToRun }) {
 
   for (const test of TEST_MAP) {
     it(test.desc, () => {
-      expect($(test.query).html()).to.equal(test.toEqual);
+      expect($(test.query).html()).toMatchSnapshot();
     });
   }
 }

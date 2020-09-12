@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`examples/main should check if values can be required from json and js 1`] = `"69"`;
+
+exports[`examples/main should test if index 0, has project name Project Two 1`] = `"Project Two"`;
+
+exports[`examples/main should test if index 1, has project name Project One 1`] = `"Project One"`;
+
+exports[`examples/main should test if index 2, has project name Project Three 1`] = `"Project Three"`;
+
+exports[`examples/main should test if putting slash before bracket prints content as it is 1`] = `"{{ print this as it is }}"`;
+
+exports[`examples/main should test if reassignment of variable is possible 1`] = `"9"`;
+
+exports[`examples/main should test javascript inside brackets 1`] = `"11"`;

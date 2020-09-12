@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`prefixHTMLTags() should prefix a single html tag 1`] = `
+"
+    <div class=\\"something\\" id=\\"something\\" aria-label=testitem data-abell-testhash>My Item
+
+    </div>
+    "
+`;
+
+exports[`prefixHTMLTags() should prefix an auto closing tag 1`] = `"<br class=\\"something\\" data-abell-testhash />"`;
+
+exports[`prefixHTMLTags() should prefix deeply nested tree 1`] = `
+"
+      <div data-abell-testhash>
+        <ul data-abell-testhash>
+          <li data-abell-testhash><a href=\\"test\\" data-abell-testhash>test</a><a href=\\"test\\" data-abell-testhash>test</a></li>
+          <li data-abell-testhash><a href=\\"test\\" data-abell-testhash>test</a><a href=\\"test\\" data-abell-testhash>test</a></li>
+          <li data-abell-testhash><a href=\\"test\\" data-abell-testhash>test</a><a href=\\"test\\" data-abell-testhash>test</a></li>
+          <li data-abell-testhash><a href=\\"test\\" data-abell-testhash>test</a><a href=\\"test\\" data-abell-testhash>test</a></li>
+          <li data-abell-testhash><a href=\\"test\\" data-abell-testhash>test</a><a href=\\"test\\" data-abell-testhash>test</a></li>
+        </ul>
+        <div data-abell-testhash>
+          <h1 data-abell-testhash>test</h1>
+          <div data-abell-testhash>
+            <ol data-abell-testhash>
+              <ul data-abell-testhash>
+                <li data-abell-testhash>testing</li>
+                <li data-abell-testhash>testing</li>
+                <li data-abell-testhash>testing</li>
+              </ul>
+            </ol>
+          </div>
+        </div>
+      </div>
+    "
+`;
+
+exports[`prefixHTMLTags() should prefix html with attributes having numbers in it 1`] = `"<div tabindex=0 data-abell-testhash>test</div>"`;

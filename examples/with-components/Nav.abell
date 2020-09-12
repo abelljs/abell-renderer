@@ -10,6 +10,15 @@
   nav {
     color: #f30;
   }
+
+  .test {
+    color: green;
+  }
+
+
+  ul > li test.a, .test li > * {
+    color: white;
+  }
 </style>
 <script>
   document.querySelector('nav').innerHTML = 'This is from JS';

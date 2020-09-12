@@ -1,9 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 
-const { execRegexOnAll, abellRequire } = require('./render-utils.js');
+const {
+  execRegexOnAll,
+  abellRequire,
+  normalizePath
+} = require('./render-utils.js');
 const { compile } = require('./compiler.js');
-
+const { cssSerializer } = require('./parsers/css');
+const { prefixHtmlTags } = require('./post-compilation');
+const hash = require('./hash');
 /**
  * Parses component tags (<Nav/> -> Nav().renderedHTML)
  * @param {String} abellTemplate
@@ -102,7 +108,7 @@ function parseComponent(abellComponentPath, props = {}, options) {
           const component = parseComponent(
             path.join(basePath, pathToRequire),
             userProps,
-            options
+            { ...options, skipHTMLHash: true }
           );
           components.push(component);
           return component;
@@ -121,28 +127,42 @@ function parseComponent(abellComponentPath, props = {}, options) {
     htmlComponentContent
   );
 
+  // we use the relative path here so that hash doesn't change across machines
+  const componentHash = hash(
+    normalizePath(path.relative(process.cwd(), abellComponentPath))
+  );
+
   let template = '';
 
   if (templateTag) {
     template = templateTag[1];
   }
+  if (options && !options.skipHTMLHash) {
+    template = prefixHtmlTags(template, componentHash);
+  }
 
-  const matchMapper = (contentMatch) => ({
-    component: path.basename(abellComponentPath),
-    componentPath: abellComponentPath,
-    content: contentMatch[2],
-    attributes: parseAttribute(contentMatch[1])
-  });
+  const matchMapper = (isCss) => (contentMatch) => {
+    const attributes = parseAttribute(contentMatch[1]);
+    const shouldPrefix = isCss && !attributes.global;
+    return {
+      component: path.basename(abellComponentPath),
+      componentPath: abellComponentPath,
+      content: shouldPrefix
+        ? cssSerializer(contentMatch[2], componentHash)
+        : contentMatch[2],
+      attributes: parseAttribute(contentMatch[1])
+    };
+  };
 
   const styleMatches = execRegexOnAll(
     /\<style(.*?)\>(.*?)\<\/style\>/gs,
     htmlComponentContent
-  ).matches.map(matchMapper);
+  ).matches.map(matchMapper(true));
 
   const scriptMatches = execRegexOnAll(
     /\<script(.*?)\>(.*?)\<\/script\>/gs,
     htmlComponentContent
-  ).matches.map(matchMapper);
+  ).matches.map(matchMapper(false));
 
   return {
     renderedHTML: template,

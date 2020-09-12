@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 
 const expect = require('chai').expect;
@@ -80,12 +81,16 @@ describe('componentTagTranspiler()', () => {
 
 describe('parseComponent()', () => {
   it('should parse component and return a componentTree - Sample.abell', () => {
+    const abellFile = path.join(__dirname, 'resources', 'Sample.abell');
+    const abellContent = fs.readFileSync(abellFile, 'utf-8');
     const componentTree = parseComponent(
+      abellContent,
       path.join(__dirname, 'resources', 'Sample.abell'),
+      {
+        foo: '123TEST'
+      },
       { filename: 'component-parser.spec.js' }
-    )({
-      foo: '123TEST'
-    });
+    );
 
     expect(componentTree.renderedHTML.trim().replace(/\n|\r|\s/g, '')).to.equal(
       '<div>Component to test abell. 123TEST</div>'
@@ -114,14 +119,18 @@ describe('parseComponent()', () => {
   });
 
   it('should work for nested components - Parent.abell', () => {
+    const abellFile = path.join(__dirname, 'resources', 'Parent.abell');
+    const abellContent = fs.readFileSync(abellFile, 'utf-8');
     const componentTree = parseComponent(
+      abellContent,
       path.join(__dirname, 'resources', 'Parent.abell'),
+      {},
       {
         allowRequire: true,
         filename: 'component-parser.spec.js',
         basePath: path.join(__dirname, 'resources')
       }
-    )();
+    );
 
     expect(componentTree.renderedHTML.trim().replace(/\n|\r|\s/g, '')).to.equal(
       '<div><div>Component to test abell. Woop Woop!</div></div>'
@@ -129,11 +138,11 @@ describe('parseComponent()', () => {
         .replace(/\n|\r|\s/g, '')
     );
 
-    expect(
-      componentTree.components[0]().styles[0].content
-    ).to.exist.and.include('div');
+    expect(componentTree.components[0].styles[0].content).to.exist.and.include(
+      'div'
+    );
 
-    expect(componentTree.components[0]().styles[0]).to.have.keys(
+    expect(componentTree.components[0].styles[0]).to.have.keys(
       'component',
       'attributes',
       'componentPath',

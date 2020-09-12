@@ -1,5 +1,8 @@
-const { getAbellInBuiltSandbox } = require('./utils.js');
+const fs = require('fs');
+const path = require('path');
 const { compile } = require('./compiler.js');
+const { parseComponent } = require('./component-parser.js');
+const { getAbellInBuiltSandbox } = require('./utils.js');
 
 /**
  * Outputs vanilla html string when abell template and sandbox is passed.
@@ -11,8 +14,42 @@ const { compile } = require('./compiler.js');
  * @return {String|Object} htmlTemplate
  */
 function render(abellTemplate, userSandbox = {}, options = {}) {
-  const { builtInFunctions, components } = getAbellInBuiltSandbox(options);
+  options.basePath =
+    options.basePath ||
+    (options.filename && path.dirname(options.filename)) ||
+    '';
+
+  options.allowRequire = options.allowRequire || false;
+  options.allowComponents = options.allowComponents || false;
+  options.filename = options.filename || '<undefined>.abell';
+
+  const components = [];
+  const transformations = {
+    '.abell': (pathToRequire) => {
+      /**
+       * TODO: Memoize Abell Component file content
+       */
+      const abellComponentContent = fs.readFileSync(
+        path.join(options.basePath, pathToRequire),
+        'utf-8'
+      );
+
+      return (props) => {
+        const parsedComponent = parseComponent(
+          abellComponentContent,
+          path.join(options.basePath, pathToRequire),
+          props,
+          options
+        );
+        components.push(parsedComponent);
+        return parsedComponent;
+      };
+    }
+  };
+
+  const { builtInFunctions } = getAbellInBuiltSandbox(options, transformations);
   userSandbox = { ...userSandbox, ...builtInFunctions };
+
   const htmlOutput = compile(abellTemplate, userSandbox, options);
   if (options.allowComponents) {
     return { html: htmlOutput, components };

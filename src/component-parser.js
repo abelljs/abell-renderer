@@ -80,73 +80,94 @@ function parseAttributes(attrString) {
 
 /**
  * Turns Given Abell Component into JavaScript Component Tree
+ * @param {string} abellComponentContent Cotent of Abell Component
  * @param {string} abellComponentPath path of abell component file
+ * @param {object} props
  * @param {object} options
  * @return {object}
  */
-function parseComponent(abellComponentPath, options) {
-  /**
-   * TODO: Memoize Abell Component file content
-   */
-  const abellComponentContent = fs.readFileSync(abellComponentPath, 'utf-8');
-  if (!abellComponentContent.trim().startsWith('<AbellComponent')) {
-    throw new Error( // eslint-disable-next-line max-len
-      `Abell Component should be wrapped inside <AbellComponent></AbellComponent>. \n >> Error requiring ${abellComponentPath}\n`
-    );
-  }
-  const { builtInFunctions, components } = getAbellInBuiltSandbox(options);
+function parseComponent(
+  abellComponentContent,
+  abellComponentPath,
+  props = {},
+  options
+) {
+  const components = [];
+  const basePath = path.dirname(abellComponentPath);
 
-  return (props = {}) => {
-    const sandbox = {
-      props,
-      ...builtInFunctions
-    };
+  options.basePath = basePath;
+  const transformations = {
+    '.abell': (abellComponentPath) => {
+      /**
+       * TODO: Memoize Abell Component file content
+       */
+      const abellComponentContent = fs.readFileSync(
+        path.join(basePath, abellComponentPath),
+        'utf-8'
+      );
 
-    const htmlComponentContent = require('./compiler.js').compile(
-      abellComponentContent,
-      sandbox,
-      {
-        filename: path.relative(process.cwd(), abellComponentPath)
-      }
-    );
-
-    const templateTag = /\<template\>(.*?)\<\/template\>/gs.exec(
-      htmlComponentContent
-    );
-
-    let template = '';
-
-    if (templateTag) {
-      template = templateTag[1];
+      return (props) => {
+        const parsedComponent = parseComponent(
+          abellComponentContent,
+          path.join(basePath, abellComponentPath),
+          props,
+          options
+        );
+        components.push(parsedComponent);
+        return parsedComponent;
+      };
     }
-
-    const matchMapper = (contentMatch) => ({
-      component: path.basename(abellComponentPath),
-      componentPath: abellComponentPath,
-      content: contentMatch[2],
-      attributes: parseAttributes(contentMatch[1])
-    });
-
-    const styleMatches = execRegexOnAll(
-      /\<style(.*?)\>(.*?)\<\/style\>/gs,
-      htmlComponentContent
-    ).matches.map(matchMapper);
-
-    const scriptMatches = execRegexOnAll(
-      /\<script(.*?)\>(.*?)\<\/script\>/gs,
-      htmlComponentContent
-    ).matches.map(matchMapper);
-
-    const componentTree = {
-      renderedHTML: template,
-      components,
-      props,
-      styles: styleMatches,
-      scripts: scriptMatches
-    };
-
-    return componentTree;
   };
+  const { builtInFunctions } = getAbellInBuiltSandbox(options, transformations);
+  const sandbox = {
+    props,
+    ...builtInFunctions
+  };
+
+  const htmlComponentContent = require('./compiler.js').compile(
+    abellComponentContent,
+    sandbox,
+    {
+      filename: path.relative(process.cwd(), abellComponentPath)
+    }
+  );
+
+  const templateTag = /\<template\>(.*?)\<\/template\>/gs.exec(
+    htmlComponentContent
+  );
+
+  let template = '';
+
+  if (templateTag) {
+    template = templateTag[1];
+  }
+
+  const matchMapper = (contentMatch) => ({
+    component: path.basename(abellComponentPath),
+    componentPath: abellComponentPath,
+    content: contentMatch[2],
+    attributes: parseAttributes(contentMatch[1])
+  });
+
+  const styleMatches = execRegexOnAll(
+    /\<style(.*?)\>(.*?)\<\/style\>/gs,
+    htmlComponentContent
+  ).matches.map(matchMapper);
+
+  const scriptMatches = execRegexOnAll(
+    /\<script(.*?)\>(.*?)\<\/script\>/gs,
+    htmlComponentContent
+  ).matches.map(matchMapper);
+
+  const componentTree = {
+    renderedHTML: template,
+    components,
+    props,
+    styles: styleMatches,
+    scripts: scriptMatches
+  };
+
+  return componentTree;
 }
 
 module.exports = {

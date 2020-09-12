@@ -5,9 +5,10 @@ const path = require('path');
  * Returns in-built functions from Abell
  * @param {object} options
  * @param {string} options.basePath
+ * @param {object} transformations
  * @return {any}
  */
-function getAbellInBuiltSandbox(options) {
+function getAbellInBuiltSandbox(options, transformations = {}) {
   const components = [];
 
   const builtInFunctions = {
@@ -18,22 +19,10 @@ function getAbellInBuiltSandbox(options) {
 
   if (options.allowRequire) {
     builtInFunctions.require = (pathToRequire) => {
-      const fullRequirePath = path.join(
-        options.basePath ||
-          (options.filename && path.dirname(options.filename)) ||
-          '',
-        pathToRequire
-      );
+      const fullRequirePath = path.join(options.basePath, pathToRequire);
 
       if (fullRequirePath.endsWith('.abell')) {
-        const parsedComponent = require('./component-parser.js').parseComponent(
-          fullRequirePath,
-          options
-        );
-
-        components.push(parsedComponent);
-
-        return parsedComponent;
+        return transformations['.abell'](pathToRequire);
       }
 
       if (fs.existsSync(fullRequirePath)) {

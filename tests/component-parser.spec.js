@@ -129,7 +129,6 @@ describe('parseComponent()', () => {
         .replace(/\n|\r|\s/g, '')
     );
 
-    console.log(componentTree);
     expect(
       componentTree.components[0]().styles[0].content
     ).to.exist.and.include('div');

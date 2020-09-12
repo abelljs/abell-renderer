@@ -14,12 +14,12 @@ describe('compile() - Executes JavaScript passed to it as string', () => {
   it('should update value of a to new value', () => {
     expect(
       compile(
-        '{{ a = 22 + 22 }}',
+        '{{ a = 22 + 22 }} {{ a }}',
         { a: 4 },
         {
           filename: 'execute.spec.js'
         }
-      )
+      ).trim()
     ).to.equal('44');
   });
 

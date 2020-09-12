@@ -37,9 +37,10 @@ describe('render() - renders abellTemplate into HTML Text', () => {
           .replace(/\n|\r|\s/g, '')
       );
 
-      expect(components[0]).to.have.keys(
+      expect(components[0]()).to.have.keys(
         'components',
         'renderedHTML',
+        'props',
         'styles',
         'scripts'
       );

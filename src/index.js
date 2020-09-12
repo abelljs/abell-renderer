@@ -57,43 +57,23 @@ function render(abellTemplate, userSandbox = {}, options = {}) {
   return htmlOutput;
 }
 
-// const abellCode = `
-// {{
-//   const Nav = require('Nav.abell');
-//   const a = 3;
-//   const b = 9;
-//   let d = 9;
-//   let e = 6;
-// }}
+/**
+ * Creates ExpressJS engine with given options
+ * FOR SSR
+ * @param {object} options
+ * @param {Boolean} options.allowRequire
+ * @return {Function}
+ */
+function engine({ allowRequire } = { allowRequire: false }) {
+  return (filePath, options, callback) => {
+    // define the template engine
+    const content = fs.readFileSync(filePath);
+    const rendered = render(content, options, {
+      basePath: path.dirname(filePath),
+      allowRequire
+    });
+    return callback(null, rendered);
+  };
+}
 
-// <body>
-//   {{ Nav('hehe').renderedHTML }}
-//   {{ a + b }}
-//   {{
-//     e = 3
-//     d = 10
-//   }}
-//   {{
-//     () => {
-//       if (d === 0) {
-//         return d
-//       } else {
-//         return 'Beep'
-//       }
-//     }
-//   }}
-//   {{ c }}
-// </body>
-// `;
-
-// const startTime = new Date().getTime();
-// console.log(
-//   render(
-//     abellCode,
-//     { c: 'Hello' },
-//     { allowRequire: true, filename: 'src/index.abell' }
-//   )
-// );
-// console.log(new Date().getTime() - startTime);
-
-module.exports = { render };
+module.exports = { render, engine };

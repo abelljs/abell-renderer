@@ -11,10 +11,11 @@ const { compile } = require('./compiler.js');
  * @return {String|Object} htmlTemplate
  */
 function render(abellTemplate, userSandbox = {}, options = {}) {
-  userSandbox = { ...userSandbox, ...getAbellInBuiltSandbox(options) };
+  const { builtInFunctions, components } = getAbellInBuiltSandbox(options);
+  userSandbox = { ...userSandbox, ...builtInFunctions };
   const htmlOutput = compile(abellTemplate, userSandbox, options);
   if (options.allowComponents) {
-    return { html: htmlOutput };
+    return { html: htmlOutput, components };
   }
   return htmlOutput;
 }

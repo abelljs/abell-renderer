@@ -5,4 +5,7 @@
 <template>
   <div><Sample props={foo: 'Woop Woop!'} /></div>
 </template>
+<script inlined>
+  console.log(3);
+</script>
 </AbellComponent>

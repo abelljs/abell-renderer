@@ -8,7 +8,7 @@ const abellTemplate = fs.readFileSync(
   'utf-8'
 );
 
-const { html, components } = abellRenderer.render(
+const { html } = abellRenderer.render(
   abellTemplate,
   {
     foo: 'Hehhe'

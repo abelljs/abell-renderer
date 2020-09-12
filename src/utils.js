@@ -8,6 +8,8 @@ const path = require('path');
  * @return {any}
  */
 function getAbellInBuiltSandbox(options) {
+  const components = [];
+
   const builtInFunctions = {
     console: {
       log: console.log
@@ -24,10 +26,14 @@ function getAbellInBuiltSandbox(options) {
       );
 
       if (fullRequirePath.endsWith('.abell')) {
-        return require('./component-parser.js').parseComponent(
+        const parsedComponent = require('./component-parser.js').parseComponent(
           fullRequirePath,
           options
         );
+
+        components.push(parsedComponent);
+
+        return parsedComponent;
       }
 
       if (fs.existsSync(fullRequirePath)) {
@@ -40,7 +46,7 @@ function getAbellInBuiltSandbox(options) {
     };
   }
 
-  return builtInFunctions;
+  return { builtInFunctions, components };
 }
 
 /**
@@ -83,4 +89,8 @@ const logWarning = (errorMessage, filename = '') => {
   }
 };
 
-module.exports = { execRegexOnAll, getAbellInBuiltSandbox, logWarning };
+module.exports = {
+  execRegexOnAll,
+  getAbellInBuiltSandbox,
+  logWarning
+};

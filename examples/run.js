@@ -17,7 +17,13 @@ const abellRenderer = require('../src/index.js');
 const { exec } = require('child_process');
 
 const args = process.argv.slice(2);
-const exampleToRun = args[0];
+let exampleToRun = args[0];
+if (fs.existsSync(path.join(__dirname, '..', args[0]))) {
+  exampleToRun = path.basename(args[0]);
+} else if (fs.existsSync(path.join(__dirname, args[0]))) {
+  exampleToRun = args[0];
+}
+
 if (!fs.existsSync(path.join(__dirname, exampleToRun))) {
   throw new Error('The example does not exist, try npm run example main');
 }

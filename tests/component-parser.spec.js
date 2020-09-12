@@ -4,7 +4,7 @@ const expect = require('chai').expect;
 
 const {
   parseAttributes,
-  parseComponentTags,
+  componentTagTranspiler,
   parseComponent
 } = require('../src/component-parser.js');
 
@@ -14,6 +14,10 @@ describe('parseAttributes()', () => {
       inlined: true,
       bundle: 'app.js'
     });
+  });
+
+  it('should return nothing for no attributes', () => {
+    expect(parseAttributes('')).to.eql({});
   });
 
   it('should handle attribute values in single quotes', () => {
@@ -44,7 +48,7 @@ describe('parseAttributes()', () => {
   });
 });
 
-describe('parseComponentTags()', () => {
+describe('componentTagTranspiler()', () => {
   // eslint-disable-next-line max-len
   it('should parse Abell Component Tag to Component Object before execution', () => {
     const code = `
@@ -60,7 +64,7 @@ describe('parseComponentTags()', () => {
     `;
 
     expect(
-      parseComponentTags(code)
+      componentTagTranspiler(code)
         .trim()
         .replace(/\s|\n|\r/g, '')
     ).to.equal(
@@ -78,11 +82,10 @@ describe('parseComponent()', () => {
   it('should parse component and return a componentTree - Sample.abell', () => {
     const componentTree = parseComponent(
       path.join(__dirname, 'resources', 'Sample.abell'),
-      {
-        foo: '123TEST'
-      },
       { filename: 'component-parser.spec.js' }
-    );
+    )({
+      foo: '123TEST'
+    });
 
     expect(componentTree.renderedHTML.trim().replace(/\n|\r|\s/g, '')).to.equal(
       '<div>Component to test abell. 123TEST</div>'
@@ -114,10 +117,11 @@ describe('parseComponent()', () => {
     const componentTree = parseComponent(
       path.join(__dirname, 'resources', 'Parent.abell'),
       {
+        allowRequire: true,
         filename: 'component-parser.spec.js',
         basePath: path.join(__dirname, 'resources')
       }
-    );
+    )();
 
     expect(componentTree.renderedHTML.trim().replace(/\n|\r|\s/g, '')).to.equal(
       '<div><div>Component to test abell. Woop Woop!</div></div>'
@@ -125,10 +129,12 @@ describe('parseComponent()', () => {
         .replace(/\n|\r|\s/g, '')
     );
 
-    expect(componentTree.components[0].styles[0].content).to.exist.and.include(
-      'div'
-    );
-    expect(componentTree.components[0].styles[0]).to.have.keys(
+    console.log(componentTree);
+    expect(
+      componentTree.components[0]().styles[0].content
+    ).to.exist.and.include('div');
+
+    expect(componentTree.components[0]().styles[0]).to.have.keys(
       'component',
       'attributes',
       'componentPath',
@@ -136,6 +142,6 @@ describe('parseComponent()', () => {
     );
 
     expect(componentTree.styles.length).to.equal(0);
-    expect(componentTree.scripts.length).to.equal(0);
+    expect(componentTree.scripts.length).to.equal(1);
   });
 });

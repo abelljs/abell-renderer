@@ -1,5 +1,6 @@
 {{
   const Nav = require('./Nav.abell');
+  const Footer = require('./Footer.abell');
 }}
 {{ const a = 3 }}
 <body>
@@ -9,5 +10,7 @@
       num2: a 
     }
   />
+
+  <Footer props={foo: 'nice'}/>
   <main data-test="main-content">Content</main>
 </body>

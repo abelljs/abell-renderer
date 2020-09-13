@@ -1,6 +1,6 @@
 {
   "name": "abell-renderer",
-  "version": "0.2.0",
+  "version": "0.3.0-alpha.1",
   "description": "JavaScript based Template Engine. Compiles .abell files to .html",
   "main": "src/index.js",
   "bin": {
@@ -42,7 +42,6 @@
   },
   "devDependencies": {
     "@types/jest": "^26.0.13",
-    "chai": "^4.2.0",
     "cheerio": "^1.0.0-rc.3",
     "eslint": "^7.0.0",
     "eslint-config-google": "^0.14.0",
@@ -50,7 +49,6 @@
     "eslint-plugin-prettier": "^3.1.3",
     "husky": "^4.2.5",
     "jest": "^26.4.2",
-    "mocha": "^7.1.2",
     "prettier": "^2.0.5"
   },
   "husky": {

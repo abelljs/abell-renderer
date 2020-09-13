@@ -1,5 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`componentTagTranspiler() should parse Abell Component Tag to Component Object before execution 1`] = `
+"
+    var Nav = require('./components/Nav.abell');
+    <div>
+      {{ Nav({
+          foo: 'bar'
+        }
+      ).renderedHTML }}
+      <NotComponent/>
+    </div>
+    "
+`;
+
 exports[`parseComponent() should parse component and return a componentTree - Sample.abell 1`] = `
 "
   <div data-abell-hKYKjJ>Component to test abell. 123TEST</div>
@@ -16,21 +29,8 @@ exports[`parseComponent() should parse component and return a componentTree - Sa
 
 exports[`parseComponent() should work for nested components - Parent.abell 1`] = `
 "
-  <div><div>Component to test abell. Woop Woop!</div></div>
+  <div data-abell-cmDbNX><div data-abell-hKYKjJ data-abell-cmDbNX>Component to test abell. Woop Woop!</div></div>
 "
 `;
 
 exports[`parseComponent() should work for nested components - Parent.abell 2`] = `"div[data-abell-hKYKjJ]{color:#f30;}"`;
-
-exports[`parseComponentTags() should parse Abell Component Tag to Component Object before execution 1`] = `
-"
-    var Nav = require('./components/Nav.abell');
-    <div>
-      {{ Nav({
-          foo: 'bar'
-        }
-      ).renderedHTML }}
-      <NotComponent/>
-    </div>
-    "
-`;

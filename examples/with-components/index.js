@@ -20,6 +20,7 @@ const { html, components } = abellRenderer.render(
   }
 );
 
+console.log(html);
 console.dir(components, { depth: Infinity });
 
 fs.writeFileSync(path.join(__dirname, 'out.html'), html);

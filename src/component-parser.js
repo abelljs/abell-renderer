@@ -1,21 +1,22 @@
 const fs = require('fs');
 const path = require('path');
 
-const {
-  execRegexOnAll,
-  abellRequire,
-  normalizePath
-} = require('./render-utils.js');
-const { compile } = require('./compiler.js');
 const { cssSerializer } = require('./parsers/css');
 const { prefixHtmlTags } = require('./post-compilation');
 const hash = require('./hash');
+
+const {
+  getAbellInBuiltSandbox,
+  execRegexOnAll,
+  normalizePath
+} = require('./utils.js');
+
 /**
- * Parses component tags (<Nav/> -> Nav().renderedHTML)
- * @param {String} abellTemplate
- * @return {String}
+ * Turns <Nav props={hello: 'hi'}/> to {{ Nav({hello: 'hi}).renderedHTML }}
+ * @param {string} abellTemplate
+ * @return {string}
  */
-function parseComponentTags(abellTemplate) {
+function componentTagTranspiler(abellTemplate) {
   abellTemplate = String(abellTemplate);
   // eslint-disable-next
   const componentVariables = execRegexOnAll(
@@ -53,75 +54,92 @@ function parseComponentTags(abellTemplate) {
 }
 
 /**
- * Parses attributes with space separate string to object
- * @param {String} attributeString
- * @return {Object}
+ * Parse string attributes to object
+ * @param {string} attrString
+ * @return {object}
  */
-const parseAttribute = (attributeString) => {
-  const attributeArr = attributeString
-    .split(/\s/)
-    .filter((attribute) => !!attribute)
-    .reduce((prev, attribute) => {
-      const indexOfEqual = attribute.indexOf('=');
-      let key;
-      let value;
-      if (indexOfEqual < 0) {
-        // does not have a value so we give 'true' as a default value
-        key = attribute;
-        value = true;
-      } else {
-        key = attribute.slice(0, indexOfEqual);
-        value = attribute.slice(indexOfEqual + 1);
-        if (value && (value.startsWith("'") || value.startsWith('"'))) {
-          value = value.slice(1, -1);
-        }
-      }
-      prev[key] = value;
-      return prev;
-    }, {});
+function parseAttributes(attrString) {
+  const attributeMatches = attrString.match(/(?:[^\s"']+|(["'])[^"]*\1)+/g);
+  if (!attributeMatches) {
+    return {};
+  }
 
-  return attributeArr;
-};
+  return attributeMatches.reduce((prevObj, val) => {
+    const firstEqual = val.indexOf('=');
+    if (firstEqual < 0) {
+      return {
+        [val]: true
+      };
+    }
+    const key = val.slice(0, firstEqual);
+    let value = val.slice(firstEqual + 1).trim();
+    if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
+
+    return {
+      ...prevObj,
+      [key]: value
+    };
+  }, {});
+}
 
 /**
- *
- * @param {String} abellComponentPath
- * @param {Object} props
- * @param {Object} options
- * @return {Object}
+ * Turns Given Abell Component into JavaScript Component Tree
+ * @param {string} abellComponentContent Cotent of Abell Component
+ * @param {string} abellComponentPath path of abell component file
+ * @param {object} props
+ * @param {object} options
+ * @return {object}
  */
-function parseComponent(abellComponentPath, props = {}, options) {
-  let abellComponentContent = fs.readFileSync(abellComponentPath, 'utf-8');
-  if (!abellComponentContent.trim().startsWith('<AbellComponent>')) {
-    throw new Error( // eslint-disable-next-line max-len
-      `Abell Component should be wrapped inside <AbellComponent></AbellComponent>. \n >> Error requiring ${abellComponentPath}\n`
-    );
-  }
-  abellComponentContent = parseComponentTags(abellComponentContent);
-  const basePath = path.dirname(abellComponentPath);
+function parseComponent(
+  abellComponentContent,
+  abellComponentPath,
+  props = {},
+  options
+) {
   const components = [];
+  const basePath = path.dirname(abellComponentPath);
+
+  options.basePath = basePath;
+  const transformations = {
+    '.abell': (abellComponentPath) => {
+      /**
+       * TODO: Memoize Abell Component file content
+       */
+      const abellComponentContent = fs.readFileSync(
+        path.join(basePath, abellComponentPath),
+        'utf-8'
+      );
+
+      return (props) => {
+        const parsedComponent = parseComponent(
+          abellComponentContent,
+          path.join(basePath, abellComponentPath),
+          props,
+          options
+        );
+        components.push(parsedComponent);
+        return parsedComponent;
+      };
+    }
+  };
+  const { builtInFunctions } = getAbellInBuiltSandbox(options, transformations);
   const sandbox = {
     props,
-    require: (pathToRequire) => {
-      if (pathToRequire.endsWith('.abell')) {
-        return (userProps) => {
-          const component = parseComponent(
-            path.join(basePath, pathToRequire),
-            userProps,
-            { ...options, skipHTMLHash: true }
-          );
-          components.push(component);
-          return component;
-        };
-      }
-
-      return abellRequire(pathToRequire, { ...options, basePath });
-    },
-    console: { log: console.log }
+    ...builtInFunctions
   };
-  const htmlComponentContent = compile(abellComponentContent, sandbox, {
-    filename: path.relative(process.cwd(), abellComponentPath)
-  });
+
+  const htmlComponentContent = require('./compiler.js').compile(
+    abellComponentContent,
+    sandbox,
+    {
+      filename: path.relative(process.cwd(), abellComponentPath)
+    }
+  );
 
   const templateTag = /\<template\>(.*?)\<\/template\>/gs.exec(
     htmlComponentContent
@@ -142,7 +160,7 @@ function parseComponent(abellComponentPath, props = {}, options) {
   }
 
   const matchMapper = (isCss) => (contentMatch) => {
-    const attributes = parseAttribute(contentMatch[1]);
+    const attributes = parseAttributes(contentMatch[1]);
     const shouldPrefix = isCss && !attributes.global;
     return {
       component: path.basename(abellComponentPath),
@@ -150,7 +168,7 @@ function parseComponent(abellComponentPath, props = {}, options) {
       content: shouldPrefix
         ? cssSerializer(contentMatch[2], componentHash)
         : contentMatch[2],
-      attributes: parseAttribute(contentMatch[1])
+      attributes: parseAttributes(contentMatch[1])
     };
   };
 
@@ -164,12 +182,19 @@ function parseComponent(abellComponentPath, props = {}, options) {
     htmlComponentContent
   ).matches.map(matchMapper(false));
 
-  return {
+  const componentTree = {
     renderedHTML: template,
     components,
+    props,
     styles: styleMatches,
     scripts: scriptMatches
   };
+
+  return componentTree;
 }
 
-module.exports = { parseComponent, parseComponentTags, parseAttribute };
+module.exports = {
+  parseComponent,
+  parseAttributes,
+  componentTagTranspiler
+};

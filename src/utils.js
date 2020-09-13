@@ -1,0 +1,103 @@
+const fs = require('fs');
+const path = require('path');
+
+/**
+ * Returns in-built functions from Abell
+ * @param {object} options
+ * @param {string} options.basePath
+ * @param {object} transformations
+ * @return {any}
+ */
+function getAbellInBuiltSandbox(options, transformations = {}) {
+  const components = [];
+
+  const builtInFunctions = {
+    console: {
+      log: console.log
+    }
+  };
+
+  if (options.allowRequire) {
+    builtInFunctions.require = (pathToRequire) => {
+      const fullRequirePath = path.join(options.basePath, pathToRequire);
+
+      if (fullRequirePath.endsWith('.abell')) {
+        return transformations['.abell'](pathToRequire);
+      }
+
+      if (fs.existsSync(fullRequirePath)) {
+        // Local file require
+        return require(fullRequirePath);
+      }
+
+      // NPM Package or NodeJS Module
+      return require(pathToRequire);
+    };
+  }
+
+  return { builtInFunctions, components };
+}
+
+/**
+ * Captures groups from regex and executes RegEx.exec() function on all.
+ *
+ * @param {regex} regex - Regular Expression to execute on.
+ * @param {string} template - HTML Template in string.
+ * @return {object} sandbox
+ * sandbox.matches - all matches of regex
+ * sandbox.input - input string
+ */
+const execRegexOnAll = (regex, template) => {
+  /** allMatches holds all the results of RegExp.exec() */
+  const allMatches = [];
+  let match = regex.exec(template);
+  if (!match) {
+    return { matches: [], input: template };
+  }
+
+  const { input } = match;
+
+  while (match !== null) {
+    delete match.input;
+    allMatches.push(match);
+    match = regex.exec(template);
+  }
+
+  return { matches: allMatches, input };
+};
+
+/**
+ * console.log for warnings, logs with warning styles
+ * @param {String} errorMessage message to log
+ * @param {string} filename name of the file and line numbers that throw error
+ */
+const logWarning = (errorMessage, filename = '') => {
+  console.log(`\u001b[1m\u001b[33m>>\u001b[39m\u001b[22m ${errorMessage}`);
+  if (filename) {
+    console.log('\tat ' + filename);
+  }
+};
+
+// copied from https://github.com/sindresorhus/slash/blob/master/index.js
+/**
+ * Convert Windows backslash paths to slash paths: foo\\bar ➔ foo/bar
+ * @param {String} path  input path string
+ * @return {String}
+ */
+const normalizePath = (path) => {
+  const isExtendedLengthPath = /^\\\\\?\\/.test(path);
+  const hasNonAscii = /[^\u0000-\u0080]+/.test(path); // eslint-disable-line no-control-regex
+
+  if (isExtendedLengthPath || hasNonAscii) {
+    return path;
+  }
+
+  return path.replace(/\\/g, '/');
+};
+
+module.exports = {
+  execRegexOnAll,
+  getAbellInBuiltSandbox,
+  logWarning,
+  normalizePath
+};

@@ -1,15 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 
-const { cssSerializer } = require('./parsers/css');
-const { prefixHtmlTags } = require('./post-compilation');
-const hash = require('./hash');
+const { cssSerializer } = require('./css-parser.js');
+const hash = require('../utils/hash.js');
 
 const {
   getAbellInBuiltSandbox,
   execRegexOnAll,
-  normalizePath
-} = require('./utils.js');
+  normalizePath,
+  prefixHtmlTags
+} = require('../utils/general-utils.js');
 
 /**
  * Turns <Nav props={hello: 'hi'}/> to {{ Nav({hello: 'hi}).renderedHTML }}
@@ -133,7 +133,7 @@ function parseComponent(
     ...builtInFunctions
   };
 
-  const htmlComponentContent = require('./compiler.js').compile(
+  const htmlComponentContent = require('../compiler.js').compile(
     abellComponentContent,
     sandbox,
     {

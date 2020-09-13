@@ -1,4 +1,4 @@
-const { prefixHtmlTags } = require('../src/post-compilation');
+const { prefixHtmlTags } = require('../src/utils/general-utils.js');
 
 describe('prefixHTMLTags()', () => {
   it('should prefix a single html tag', () => {

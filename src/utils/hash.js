@@ -1,19 +1,16 @@
 // mostly taken from styled-components
 const SEED = 5381;
 
-const phash = (h, x) => {
+// This is a djb2 hashing function
+const hash = (x) => {
   let i = x.length;
+  let h = SEED;
 
   while (i) {
     h = (h * 33) ^ x.charCodeAt(--i);
   }
 
   return h;
-};
-
-// This is a djb2 hashing function
-const hash = (x) => {
-  return phash(SEED, x);
 };
 
 const AD_REPLACER_R = /(a)(d)/gi;

@@ -2,9 +2,9 @@ const path = require('path');
 const fs = require('fs');
 const cheerio = require('cheerio');
 
-const { render } = require('../src/index');
-const hash = require('../src/hash');
-const { normalizePath } = require('../src/utils');
+const { render } = require('../src/index.js');
+const hash = require('../src/utils/hash.js');
+const { normalizePath } = require('../src/utils/general-utils.js');
 
 describe('scoped css', () => {
   // loading and rendering test component

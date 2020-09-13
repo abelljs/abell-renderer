@@ -5,7 +5,7 @@ const {
   parseAttributes,
   componentTagTranspiler,
   parseComponent
-} = require('../src/component-parser.js');
+} = require('../src/parsers/component-parser.js');
 
 describe('parseAttributes()', () => {
   it('should turn string attributes into object', () => {

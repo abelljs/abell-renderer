@@ -1,5 +1,5 @@
-const hash = require('../src/hash');
-const { normalizePath } = require('../src/utils.js');
+const hash = require('../src/utils/hash.js');
+const { normalizePath } = require('../src/utils/general-utils.js');
 const path = require('path');
 // Simple test for our hashing function
 // Just to ensure we don't accidentally modify it

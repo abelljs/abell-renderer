@@ -2,8 +2,8 @@ const vm = require('vm');
 
 const acorn = require('acorn');
 
-const { execRegexOnAll, logWarning } = require('./utils.js');
-const { componentTagTranspiler } = require('./component-parser.js');
+const { execRegexOnAll, logWarning } = require('./utils/general-utils.js');
+const { componentTagTranspiler } = require('./parsers/component-parser.js');
 
 /**
  * @typedef {import('vm').Context} Context

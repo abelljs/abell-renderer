@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const { compile } = require('./compiler.js');
-const { parseComponent } = require('./component-parser.js');
-const { getAbellInBuiltSandbox } = require('./utils.js');
+const { parseComponent } = require('./parsers/component-parser.js');
+const { getAbellInBuiltSandbox } = require('./utils/general-utils.js');
 
 /**
  * Outputs vanilla html string when abell template and sandbox is passed.

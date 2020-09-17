@@ -53,14 +53,16 @@ function getStatementTypeMap(jsCode) {
  * Evaluates Abell Block value
  * @param {string} jsCode JavaScript code in string
  * @param {Context} context
+ * @param {number} errLineOffset
  * @param {Object} options
  * @return {object}
  */
-function evaluateAbellBlock(jsCode, context, options) {
+function evaluateAbellBlock(jsCode, context, errLineOffset, options) {
   const statementTypeMap = getStatementTypeMap(jsCode);
   validateAbellBlock(statementTypeMap, jsCode, options.filename);
   const script = new vm.Script(jsCode, {
-    filename: options.filename || '.abell'
+    filename: options.filename,
+    lineOffset: errLineOffset
   });
 
   const jsOutput = script.runInContext(context, {
@@ -105,12 +107,19 @@ function compile(abellTemplate, sandbox, options) {
   for (const match of matches) {
     const [abellBlock, jsCode] = match;
     let evaluatedValue = '';
+    const errLineOffset = (input.slice(0, match.index).match(/\n/g) || [])
+      .length;
 
     if (abellBlock.startsWith('\\{{')) {
       // if block is comment (e.g \{{ I want to print this as it is }})
       evaluatedValue = abellBlock.slice(1);
     } else {
-      evaluatedValue = evaluateAbellBlock(jsCode, context, options);
+      evaluatedValue = evaluateAbellBlock(
+        jsCode,
+        context,
+        errLineOffset,
+        options
+      );
     }
 
     const toAddOnIndex = match.index; // Gets the index where the executed value is to be put.
@@ -124,4 +133,4 @@ function compile(abellTemplate, sandbox, options) {
   return renderedHTML;
 }
 
-module.exports = { compile, evaluateAbellBlock };
+module.exports = { compile, evaluateAbellBlock, getStatementTypeMap };

@@ -1,6 +1,13 @@
 # Changelog
 
-## v0.2.0
+## v0.3.0 (Next)
+
+- Scoped CSS Support (Hugee shoutout to [@pantharshit00](https://github.com/pantharshit00/)).
+- Syntax warnings for multiple statements in a block.
+- More reliable code.
+- Bug fix for `const` not being true constant.
+
+## v0.2.0 (Latest)
 
 - Default value of props in components is now empty object instead of undefined.
 - Multi-line support for writing component tag.
@@ -111,9 +118,7 @@ Ability to add functions inside curly brackets
 outputs:
 
 ```html
-<div>
-  8
-</div>
+<div>8</div>
 ```
 
 ## < v0.0.2

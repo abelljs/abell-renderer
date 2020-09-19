@@ -1,5 +1,7 @@
 const path = require('path');
-const { equalValueChecks } = require('../../tests/utils/baseTestFramework.js');
+const {
+  buildAndGetSelector
+} = require('../../tests/utils/baseTestFramework.js');
 
 // all the contents are managed by a jest snapshot internally
 const TEST_MAP = [
@@ -9,8 +11,7 @@ const TEST_MAP = [
   },
   {
     desc: 'should render content of Footer Component',
-    query: '[data-test="footer-component"]',
-    toEqual: ' This is my <b data-abell-fbrlim>Footer</b> hello'
+    query: '[data-test="footer-component"]'
   },
   {
     desc: 'should render main content',
@@ -19,8 +20,17 @@ const TEST_MAP = [
 ];
 
 describe('examples/with-components', () => {
-  equalValueChecks(TEST_MAP, {
-    exampleToRun: 'with-components',
-    outPath: path.join(__dirname, 'out.html')
+  let $;
+  beforeAll(async () => {
+    $ = await buildAndGetSelector({
+      exampleToRun: 'with-components',
+      outPath: path.join(__dirname, 'out.html')
+    });
   });
+
+  for (const test of TEST_MAP) {
+    it(test.desc, () => {
+      expect($(test.query).html()).toMatchSnapshot();
+    });
+  }
 });

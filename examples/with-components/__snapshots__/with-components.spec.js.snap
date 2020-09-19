@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`examples/with-components should render content of Footer Component 1`] = `" This is my <b data-abell-cybowg>Footer</b> nice"`;
+exports[`examples/with-components should render content of Footer Component 1`] = `" This is my <b data-abell-cybowg>Footer</b> nice Test JSON Import Pass"`;
 
 exports[`examples/with-components should render content of Nav Component 1`] = `" This is my Navbar 13 "`;
 

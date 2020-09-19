@@ -24,7 +24,7 @@
   <span data-test="require-check">{{ numberFromJSON + numberFromJS }}</span> <!-- 69 -->
   <span data-test="comment-check">\{{ print this as it is }}</span>
 
-  <div class="projects">
+  <div class="projects" data-test="projects-check">
     {{
       projects
         .map((project, index) => `

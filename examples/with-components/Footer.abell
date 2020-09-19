@@ -1,6 +1,7 @@
 <AbellComponent>
+{{ const testJSONImport = require('./data/test-json-import.json') }}
 <template>
-  <footer data-test="footer-component"> This is my <b>Footer</b> {{ props.foo }}</footer>
+  <footer data-test="footer-component"> This is my <b>Footer</b> {{ props.foo }} {{ testJSONImport.test }}</footer>
 </template>
 <style>
   footer {

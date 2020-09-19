@@ -2,11 +2,21 @@
 
 exports[`examples/main should check if values can be required from json and js 1`] = `"69"`;
 
-exports[`examples/main should test if index 0, has project name Project Two 1`] = `"Project Two"`;
-
-exports[`examples/main should test if index 1, has project name Project One 1`] = `"Project One"`;
-
-exports[`examples/main should test if index 2, has project name Project Three 1`] = `"Project Three"`;
+exports[`examples/main should test if projects are correctly rendered 1`] = `
+"
+    <div>
+          <span data-test=\\"project-0-check\\">Project Two</span>
+        </div>
+        
+        <div>
+          <span data-test=\\"project-1-check\\">Project One</span>
+        </div>
+        
+        <div>
+          <span data-test=\\"project-2-check\\">Project Three</span>
+        </div>
+  "
+`;
 
 exports[`examples/main should test if putting slash before bracket prints content as it is 1`] = `"{{ print this as it is }}"`;
 

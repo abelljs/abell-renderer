@@ -1,38 +1,43 @@
 const path = require('path');
-const { equalValueChecks } = require('../../tests/utils/baseTestFramework.js');
-const projects = require('./data/projects.json');
+const {
+  buildAndGetSelector
+} = require('../../tests/utils/baseTestFramework.js');
 
 const TEST_MAP = [
   {
     desc: 'should test javascript inside brackets',
-    query: '[data-test="js-add-check"]',
-    toEqual: String(11)
+    query: '[data-test="js-add-check"]'
   },
   {
     desc: 'should test if reassignment of variable is possible',
-    query: '[data-test="reassignment-check"]',
-    toEqual: String(9)
+    query: '[data-test="reassignment-check"]'
   },
   {
     desc: 'should check if values can be required from json and js',
-    query: '[data-test="require-check"]',
-    toEqual: String(69)
+    query: '[data-test="require-check"]'
   },
   {
     desc: 'should test if putting slash before bracket prints content as it is',
-    query: '[data-test="comment-check"]',
-    toEqual: '{{ print this as it is }}'
+    query: '[data-test="comment-check"]'
   },
-  ...projects.map((project, index) => ({
-    desc: `should test if index ${index}, has project name ${project.name}`,
-    query: `[data-test="project-${index}-check"]`,
-    toEqual: project.name
-  }))
+  {
+    desc: 'should test if projects are correctly rendered',
+    query: '[data-test="projects-check"]'
+  }
 ];
 
 describe('examples/main', () => {
-  equalValueChecks(TEST_MAP, {
-    exampleToRun: 'main',
-    outPath: path.join(__dirname, 'out.html')
+  let $;
+  beforeAll(async () => {
+    $ = await buildAndGetSelector({
+      exampleToRun: 'main',
+      outPath: path.join(__dirname, 'out.html')
+    });
   });
+
+  for (const test of TEST_MAP) {
+    it(test.desc, () => {
+      expect($(test.query).html()).toMatchSnapshot();
+    });
+  }
 });

@@ -104,7 +104,7 @@ function parseComponent(
   const components = [];
   const basePath = path.dirname(abellComponentPath);
 
-  options.basePath = basePath;
+  const newOptions = { ...options, basePath };
   const transformations = {
     '.abell': (abellComponentPath) => {
       /**
@@ -120,14 +120,17 @@ function parseComponent(
           abellComponentContent,
           path.join(basePath, abellComponentPath),
           props,
-          options
+          newOptions
         );
         components.push(parsedComponent);
         return parsedComponent;
       };
     }
   };
-  const { builtInFunctions } = getAbellInBuiltSandbox(options, transformations);
+  const { builtInFunctions } = getAbellInBuiltSandbox(
+    newOptions,
+    transformations
+  );
   const sandbox = {
     props,
     ...builtInFunctions

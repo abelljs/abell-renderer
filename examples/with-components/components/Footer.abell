@@ -1,0 +1,20 @@
+<AbellComponent>
+{{ 
+  const testJSONImport = require('../data/test-json-import.json');
+  const Button = require('./Button.abell');
+}}
+<template>
+  <footer data-test="footer-component"> 
+    This is my <b>Footer</b> {{ props.foo }} {{ testJSONImport.test }}
+    <div><Button props={text: 'Button Test'}/></div>
+  </footer>
+</template>
+<style>
+  footer {
+    color: #f30;
+  }
+</style>
+<script>
+  document.querySelector('nav').innerHTML = 'This is from JS';
+</script>
+</AbellComponent>

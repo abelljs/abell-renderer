@@ -1,6 +1,6 @@
 {{
-  const Nav = require('./Nav.abell');
-  const Footer = require('./Footer.abell');
+  const Nav = require('./components/Nav.abell');
+  const Footer = require('./components/Footer.abell');
 }}
 {{ const a = 3 }}
 <body>

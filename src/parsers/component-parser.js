@@ -68,6 +68,7 @@ function parseAttributes(attrString) {
     const firstEqual = val.indexOf('=');
     if (firstEqual < 0) {
       return {
+        ...prevObj,
         [val]: true
       };
     }

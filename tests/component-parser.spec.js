@@ -15,6 +15,13 @@ describe('parseAttributes()', () => {
     });
   });
 
+  it('should return expected result on global inlined', () => {
+    expect(parseAttributes('global inlined')).toEqual({
+      global: true,
+      inlined: true
+    });
+  });
+
   it('should return nothing for no attributes', () => {
     expect(parseAttributes('')).toEqual({});
   });

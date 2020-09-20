@@ -6,6 +6,7 @@
 - Syntax warnings for multiple statements in a block.
 - More reliable code.
 - Bug fix for `const` not being true constant.
+- Fix multiple values-less attributes parsing error
 
 ## v0.2.0 (Latest)
 

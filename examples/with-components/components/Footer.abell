@@ -9,7 +9,7 @@
     <div><Button props={text: 'Button Test'}/></div>
   </footer>
 </template>
-<style>
+<style global inlined>
   footer {
     color: #f30;
   }

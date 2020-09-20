@@ -140,6 +140,7 @@ function parseComponent(
     abellComponentContent,
     sandbox,
     {
+      ...options,
       filename: path.relative(process.cwd(), abellComponentPath)
     }
   );

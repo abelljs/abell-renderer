@@ -112,6 +112,7 @@ describe('parseComponent()', () => {
       {},
       {
         allowRequire: true,
+        allowComponents: true,
         filename: 'component-parser.spec.js',
         basePath: path.join(__dirname, 'resources')
       }

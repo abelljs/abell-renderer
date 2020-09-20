@@ -96,9 +96,10 @@ function evaluateAbellBlock(jsCode, context, errLineOffset, options) {
  */
 function compile(abellTemplate, sandbox, options) {
   const context = new vm.createContext(sandbox); // eslint-disable-line
-
-  // transpile tags from <Nav/> to {{ Nav().renderedHTML }}
-  abellTemplate = componentTagTranspiler(abellTemplate); // transpile component tags
+  if (options.allowComponents) {
+    // transpile tags from <Nav/> to {{ Nav().renderedHTML }}
+    abellTemplate = componentTagTranspiler(abellTemplate); // transpile component tags
+  }
 
   const { matches, input } = execRegexOnAll(/\\?{{(.+?)}}/gs, abellTemplate);
   let renderedHTML = '';

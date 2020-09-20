@@ -1,6 +1,6 @@
 {
   "name": "abell-renderer",
-  "version": "0.3.0-alpha.3",
+  "version": "0.3.0-beta.1",
   "description": "JavaScript based Template Engine. Compiles .abell files to .html",
   "main": "src/index.js",
   "bin": {

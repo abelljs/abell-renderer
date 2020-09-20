@@ -16,6 +16,7 @@ const { html, components } = abellRenderer.render(
   {
     allowRequire: true,
     allowComponents: true,
+    filename: path.join(__dirname, 'in.abell'),
     basePath: __dirname
   }
 );

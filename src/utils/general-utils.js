@@ -10,8 +10,6 @@ const { ABELL_CSS_DATA_PREFIX } = require('../parsers/css-parser.js');
  * @return {any}
  */
 function getAbellInBuiltSandbox(options, transformations = {}) {
-  const components = [];
-
   const builtInFunctions = {
     console: {
       log: console.log
@@ -31,12 +29,20 @@ function getAbellInBuiltSandbox(options, transformations = {}) {
         return require(fullRequirePath);
       }
 
-      // NPM Package or NodeJS Module
-      return require(pathToRequire);
+      try {
+        // NPM Package or NodeJS Module
+        return require(pathToRequire);
+      } catch (err) {
+        if (err.code === 'MODULE_NOT_FOUND') {
+          throwCustomError(err);
+        } else {
+          throw err;
+        }
+      }
     };
   }
 
-  return { builtInFunctions, components };
+  return builtInFunctions;
 }
 
 /**
@@ -96,6 +102,45 @@ const normalizePath = (path) => {
   return path.replace(/\\/g, '/');
 };
 
+/**
+ *
+ * @param {Error} err
+ * @param {string} code
+ */
+function throwCustomError(err, code = '') {
+  console.log(code);
+  console.log(`Error: ${err.message}`);
+  const stack = err.stack.split('\n');
+  const abellFileInStack = stack
+    .filter((atFile) => atFile.includes('.abell:'))
+    .join('\n');
+  console.log(abellFileInStack);
+  console.log('\n');
+  process.exit(0);
+}
+
+/**
+ * Returns the content of the abell file
+ * @param {string} filePath path of the file
+ * @return {string}
+ */
+function getAbellComponentTemplate(filePath) {
+  /**
+   * TODO: Memoize the component reads
+   */
+  try {
+    return fs.readFileSync(filePath, 'utf-8');
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      const relativeFilePath = path.relative(process.cwd(), filePath);
+      err.message = `Cannot find component '${relativeFilePath}'`;
+      throwCustomError(err);
+    } else {
+      throw err;
+    }
+  }
+}
+
 // This function uses a single regular expression to add a data prefix to every html opening tag passed to it
 const prefixHtmlTags = (htmlString, hash) => {
   const openingTagRegexp = /\<([a-zA-Z]+)(.*?)(\s?\/?)\>/gs;
@@ -110,5 +155,6 @@ module.exports = {
   getAbellInBuiltSandbox,
   logWarning,
   normalizePath,
+  getAbellComponentTemplate,
   prefixHtmlTags
 };

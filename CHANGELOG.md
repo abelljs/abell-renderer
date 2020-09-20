@@ -7,6 +7,7 @@
 - More reliable code.
 - Bug fix for `const` not being true constant.
 - Fix multiple values-less attributes parsing error
+- Better file not found errors for .abell and other files.
 
 ## v0.2.0 (Latest)
 

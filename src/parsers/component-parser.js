@@ -1,4 +1,3 @@
-const fs = require('fs');
 const path = require('path');
 
 const { cssSerializer } = require('./css-parser.js');
@@ -8,7 +7,8 @@ const {
   getAbellInBuiltSandbox,
   execRegexOnAll,
   normalizePath,
-  prefixHtmlTags
+  prefixHtmlTags,
+  getAbellComponentTemplate
 } = require('../utils/general-utils.js');
 
 /**
@@ -108,10 +108,7 @@ function parseComponent(
   const newOptions = { ...options, basePath };
   const transformations = {
     '.abell': (abellComponentPath) => {
-      /**
-       * TODO: Memoize Abell Component file content
-       */
-      const abellComponentContent = fs.readFileSync(
+      const abellComponentContent = getAbellComponentTemplate(
         path.join(basePath, abellComponentPath),
         'utf-8'
       );
@@ -128,10 +125,7 @@ function parseComponent(
       };
     }
   };
-  const { builtInFunctions } = getAbellInBuiltSandbox(
-    newOptions,
-    transformations
-  );
+  const builtInFunctions = getAbellInBuiltSandbox(newOptions, transformations);
   const sandbox = {
     props,
     ...builtInFunctions

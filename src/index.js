@@ -2,7 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const { compile } = require('./compiler.js');
 const { parseComponent } = require('./parsers/component-parser.js');
-const { getAbellInBuiltSandbox } = require('./utils/general-utils.js');
+const {
+  getAbellInBuiltSandbox,
+  getAbellComponentTemplate
+} = require('./utils/general-utils.js');
 
 /**
  * Outputs vanilla html string when abell template and sandbox is passed.
@@ -26,10 +29,7 @@ function render(abellTemplate, userSandbox = {}, options = {}) {
   const components = [];
   const transformations = {
     '.abell': (pathToRequire) => {
-      /**
-       * TODO: Memoize Abell Component file content
-       */
-      const abellComponentContent = fs.readFileSync(
+      const abellComponentContent = getAbellComponentTemplate(
         path.join(options.basePath, pathToRequire),
         'utf-8'
       );
@@ -47,7 +47,7 @@ function render(abellTemplate, userSandbox = {}, options = {}) {
     }
   };
 
-  const { builtInFunctions } = getAbellInBuiltSandbox(options, transformations);
+  const builtInFunctions = getAbellInBuiltSandbox(options, transformations);
   userSandbox = { ...userSandbox, ...builtInFunctions };
 
   const htmlOutput = compile(abellTemplate, userSandbox, options);

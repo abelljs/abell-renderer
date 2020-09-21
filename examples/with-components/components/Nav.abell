@@ -1,14 +1,19 @@
 <AbellComponent>
-{{
-  const Footer = require('./Footer.abell');
-}}
 <template>
   <nav data-test="nav-component"> This is my Navbar {{ props.num + props.num2 }} </nav>
-  <Footer props={ hello: 'hehehe', foo: 'hello' } />
 </template>
 <style>
   nav {
     color: #f30;
+  }
+
+  .test {
+    color: green;
+  }
+
+
+  ul > li test.a, .test li > * {
+    color: white;
   }
 </style>
 <script>

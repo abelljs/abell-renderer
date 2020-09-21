@@ -1,0 +1,11 @@
+<AbellComponent>
+<template>
+  <button>{{ props.text }}</button>
+</template>
+<style>
+  button {
+    background-color: #f30;
+    color: #fff;
+  }
+</style>
+</AbellComponent>

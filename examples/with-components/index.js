@@ -16,10 +16,12 @@ const { html, components } = abellRenderer.render(
   {
     allowRequire: true,
     allowComponents: true,
+    filename: path.join(__dirname, 'in.abell'),
     basePath: __dirname
   }
 );
 
-console.log(components);
+console.log(html);
+console.dir(components, { depth: Infinity });
 
 fs.writeFileSync(path.join(__dirname, 'out.html'), html);

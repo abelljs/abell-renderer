@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`examples/main should check if values can be required from json and js 1`] = `"69"`;
+
+exports[`examples/main should test if projects are correctly rendered 1`] = `
+"
+    <div>
+          <span data-test=\\"project-0-check\\">Project Two</span>
+        </div>
+        
+        <div>
+          <span data-test=\\"project-1-check\\">Project One</span>
+        </div>
+        
+        <div>
+          <span data-test=\\"project-2-check\\">Project Three</span>
+        </div>
+  "
+`;
+
+exports[`examples/main should test if putting slash before bracket prints content as it is 1`] = `"{{ print this as it is }}"`;
+
+exports[`examples/main should test if reassignment of variable is possible 1`] = `"9"`;
+
+exports[`examples/main should test javascript inside brackets 1`] = `"11"`;

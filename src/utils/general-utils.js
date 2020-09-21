@@ -1,0 +1,160 @@
+const fs = require('fs');
+const path = require('path');
+const { ABELL_CSS_DATA_PREFIX } = require('../parsers/css-parser.js');
+
+/**
+ * Returns in-built functions from Abell
+ * @param {object} options
+ * @param {string} options.basePath
+ * @param {object} transformations
+ * @return {any}
+ */
+function getAbellInBuiltSandbox(options, transformations = {}) {
+  const builtInFunctions = {
+    console: {
+      log: console.log
+    }
+  };
+
+  if (options.allowRequire) {
+    builtInFunctions.require = (pathToRequire) => {
+      const fullRequirePath = path.join(options.basePath, pathToRequire);
+
+      if (fullRequirePath.endsWith('.abell')) {
+        return transformations['.abell'](pathToRequire);
+      }
+
+      if (fs.existsSync(fullRequirePath)) {
+        // Local file require
+        return require(fullRequirePath);
+      }
+
+      try {
+        // NPM Package or NodeJS Module
+        return require(pathToRequire);
+      } catch (err) {
+        if (err.code === 'MODULE_NOT_FOUND') {
+          throwCustomError(err);
+        } else {
+          throw err;
+        }
+      }
+    };
+  }
+
+  return builtInFunctions;
+}
+
+/**
+ * Captures groups from regex and executes RegEx.exec() function on all.
+ *
+ * @param {regex} regex - Regular Expression to execute on.
+ * @param {string} template - HTML Template in string.
+ * @return {object} sandbox
+ * sandbox.matches - all matches of regex
+ * sandbox.input - input string
+ */
+const execRegexOnAll = (regex, template) => {
+  /** allMatches holds all the results of RegExp.exec() */
+  const allMatches = [];
+  let match = regex.exec(template);
+  if (!match) {
+    return { matches: [], input: template };
+  }
+
+  const { input } = match;
+
+  while (match !== null) {
+    delete match.input;
+    allMatches.push(match);
+    match = regex.exec(template);
+  }
+
+  return { matches: allMatches, input };
+};
+
+/**
+ * console.log for warnings, logs with warning styles
+ * @param {String} errorMessage message to log
+ * @param {string} filename name of the file and line numbers that throw error
+ */
+const logWarning = (errorMessage, filename = '') => {
+  console.log(`\u001b[1m\u001b[33m>>\u001b[39m\u001b[22m ${errorMessage}`);
+  if (filename) {
+    console.log('\tat ' + filename);
+  }
+};
+
+// copied from https://github.com/sindresorhus/slash/blob/master/index.js
+/**
+ * Convert Windows backslash paths to slash paths: foo\\bar ➔ foo/bar
+ * @param {String} path  input path string
+ * @return {String}
+ */
+const normalizePath = (path) => {
+  const isExtendedLengthPath = /^\\\\\?\\/.test(path);
+  const hasNonAscii = /[^\u0000-\u0080]+/.test(path); // eslint-disable-line no-control-regex
+
+  if (isExtendedLengthPath || hasNonAscii) {
+    return path;
+  }
+
+  return path.replace(/\\/g, '/');
+};
+
+/**
+ *
+ * @param {Error} err
+ * @param {string} code
+ */
+function throwCustomError(err, code = '') {
+  console.log(code);
+  console.log(`Error: ${err.message}`);
+  const stack = err.stack.split('\n');
+  const abellFileInStack = stack
+    .filter((atFile) => atFile.includes('.abell:'))
+    .join('\n');
+  console.log(abellFileInStack);
+  console.log('\n');
+  process.exit(0);
+}
+
+/**
+ * Returns the content of the abell file
+ * @param {string} filePath path of the file
+ * @return {string}
+ */
+function getAbellComponentTemplate(filePath) {
+  /**
+   * TODO: Memoize the component reads
+   */
+  try {
+    return fs.readFileSync(filePath, 'utf-8');
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      const relativeFilePath = path.relative(process.cwd(), filePath);
+      err.message = `Cannot find component '${relativeFilePath}'`;
+      throwCustomError(err);
+    } else {
+      throw err;
+    }
+  }
+}
+
+// This function uses a single regular expression to add a data prefix to every html opening tag passed to it
+const prefixHtmlTags = (htmlString, hash) => {
+  const openingTagRegexp = /\<([a-zA-Z]+)(.*?)(\s?\/?)\>/gs;
+  return htmlString.replace(
+    openingTagRegexp,
+    `<$1$2 ${ABELL_CSS_DATA_PREFIX}-${hash}$3>`
+  );
+};
+
+module.exports = {
+  execRegexOnAll,
+  getAbellInBuiltSandbox,
+  logWarning,
+  normalizePath,
+  getAbellComponentTemplate,
+  prefixHtmlTags
+};

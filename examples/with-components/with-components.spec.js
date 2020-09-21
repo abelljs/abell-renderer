@@ -1,27 +1,36 @@
 const path = require('path');
-const { equalValueChecks } = require('../../tests/utils/baseTestFramework.js');
+const {
+  buildAndGetSelector
+} = require('../../tests/utils/baseTestFramework.js');
 
+// all the contents are managed by a jest snapshot internally
 const TEST_MAP = [
   {
     desc: 'should render content of Nav Component',
-    query: '[data-test="nav-component"]',
-    toEqual: ' This is my Navbar 13 '
+    query: '[data-test="nav-component"]'
   },
   {
     desc: 'should render content of Footer Component',
-    query: '[data-test="footer-component"]',
-    toEqual: ' This is my Footer hello'
+    query: '[data-test="footer-component"]'
   },
   {
     desc: 'should render main content',
-    query: '[data-test="main-content"]',
-    toEqual: 'Content'
+    query: '[data-test="main-content"]'
   }
 ];
 
 describe('examples/with-components', () => {
-  equalValueChecks(TEST_MAP, {
-    exampleToRun: 'with-components',
-    outPath: path.join(__dirname, 'out.html')
+  let $;
+  beforeAll(async () => {
+    $ = await buildAndGetSelector({
+      exampleToRun: 'with-components',
+      outPath: path.join(__dirname, 'out.html')
+    });
   });
+
+  for (const test of TEST_MAP) {
+    it(test.desc, () => {
+      expect($(test.query).html()).toMatchSnapshot();
+    });
+  }
 });

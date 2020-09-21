@@ -1,17 +1,11 @@
-/**
- * This file mostly deals with exporting the right functions to the user
- * ./render.js - has the code that gets executed on abellRenderer.render
- * ./execute.js - executes the JavaScript and handles all the edge cases.
- */
-
 const fs = require('fs');
 const path = require('path');
-
-const execute = require('./execute.js');
 const { compile } = require('./compiler.js');
-const { abellRequire } = require('./render-utils.js');
-
-const { parseComponent, parseComponentTags } = require('./component-parser.js');
+const { parseComponent } = require('./parsers/component-parser.js');
+const {
+  getAbellInBuiltSandbox,
+  getAbellComponentTemplate
+} = require('./utils/general-utils.js');
 
 /**
  * Outputs vanilla html string when abell template and sandbox is passed.
@@ -22,63 +16,45 @@ const { parseComponent, parseComponentTags } = require('./component-parser.js');
  * @param {Object} options additional options e.g ({basePath})
  * @return {String|Object} htmlTemplate
  */
-function render(
-  abellTemplate,
-  userSandbox,
-  options = {
-    basePath: '',
-    allowRequire: false,
-    allowComponents: false,
-    filename: '.abell'
-  }
-) {
-  options.basePath = options.basePath || '';
+function render(abellTemplate, userSandbox = {}, options = {}) {
+  options.basePath =
+    options.basePath ||
+    (options.filename && path.dirname(options.filename)) ||
+    '';
+
   options.allowRequire = options.allowRequire || false;
   options.allowComponents = options.allowComponents || false;
-  options.filename = options.filename || '.abell';
+  options.filename = options.filename || '<undefined>.abell';
 
   const components = [];
-  const sandbox = {
-    ...userSandbox,
-    require: (pathToRequire) => {
-      if (pathToRequire.endsWith('.abell')) {
-        if (options.allowComponents) {
-          return (props) => {
-            const component = parseComponent(
-              path.join(options.basePath, pathToRequire),
-              props,
-              options
-            );
-            components.push(component);
-            return component;
-          };
-        } else {
-          return;
-        }
-      }
+  const transformations = {
+    '.abell': (pathToRequire) => {
+      const abellComponentContent = getAbellComponentTemplate(
+        path.join(options.basePath, pathToRequire),
+        'utf-8'
+      );
 
-      return abellRequire(pathToRequire, options);
-    },
-    console: { log: console.log }
+      return (props) => {
+        const parsedComponent = parseComponent(
+          abellComponentContent,
+          path.join(options.basePath, pathToRequire),
+          props,
+          options
+        );
+        components.push(parsedComponent);
+        return parsedComponent;
+      };
+    }
   };
 
-  // delete require function if allow require is false
-  if (!options.allowRequire) {
-    delete sandbox.require;
-  }
+  const builtInFunctions = getAbellInBuiltSandbox(options, transformations);
+  userSandbox = { ...userSandbox, ...builtInFunctions };
 
+  const htmlOutput = compile(abellTemplate, userSandbox, options);
   if (options.allowComponents) {
-    abellTemplate = parseComponentTags(abellTemplate);
+    return { html: htmlOutput, components };
   }
-  const compiledAbell = compile(abellTemplate, sandbox, options);
-  if (options.allowComponents) {
-    return {
-      html: compiledAbell,
-      components
-    };
-  }
-
-  return compiledAbell;
+  return htmlOutput;
 }
 
 /**
@@ -100,8 +76,4 @@ function engine({ allowRequire } = { allowRequire: false }) {
   };
 }
 
-module.exports = {
-  render,
-  execute,
-  engine
-};
+module.exports = { render, engine };

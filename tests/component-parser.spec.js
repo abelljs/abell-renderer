@@ -1,49 +1,66 @@
+const fs = require('fs');
 const path = require('path');
 
-const expect = require('chai').expect;
-
 const {
-  parseAttribute,
-  parseComponentTags,
+  parseAttributes,
+  componentTagTranspiler,
   parseComponent
-} = require('../src/component-parser.js');
+} = require('../src/parsers/component-parser.js');
 
-describe('parseAttribute()', () => {
+describe('parseAttributes()', () => {
   it('should turn string attributes into object', () => {
-    expect(parseAttribute('inlined bundle="app.js"')).to.eql({
+    expect(parseAttributes('inlined bundle="app.js"')).toEqual({
+      inlined: true,
+      bundle: 'app.js'
+    });
+  });
+
+  it('should return expected result on global inlined', () => {
+    expect(parseAttributes('global inlined')).toEqual({
+      global: true,
+      inlined: true
+    });
+  });
+
+  it('should return nothing for no attributes', () => {
+    expect(parseAttributes('')).toEqual({});
+  });
+
+  it('should handle attribute values in single quotes', () => {
+    expect(parseAttributes("inlined bundle='app.js'")).toEqual({
       inlined: true,
       bundle: 'app.js'
     });
   });
 
   it('should allow inlined=false in attribute', () => {
-    expect(parseAttribute('inlined=false')).to.eql({
+    expect(parseAttributes('inlined=false')).toEqual({
       inlined: 'false'
     });
   });
 
   it('should handle custom attributes as well', () => {
     expect(
-      parseAttribute(
+      parseAttributes(
         `rel="preload" 
         as="style" 
-        onload="this.rel=\"stylesheet\";this.onload=null"`
+        onload="this.rel=\"stylesheet\"; this.onload = null"`
       )
-    ).to.eql({
+    ).toEqual({
       rel: 'preload',
       as: 'style',
-      onload: 'this.rel="stylesheet";this.onload=null'
+      onload: 'this.rel="stylesheet"; this.onload = null'
     });
   });
 });
 
-describe('parseComponentTags()', () => {
+describe('componentTagTranspiler()', () => {
   // eslint-disable-next-line max-len
   it('should parse Abell Component Tag to Component Object before execution', () => {
     const code = `
     var Nav = require('./components/Nav.abell');
     <div>
-      <Nav 
+      <Nav
         props={
           foo: 'bar'
         }
@@ -52,24 +69,16 @@ describe('parseComponentTags()', () => {
     </div>
     `;
 
-    expect(
-      parseComponentTags(code)
-        .trim()
-        .replace(/\s|\n|\r/g, '')
-    ).to.equal(
-      `
-      var Nav = require('./components/Nav.abell');
-      <div>{{ Nav({foo: 'bar'}).renderedHTML }} <NotComponent/></div>
-      `
-        .trim()
-        .replace(/\s|\n|\r/g, '')
-    );
+    expect(componentTagTranspiler(code)).toMatchSnapshot();
   });
 });
 
 describe('parseComponent()', () => {
   it('should parse component and return a componentTree - Sample.abell', () => {
+    const abellFile = path.join(__dirname, 'resources', 'Sample.abell');
+    const abellContent = fs.readFileSync(abellFile, 'utf-8');
     const componentTree = parseComponent(
+      abellContent,
       path.join(__dirname, 'resources', 'Sample.abell'),
       {
         foo: '123TEST'
@@ -77,58 +86,59 @@ describe('parseComponent()', () => {
       { filename: 'component-parser.spec.js' }
     );
 
-    expect(componentTree.renderedHTML.trim().replace(/\n|\r|\s/g, '')).to.equal(
-      '<div>Component to test abell. 123TEST</div>'
-        .trim()
-        .replace(/\n|\r|\s/g, '')
+    expect(componentTree.renderedHTML).toMatchSnapshot();
+
+    expect(componentTree.styles[0].content).toMatchSnapshot();
+    expect(Object.keys(componentTree.styles[0])).toEqual(
+      expect.arrayContaining([
+        'component',
+        'attributes',
+        'componentPath',
+        'content'
+      ])
     );
 
-    expect(componentTree.styles[0].content).to.exist.and.include('div');
-    expect(componentTree.styles[0]).to.have.keys(
-      'component',
-      'attributes',
-      'componentPath',
-      'content'
-    );
+    expect(componentTree.scripts[0].content).toMatchSnapshot();
 
-    expect(componentTree.scripts[0].content).to.exist.and.include(
-      'console.log(3)'
-    );
-
-    expect(componentTree.scripts[0]).to.have.keys(
-      'component',
-      'attributes',
-      'componentPath',
-      'content'
+    expect(Object.keys(componentTree.scripts[0])).toEqual(
+      expect.arrayContaining([
+        'component',
+        'attributes',
+        'componentPath',
+        'content'
+      ])
     );
   });
 
   it('should work for nested components - Parent.abell', () => {
+    const abellFile = path.join(__dirname, 'resources', 'Parent.abell');
+    const abellContent = fs.readFileSync(abellFile, 'utf-8');
     const componentTree = parseComponent(
+      abellContent,
       path.join(__dirname, 'resources', 'Parent.abell'),
+      {},
       {
+        allowRequire: true,
+        allowComponents: true,
         filename: 'component-parser.spec.js',
         basePath: path.join(__dirname, 'resources')
       }
     );
 
-    expect(componentTree.renderedHTML.trim().replace(/\n|\r|\s/g, '')).to.equal(
-      '<div><div>Component to test abell. Woop Woop!</div></div>'
-        .trim()
-        .replace(/\n|\r|\s/g, '')
+    expect(componentTree.renderedHTML).toMatchSnapshot();
+
+    expect(componentTree.components[0].styles[0].content).toMatchSnapshot();
+
+    expect(Object.keys(componentTree.components[0].styles[0])).toEqual(
+      expect.arrayContaining([
+        'component',
+        'attributes',
+        'componentPath',
+        'content'
+      ])
     );
 
-    expect(componentTree.components[0].styles[0].content).to.exist.and.include(
-      'div'
-    );
-    expect(componentTree.components[0].styles[0]).to.have.keys(
-      'component',
-      'attributes',
-      'componentPath',
-      'content'
-    );
-
-    expect(componentTree.styles.length).to.equal(0);
-    expect(componentTree.scripts.length).to.equal(0);
+    expect(componentTree.styles.length).toBe(0);
+    expect(componentTree.scripts.length).toBe(1);
   });
 });

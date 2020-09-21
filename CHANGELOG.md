@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.3.0 (Latest)
+
+- Scoped CSS Support (Hugee shoutout to [@pantharshit00](https://github.com/pantharshit00/))
+- Syntax warnings for multiple statements in a block.
+- More reliable code.
+- Bug fix for `const` not being true constant.
+- Fix multiple values-less attribute parsing error
+- Better file not found errors for .abell and other files.
+- Refactor
+- Moved to JEST for testing ([@pantharshit00](https://github.com/pantharshit00/))
+
 ## v0.2.0
 
 - Default value of props in components is now empty object instead of undefined.
@@ -111,9 +122,7 @@ Ability to add functions inside curly brackets
 outputs:
 
 ```html
-<div>
-  8
-</div>
+<div>8</div>
 ```
 
 ## < v0.0.2

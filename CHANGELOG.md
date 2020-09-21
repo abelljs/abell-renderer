@@ -1,15 +1,17 @@
 # Changelog
 
-## v0.3.0 (Next)
+## v0.3.0 (Latest)
 
-- Scoped CSS Support (Hugee shoutout to [@pantharshit00](https://github.com/pantharshit00/)).
+- Scoped CSS Support (Hugee shoutout to [@pantharshit00](https://github.com/pantharshit00/))
 - Syntax warnings for multiple statements in a block.
 - More reliable code.
 - Bug fix for `const` not being true constant.
-- Fix multiple values-less attributes parsing error
+- Fix multiple values-less attribute parsing error
 - Better file not found errors for .abell and other files.
+- Refactor
+- Moved to JEST for testing ([@pantharshit00](https://github.com/pantharshit00/))
 
-## v0.2.0 (Latest)
+## v0.2.0
 
 - Default value of props in components is now empty object instead of undefined.
 - Multi-line support for writing component tag.

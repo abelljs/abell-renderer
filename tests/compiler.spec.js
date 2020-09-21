@@ -36,7 +36,7 @@ describe('getStatementMap() - Returns an array of top-level statement types', ()
     {
       const c = 'hello';
     }var d = 9;e = 10;
-    c;
+    c;d+=10;e-=5;
     b + 9;
     [1, 2, 3].map(val => {
       const multiplier = 2;
@@ -51,6 +51,8 @@ describe('getStatementMap() - Returns an array of top-level statement types', ()
       'VariableDeclaration',
       'AssignmentExpression',
       'ExpressionStatement',
+      'AssignmentExpression',
+      'AssignmentExpression',
       'ExpressionStatement',
       'ExpressionStatement'
     ]);

@@ -116,7 +116,10 @@ function throwCustomError(err, code = '') {
     .join('\n');
   console.log(abellFileInStack);
   console.log('\n');
-  process.exit(0);
+  const blankError = new Error('Abell Compiler Error. More logs above.');
+  blankError.stack =
+    blankError.stack.slice(0, blankError.stack.indexOf('\n')) + '\n\n';
+  throw blankError;
 }
 
 /**

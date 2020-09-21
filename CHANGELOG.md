@@ -1,6 +1,10 @@
 # Changelog
 
-## v0.3.0 (Latest)
+## v0.3.1 (Latest)
+
+- Fix exitting dev-server on module not found errors.
+
+## v0.3.0
 
 - Scoped CSS Support (Hugee shoutout to [@pantharshit00](https://github.com/pantharshit00/))
 - Syntax warnings for multiple statements in a block.

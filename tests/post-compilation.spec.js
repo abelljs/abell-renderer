@@ -23,7 +23,7 @@ describe('prefixHTMLTags()', () => {
 
   it('should not prefix Doctype', () => {
     const testHtml = `<!DOCTYPE html>;`;
-    expect(testHtml).toEqual(testHtml);
+    expect(prefixHtmlTags(testHtml, 'testhash')).toEqual(testHtml);
   });
 
   it('should prefix deeply nested tree', () => {

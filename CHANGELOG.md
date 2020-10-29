@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.2 (Latest)
+
+- Ignore scoping HTML when not needed. (by [@judicaelandria](https://github.com/judicaelandria/) (Issue: [#32](https://github.com/abelljs/abell-renderer/issues/32), PR: [#34](https://github.com/abelljs/abell-renderer/pull/34))
+
 ## v0.3.1 (Latest)
 
 - Fix exitting dev-server on module not found errors.

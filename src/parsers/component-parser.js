@@ -155,6 +155,9 @@ function parseComponent(
     template = templateTag[1];
   }
   if (options && !options.skipHTMLHash) {
+    if (styleMatches || !styleMatches) {
+      return;
+    }
     template = prefixHtmlTags(template, componentHash);
   }
 

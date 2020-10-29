@@ -154,11 +154,9 @@ function parseComponent(
   if (templateTag) {
     template = templateTag[1];
   }
-  if (options && !options.skipHTMLHash) {
+  const isStyleGlobal = styleMatches.length <= 0 || styleMatches.every(styleMatch => styleMatch.attributes.global === true))
+  if ((options && !options.skipHTMLHash) || isStyleGlobal) {
     // ignore adding scope hash
-    if (styleMatches || !styleMatches) {
-      return;
-    }
     template = prefixHtmlTags(template, componentHash);
   }
 

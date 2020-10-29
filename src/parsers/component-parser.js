@@ -178,23 +178,10 @@ function parseComponent(
     htmlComponentContent
   ).matches.map(matchMapper(false));
 
-  const isGlobal = (style) => {
-    if (
-      style.component === 'Footer.abell' &&
-      style.attributes.global === true
-    ) {
-      return true;
-    }
-    return false;
-  };
-
-  const isFooter = styleMatches.every((styleMatch) => isGlobal(styleMatch));
-
-  if (
-    (options && !options.skipHTMLHash) ||
-    styleMatches.length > 0 ||
-    isFooter
-  ) {
+  const isStyleGlobal =
+    styleMatches.length <= 0 ||
+    styleMatches.every((styleMatch) => styleMatch.attributes.global === true);
+  if ((options && !options.skipHTMLHash) || isStyleGlobal) {
     // ignore adding scope hash
     template = prefixHtmlTags(template, componentHash);
   }

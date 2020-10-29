@@ -5,7 +5,7 @@ exports[`scoped css should have a stable html snapshot 1`] = `
 <html>
 <body>
   <div data-abell-efDpsM>This is a test component for testing scoped css.123</div>
-  <div data-abell-kZbbBm>This is a test component for testing global css.</div>
+  <div>This is a test component for testing global css.</div>
 </body>
 </html>"
 `;

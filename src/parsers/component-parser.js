@@ -154,9 +154,6 @@ function parseComponent(
   if (templateTag) {
     template = templateTag[1];
   }
-  if (options && !options.skipHTMLHash) {
-    template = prefixHtmlTags(template, componentHash);
-  }
 
   const matchMapper = (isCss) => (contentMatch) => {
     const attributes = parseAttributes(contentMatch[1]);
@@ -180,6 +177,15 @@ function parseComponent(
     /\<script(.*?)\>(.*?)\<\/script\>/gs,
     htmlComponentContent
   ).matches.map(matchMapper(false));
+
+  const isStyleGlobal =
+    styleMatches.length <= 0 ||
+    styleMatches.every((styleMatch) => styleMatch.attributes.global === true);
+
+  if (options && !options.skipHTMLHash && !isStyleGlobal) {
+    // ignore adding scope hash
+    template = prefixHtmlTags(template, componentHash);
+  }
 
   const componentTree = {
     renderedHTML: template,

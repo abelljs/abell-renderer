@@ -2,8 +2,8 @@
 
 exports[`examples/with-components should render content of Footer Component 1`] = `
 " 
-    This is my <b data-abell-gwpgqt>Footer</b> nice Test JSON Import Pass
-    <div data-abell-gwpgqt><button data-abell-coberm data-abell-gwpgqt>Button Test</button></div>
+    This is my <b>Footer</b> nice Test JSON Import Pass
+    <div><button data-abell-coberm>Button Test</button></div>
   "
 `;
 

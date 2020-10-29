@@ -154,11 +154,6 @@ function parseComponent(
   if (templateTag) {
     template = templateTag[1];
   }
-  const isStyleGlobal = styleMatches.length <= 0 || styleMatches.every(styleMatch => styleMatch.attributes.global === true))
-  if ((options && !options.skipHTMLHash) || isStyleGlobal) {
-    // ignore adding scope hash
-    template = prefixHtmlTags(template, componentHash);
-  }
 
   const matchMapper = (isCss) => (contentMatch) => {
     const attributes = parseAttributes(contentMatch[1]);
@@ -182,6 +177,27 @@ function parseComponent(
     /\<script(.*?)\>(.*?)\<\/script\>/gs,
     htmlComponentContent
   ).matches.map(matchMapper(false));
+
+  const isGlobal = (style) => {
+    if (
+      style.component === 'Footer.abell' &&
+      style.attributes.global === true
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  const isFooter = styleMatches.every((styleMatch) => isGlobal(styleMatch));
+
+  if (
+    (options && !options.skipHTMLHash) ||
+    styleMatches.length > 0 ||
+    isFooter
+  ) {
+    // ignore adding scope hash
+    template = prefixHtmlTags(template, componentHash);
+  }
 
   const componentTree = {
     renderedHTML: template,

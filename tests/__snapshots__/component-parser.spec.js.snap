@@ -29,7 +29,7 @@ exports[`parseComponent() should parse component and return a componentTree - Sa
 
 exports[`parseComponent() should work for nested components - Parent.abell 1`] = `
 "
-  <div data-abell-cmDbNX><div data-abell-hKYKjJ data-abell-cmDbNX>Component to test abell. Woop Woop!</div></div>
+  <div><div data-abell-hKYKjJ>Component to test abell. Woop Woop!</div></div>
 "
 `;
 

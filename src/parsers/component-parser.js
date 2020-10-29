@@ -181,7 +181,8 @@ function parseComponent(
   const isStyleGlobal =
     styleMatches.length <= 0 ||
     styleMatches.every((styleMatch) => styleMatch.attributes.global === true);
-  if ((options && !options.skipHTMLHash) || isStyleGlobal) {
+
+  if (options && !options.skipHTMLHash && !isStyleGlobal) {
     // ignore adding scope hash
     template = prefixHtmlTags(template, componentHash);
   }

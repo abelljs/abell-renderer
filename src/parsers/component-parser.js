@@ -155,6 +155,7 @@ function parseComponent(
     template = templateTag[1];
   }
   if (options && !options.skipHTMLHash) {
+    // ignore adding scope hash
     if (styleMatches || !styleMatches) {
       return;
     }

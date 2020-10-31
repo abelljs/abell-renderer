@@ -1,0 +1,10 @@
+{{
+  const MainLayout = require('./MainLayout.abell');
+}}
+<html>
+<body>
+  <MainLayout>
+    <div>This is amazing!</div>
+  </MainLayout>
+</body>
+</html>

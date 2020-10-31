@@ -1,0 +1,13 @@
+<AbellComponent>
+<template>
+  <main>
+    <nav>This is Navigation Bar</nav>
+    {{ props.children }}
+  </main>
+</template>
+<style>
+  nav {
+    background-color: #f30;
+  }
+</style>
+</AbellComponent>

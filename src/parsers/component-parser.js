@@ -30,9 +30,14 @@ function componentTagTranspiler(abellTemplate) {
 
   let newAbellTemplate = '';
   const componentParseREGEX = new RegExp(
-    `\<(${componentVariables.join('|')}).*?(?:props=(.*?))?\/\>`,
+    `(?:<(${componentVariables.join(
+      '|'
+    )}).*?(?:props=(.*?))?\/\>)|(?:<(${componentVariables.join(
+      '|'
+    )}).*?(?:props=(.*?))?>(.*?)<\\/\\3>)`,
     'gs'
   );
+  // `\<(${componentVariables.join('|')}).*?(?:props=(.*?))?\/\>`,
 
   const { matches: componentMatches } = execRegexOnAll(
     componentParseREGEX,
@@ -41,11 +46,32 @@ function componentTagTranspiler(abellTemplate) {
 
   let lastIndex = 0;
   for (const componentMatch of componentMatches) {
-    newAbellTemplate +=
-      abellTemplate.slice(lastIndex, componentMatch.index) +
-      `{{ ${componentMatch[1]}(${componentMatch[2]}).renderedHTML }}`;
+    const [
+      fullMatch,
+      tagName,
+      props,
+      layoutTagName,
+      layoutProps,
+      layoutChildren
+    ] = componentMatch;
 
-    lastIndex = componentMatch[0].length + componentMatch.index;
+    if (layoutTagName) {
+      if (layoutChildren.includes(`<${layoutTagName}>`)) {
+        throw new Error(
+          'Nested components are not supported and may have unexpected results'
+        ); // esling-disable-line max-len
+      }
+
+      newAbellTemplate +=
+        abellTemplate.slice(lastIndex, componentMatch.index) +
+        `{{ ${layoutTagName}({...${layoutProps}, children:\`${layoutChildren}\`}).renderedHTML }}`; // eslint-disable-line max-len
+    } else {
+      newAbellTemplate +=
+        abellTemplate.slice(lastIndex, componentMatch.index) +
+        `{{ ${tagName}(${props}).renderedHTML }}`;
+    }
+
+    lastIndex = fullMatch.length + componentMatch.index;
   }
 
   newAbellTemplate += abellTemplate.slice(lastIndex);

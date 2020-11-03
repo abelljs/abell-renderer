@@ -24,7 +24,7 @@ function validateAbellBlock(statementTypeMap, jsCode, filename) {
     console.log('\nWARNING:');
     console.log('{{\n>' + jsCode + '\n}}');
     logWarning(
-      'SYNTAX WARN: An Abell Block should not have multiple expressions that output value', // eslint-disable-line
+      'SYNTAX WARN: An Abell Block should not have multiple expressions that output values', // eslint-disable-line
       filename
     );
   }
@@ -36,17 +36,28 @@ function validateAbellBlock(statementTypeMap, jsCode, filename) {
  * @return {[string]}
  */
 function getStatementTypeMap(jsCode) {
-  const ast = acorn.parse(jsCode, { ecmaVersion: 2020 }).body;
-  return ast.map((astNode) => {
-    if (
-      astNode.type === 'ExpressionStatement' &&
-      astNode.expression.type === 'AssignmentExpression'
-    ) {
-      return 'AssignmentExpression';
-    }
+  /**
+   * TODO:
+   * Remove things from curly brackets {} in jsCode string since they are
+   * anyway counted as a BlockStatement directly.
+   */
 
-    return astNode.type;
-  });
+  try {
+    const ast = acorn.parse(jsCode, { ecmaVersion: 2020 }).body;
+
+    return ast.map((astNode) => {
+      if (
+        astNode.type === 'ExpressionStatement' &&
+        astNode.expression.type === 'AssignmentExpression'
+      ) {
+        return 'AssignmentExpression';
+      }
+
+      return astNode.type;
+    });
+  } catch (err) {
+    return ['ExpressionStatement'];
+  }
 }
 
 /**
@@ -59,7 +70,12 @@ function getStatementTypeMap(jsCode) {
  */
 function evaluateAbellBlock(jsCode, context, errLineOffset, options) {
   const statementTypeMap = getStatementTypeMap(jsCode);
-  validateAbellBlock(statementTypeMap, jsCode, options.filename);
+  validateAbellBlock(
+    statementTypeMap,
+    jsCode,
+    `${options.filename}:${errLineOffset + 1}`
+  );
+
   const script = new vm.Script(jsCode, {
     filename: options.filename,
     lineOffset: errLineOffset

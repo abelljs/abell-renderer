@@ -79,7 +79,7 @@ const execRegexOnAll = (regex, template) => {
  * @param {string} filename name of the file and line numbers that throw error
  */
 const logWarning = (errorMessage, filename = '') => {
-  console.log(`\u001b[1m\u001b[33m>>\u001b[39m\u001b[22m ${errorMessage}`);
+  console.log(`${colors.yellow('>>')} ${errorMessage}`);
   if (filename) {
     console.log('\tat ' + filename);
   }
@@ -109,17 +109,25 @@ const normalizePath = (path) => {
  */
 function throwCustomError(err, code = '') {
   console.log(code);
-  console.log(`Error: ${err.message}`);
   const stack = err.stack.split('\n');
   const abellFileInStack = stack
     .filter((atFile) => atFile.includes('.abell:'))
     .join('\n');
+  console.log(colors.red('> ') + abellFileInStack.trim().replace(/at /g, ''));
+  console.log(
+    `${colors.red('>>')} Error: ${err.message.slice(
+      0,
+      err.message.indexOf('\n')
+    )}`
+  );
   console.log(abellFileInStack);
   console.log('\n');
-  const blankError = new Error('Abell Compiler Error. More logs above.');
-  blankError.stack =
-    blankError.stack.slice(0, blankError.stack.indexOf('\n')) + '\n\n';
-  throw blankError;
+  const compileError = new Error('>> Abell Compiler Error. More logs above.');
+  compileError.stack = compileError.stack.slice(
+    0,
+    compileError.stack.indexOf('\n')
+  );
+  throw compileError;
 }
 
 /**
@@ -153,11 +161,17 @@ const prefixHtmlTags = (htmlString, hash) => {
   );
 };
 
+const colors = {
+  red: (message) => `\u001b[31m${message}\u001b[39m`,
+  yellow: (message) => `\u001b[1m\u001b[33m${message}\u001b[39m\u001b[22m`
+};
+
 module.exports = {
   execRegexOnAll,
   getAbellInBuiltSandbox,
   logWarning,
   normalizePath,
   getAbellComponentTemplate,
-  prefixHtmlTags
+  prefixHtmlTags,
+  colors
 };

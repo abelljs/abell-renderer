@@ -11,7 +11,7 @@ const { componentTagTranspiler } = require('./parsers/component-parser.js');
 
 /**
  * Validates the Abell Block
- * @param {[string]} statementTypeMap
+ * @param {string[]} statementTypeMap
  * @param {string} jsCode
  * @param {string} filename
  */
@@ -33,7 +33,7 @@ function validateAbellBlock(statementTypeMap, jsCode, filename) {
 /**
  * Returns statementTypeMap from javascript code
  * @param {string} jsCode JavaScript code to execute
- * @return {[string]}
+ * @return {string[]}
  */
 function getStatementTypeMap(jsCode) {
   /**

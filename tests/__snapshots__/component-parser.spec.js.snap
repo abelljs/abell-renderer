@@ -22,9 +22,9 @@ exports[`parseComponent() should parse component and return a componentTree - Sa
 exports[`parseComponent() should parse component and return a componentTree - Sample.abell 2`] = `"div[data-abell-hKYKjJ]{color:#f30;}"`;
 
 exports[`parseComponent() should parse component and return a componentTree - Sample.abell 3`] = `
-"
+"{
   console.log(3);
-"
+}"
 `;
 
 exports[`parseComponent() should work for nested components - Parent.abell 1`] = `

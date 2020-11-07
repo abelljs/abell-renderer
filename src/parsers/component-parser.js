@@ -158,12 +158,26 @@ function parseComponent(
   const matchMapper = (isCss) => (contentMatch) => {
     const attributes = parseAttributes(contentMatch[1]);
     const shouldPrefix = isCss && !attributes.global;
+
+    let content;
+    if (shouldPrefix) {
+      // if it is css then scope it by appending hash to css selector
+      content = cssSerializer(contentMatch[2], componentHash);
+    } else if (!isCss && contentMatch[2].includes('scopedSelector')) {
+      // if it is javascript then scope it by injecting scopedSelector functions
+      // prettier-ignore
+      content =
+        `const scopedSelector = (queryString) => document.querySelector(queryString + '[data-abell-${componentHash}]');` + // eslint-disable-line max-len
+        `const scopedSelectorAll = (queryString) => document.querySelectorAll(queryString + '[data-abell-${componentHash}]');` // eslint-disable-line max-len
+         + contentMatch[2];
+    } else {
+      content = contentMatch[2];
+    }
+
     return {
       component: path.basename(abellComponentPath),
       componentPath: abellComponentPath,
-      content: shouldPrefix
-        ? cssSerializer(contentMatch[2], componentHash)
-        : contentMatch[2],
+      content: isCss ? content : '{' + content + '}',
       attributes: parseAttributes(contentMatch[1])
     };
   };

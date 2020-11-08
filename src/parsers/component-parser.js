@@ -177,7 +177,7 @@ function parseComponent(
     return {
       component: path.basename(abellComponentPath),
       componentPath: abellComponentPath,
-      content: isCss ? content : '{' + content + '}',
+      content,
       attributes: parseAttributes(contentMatch[1])
     };
   };

@@ -8,7 +8,8 @@ const {
   execRegexOnAll,
   normalizePath,
   prefixHtmlTags,
-  getAbellComponentTemplate
+  getAbellComponentTemplate,
+  isInsideAbellBlock
 } = require('../utils/general-utils.js');
 
 /**
@@ -41,9 +42,16 @@ function componentTagTranspiler(abellTemplate) {
 
   let lastIndex = 0;
   for (const componentMatch of componentMatches) {
+    const isInsideBlock = isInsideAbellBlock(
+      abellTemplate,
+      componentMatch.index
+    );
+
     newAbellTemplate +=
       abellTemplate.slice(lastIndex, componentMatch.index) +
-      `{{ ${componentMatch[1]}(${componentMatch[2]}).renderedHTML }}`;
+      `${isInsideBlock ? '' : '{{'} ${componentMatch[1]}(${
+        componentMatch[2]
+      }).renderedHTML ${isInsideBlock ? '' : '}}'}`;
 
     lastIndex = componentMatch[0].length + componentMatch.index;
   }

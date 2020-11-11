@@ -56,6 +56,7 @@ function getStatementTypeMap(jsCode) {
       return astNode.type;
     });
   } catch (err) {
+    // errors are caught by the vm module so we let code continue anyway
     return ['ExpressionStatement'];
   }
 }

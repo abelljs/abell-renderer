@@ -8,13 +8,27 @@ const {
 } = require('./utils/general-utils.js');
 
 /**
+ *
+ * @typedef RenderedObject
+ * @property {string} html
+ * @property {Array} components
+ *
+ * @typedef RenderOptions
+ * @property {string} basePath
+ * @property {string} filename
+ * @property {boolean} allowRequire
+ * @property {boolean} allowComponents
+ *
+ */
+
+/**
  * Outputs vanilla html string when abell template and sandbox is passed.
  *
  * @param {String} abellTemplate - String of Abell File.
  * @param {Object} userSandbox
  * Object of variables. The template will be executed in context of this sandbox.
- * @param {Object} options additional options e.g ({basePath})
- * @return {String|Object} htmlTemplate
+ * @param {RenderOptions} options additional options.
+ * @return {String|RenderedObject} htmlTemplate
  */
 function render(abellTemplate, userSandbox = {}, options = {}) {
   options.basePath =

@@ -3,9 +3,12 @@ const path = require('path');
 const { ABELL_CSS_DATA_PREFIX } = require('../parsers/css-parser.js');
 
 /**
+ * @typedef {import('../index.js').RenderOptions} RenderOptions
+ */
+
+/**
  * Returns in-built functions from Abell
- * @param {object} options
- * @param {string} options.basePath
+ * @param {RenderOptions} options
  * @param {object} transformations
  * @return {any}
  */
@@ -13,7 +16,9 @@ function getAbellInBuiltSandbox(options, transformations = {}) {
   const builtInFunctions = {
     console: {
       log: console.log
-    }
+    },
+    __filename: path.resolve(options.filename),
+    __dirname: path.resolve(options.basePath)
   };
 
   if (options.allowRequire) {

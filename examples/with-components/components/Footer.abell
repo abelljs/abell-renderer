@@ -2,6 +2,7 @@
 {{ 
   const testJSONImport = require('../data/test-json-import.json');
   const Button = require('./Button.abell');
+  console.log('filename', __filename);
 }}
 <template>
   <footer data-test="footer-component"> 

@@ -112,8 +112,9 @@ function parseComponent(
 ) {
   const components = [];
   const basePath = path.dirname(abellComponentPath);
+  const filename = path.relative(process.cwd(), abellComponentPath);
 
-  const newOptions = { ...options, basePath };
+  const newOptions = { ...options, basePath, filename };
   const transformations = {
     '.abell': (abellComponentPath) => {
       const abellComponentContent = getAbellComponentTemplate(
@@ -142,10 +143,7 @@ function parseComponent(
   const htmlComponentContent = require('../compiler.js').compile(
     abellComponentContent,
     sandbox,
-    {
-      ...options,
-      filename: path.relative(process.cwd(), abellComponentPath)
-    }
+    newOptions
   );
 
   const templateTag = /\<template\>(.*?)\<\/template\>/gs.exec(

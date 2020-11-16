@@ -46,6 +46,23 @@ function getAbellInBuiltSandbox(options, transformations = {}) {
 }
 
 /**
+ * Checks if the given index comes inside Abell Block
+ * @param {string} abellBlockText abell template
+ * @param {number} index current position index
+ * @return {boolean}
+ */
+function isInsideAbellBlock(abellBlockText, index) {
+  const beforeIndexTemplate = abellBlockText.slice(0, index);
+  const openBracketMatches = beforeIndexTemplate.match(/.?{{/gs);
+  const openBracketCount = (openBracketMatches || []).length;
+  const closeBracketCount = (beforeIndexTemplate.match(/}}/g) || []).length;
+  return (
+    openBracketCount > closeBracketCount &&
+    !openBracketMatches[openBracketMatches.length - 1].startsWith('\\')
+  );
+}
+
+/**
  * Captures groups from regex and executes RegEx.exec() function on all.
  *
  * @param {regex} regex - Regular Expression to execute on.
@@ -169,6 +186,7 @@ const colors = {
 module.exports = {
   execRegexOnAll,
   getAbellInBuiltSandbox,
+  isInsideAbellBlock,
   logWarning,
   normalizePath,
   getAbellComponentTemplate,

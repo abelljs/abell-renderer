@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`examples/read-file should render csv data in out.html 1`] = `
+"hi, hello, nice
+haha, woop, lol"
+`;

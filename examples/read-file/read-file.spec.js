@@ -14,6 +14,6 @@ describe('examples/read-file', () => {
   it('should render csv data in out.html', () => {
     expect(
       fs.readFileSync(path.join(__dirname, 'out.html'), 'utf-8').trim()
-    ).toEqual('hi, hello, nice\nhaha, woop, lol');
+    ).toMatchSnapshot();
   });
 });

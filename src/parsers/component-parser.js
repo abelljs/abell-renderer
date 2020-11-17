@@ -112,8 +112,10 @@ function parseComponent(
 ) {
   const components = [];
   const basePath = path.dirname(abellComponentPath);
+  const filename = path.relative(process.cwd(), abellComponentPath);
 
-  const newOptions = { ...options, basePath };
+  console.log('1', process.cwd());
+  const newOptions = { ...options, basePath, filename };
   const transformations = {
     '.abell': (abellComponentPath) => {
       const abellComponentContent = getAbellComponentTemplate(
@@ -142,16 +144,18 @@ function parseComponent(
   const htmlComponentContent = require('../compiler.js').compile(
     abellComponentContent,
     sandbox,
-    {
-      ...options,
-      filename: path.relative(process.cwd(), abellComponentPath)
-    }
+    newOptions
   );
 
   const templateTag = /\<template\>(.*?)\<\/template\>/gs.exec(
     htmlComponentContent
   );
 
+  console.log('2', process.cwd());
+  console.log(
+    'componentHash',
+    normalizePath(path.relative(process.cwd(), abellComponentPath))
+  );
   // we use the relative path here so that hash doesn't change across machines
   const componentHash = hash(
     normalizePath(path.relative(process.cwd(), abellComponentPath))

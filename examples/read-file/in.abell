@@ -3,4 +3,4 @@
   const path = require('path');
 }}
 
-{{ console.log(fs.readFileSync(path.join(__dirname, 'sample.csv'))) }}
+{{ fs.readFileSync(path.join(__dirname, 'sample.csv'), 'utf-8') }}

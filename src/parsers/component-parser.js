@@ -114,6 +114,7 @@ function parseComponent(
   const basePath = path.dirname(abellComponentPath);
   const filename = path.relative(process.cwd(), abellComponentPath);
 
+  console.log('1', process.cwd());
   const newOptions = { ...options, basePath, filename };
   const transformations = {
     '.abell': (abellComponentPath) => {
@@ -150,6 +151,11 @@ function parseComponent(
     htmlComponentContent
   );
 
+  console.log('2', process.cwd());
+  console.log(
+    'componentHash',
+    normalizePath(path.relative(process.cwd(), abellComponentPath))
+  );
   // we use the relative path here so that hash doesn't change across machines
   const componentHash = hash(
     normalizePath(path.relative(process.cwd(), abellComponentPath))

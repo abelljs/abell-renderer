@@ -8,7 +8,7 @@ const abellTemplate = fs.readFileSync(
   'utf-8'
 );
 
-const { html, components } = abellRenderer.render(
+const { html } = abellRenderer.render(
   abellTemplate,
   {
     foo: 'Hehhe'
@@ -20,8 +20,5 @@ const { html, components } = abellRenderer.render(
     basePath: __dirname
   }
 );
-
-console.log(html);
-console.dir(components, { depth: Infinity });
 
 fs.writeFileSync(path.join(__dirname, 'out.html'), html);

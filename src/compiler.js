@@ -93,6 +93,10 @@ function evaluateAbellBlock(jsCode, context, errLineOffset, options) {
     return '';
   }
 
+  if (jsOutput === undefined || jsOutput === null) {
+    return '';
+  }
+
   if (typeof jsOutput === 'function') {
     return jsOutput();
   }
@@ -101,7 +105,7 @@ function evaluateAbellBlock(jsCode, context, errLineOffset, options) {
     return jsOutput.join('');
   }
 
-  return jsOutput || '';
+  return jsOutput;
 }
 
 /**

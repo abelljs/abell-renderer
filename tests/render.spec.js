@@ -67,6 +67,14 @@ describe('render() - renders abellTemplate into HTML Text', () => {
       expect(render('{{}}', {})).toBe('{{}}');
     });
 
+    it('should return nothing when undefined and null is rendered', () => {
+      expect(render('{{ undefined }}{{ null }}')).toBe('');
+    });
+
+    it('should render 0 and false correctly', () => {
+      expect(render('{{ 0 }}{{ false }}')).toBe('0false');
+    });
+
     // eslint-disable-next-line max-len
     it('should ignore the brackets when slash is added before the bracket', () => {
       expect(render('\\{{ This is ignored }}', {})).toBe(

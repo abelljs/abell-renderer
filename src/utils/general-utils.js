@@ -3,9 +3,12 @@ const path = require('path');
 const { ABELL_CSS_DATA_PREFIX } = require('../parsers/css-parser.js');
 
 /**
+ * @typedef {import('../index.js').RenderOptions} RenderOptions
+ */
+
+/**
  * Returns in-built functions from Abell
- * @param {object} options
- * @param {string} options.basePath
+ * @param {RenderOptions} options
  * @param {object} transformations
  * @return {any}
  */
@@ -13,7 +16,9 @@ function getAbellInBuiltSandbox(options, transformations = {}) {
   const builtInFunctions = {
     console: {
       log: console.log
-    }
+    },
+    __filename: path.resolve(options.filename),
+    __dirname: path.resolve(options.basePath)
   };
 
   if (options.allowRequire) {
@@ -43,6 +48,23 @@ function getAbellInBuiltSandbox(options, transformations = {}) {
   }
 
   return builtInFunctions;
+}
+
+/**
+ * Checks if the given index comes inside Abell Block
+ * @param {string} abellBlockText abell template
+ * @param {number} index current position index
+ * @return {boolean}
+ */
+function isInsideAbellBlock(abellBlockText, index) {
+  const beforeIndexTemplate = abellBlockText.slice(0, index);
+  const openBracketMatches = beforeIndexTemplate.match(/.?{{/gs);
+  const openBracketCount = (openBracketMatches || []).length;
+  const closeBracketCount = (beforeIndexTemplate.match(/}}/g) || []).length;
+  return (
+    openBracketCount > closeBracketCount &&
+    !openBracketMatches[openBracketMatches.length - 1].startsWith('\\')
+  );
 }
 
 /**
@@ -169,6 +191,7 @@ const colors = {
 module.exports = {
   execRegexOnAll,
   getAbellInBuiltSandbox,
+  isInsideAbellBlock,
   logWarning,
   normalizePath,
   getAbellComponentTemplate,

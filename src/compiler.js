@@ -56,6 +56,7 @@ function getStatementTypeMap(jsCode) {
       return astNode.type;
     });
   } catch (err) {
+    // errors are caught by the vm module so we let code continue anyway
     return ['ExpressionStatement'];
   }
 }
@@ -92,6 +93,10 @@ function evaluateAbellBlock(jsCode, context, errLineOffset, options) {
     return '';
   }
 
+  if (jsOutput === undefined || jsOutput === null) {
+    return '';
+  }
+
   if (typeof jsOutput === 'function') {
     return jsOutput();
   }
@@ -100,7 +105,7 @@ function evaluateAbellBlock(jsCode, context, errLineOffset, options) {
     return jsOutput.join('');
   }
 
-  return jsOutput || '';
+  return jsOutput;
 }
 
 /**

@@ -1,6 +1,17 @@
 # Changelog
 
-## v0.3.2 (Latest)
+## v0.4.0 (Latest)
+
+**Features**
+
+- Add `scopedSelector` and `scopedSelectorAll` to component scripts
+- Add `__dirname`, `__filename` to files.
+
+**Bug Fixes**
+
+- Fixed #37
+
+## v0.3.2
 
 - Ignore scoping HTML when not needed. (by [@judicaelandria](https://github.com/judicaelandria/) (Issue: [#32](https://github.com/abelljs/abell-renderer/issues/32), PR: [#34](https://github.com/abelljs/abell-renderer/pull/34))
 

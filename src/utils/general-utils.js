@@ -168,7 +168,6 @@ function getAbellComponentTemplate(filePath, shouldMemoize = true) {
 
   try {
     if (hashKey in componentMemo) {
-      console.log(hashKey);
       return componentMemo[hashKey];
     }
 

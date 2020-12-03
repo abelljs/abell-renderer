@@ -152,17 +152,31 @@ function throwCustomError(err, code = '') {
   throw compileError;
 }
 
+const componentMemo = {};
+
 /**
- * Returns the content of the abell file
+ * Returns the content of the abell file (Memoizes)
  * @param {string} filePath path of the file
+ * @param {boolean} shouldMemoize flag that allows to memoize component content. (Default: true)
  * @return {string}
  */
-function getAbellComponentTemplate(filePath) {
+function getAbellComponentTemplate(filePath, shouldMemoize = true) {
   /**
    * TODO: Memoize the component reads
    */
+  const hashKey = path.relative(process.cwd(), filePath);
+
   try {
-    return fs.readFileSync(filePath, 'utf-8');
+    if (hashKey in componentMemo) {
+      console.log(hashKey);
+      return componentMemo[hashKey];
+    }
+
+    const componentData = fs.readFileSync(filePath, 'utf-8');
+    if (shouldMemoize) {
+      componentMemo[hashKey] = componentData;
+    }
+    return componentData;
   } catch (err) {
     if (err.code === 'ENOENT') {
       const relativeFilePath = path.relative(process.cwd(), filePath);
@@ -171,6 +185,18 @@ function getAbellComponentTemplate(filePath) {
     } else {
       throw err;
     }
+  }
+}
+
+/**
+ * Removes given key from memo. Clears memo if no value is passed.
+ * @param {string} hashKey Memo key. Mostly relative filepath
+ */
+function removeFromComponentMemo(hashKey = '') {
+  if (hashKey === '') {
+    componentMemo = {};
+  } else {
+    delete componentMemo[hashKey];
   }
 }
 
@@ -196,5 +222,6 @@ module.exports = {
   normalizePath,
   getAbellComponentTemplate,
   prefixHtmlTags,
+  removeFromComponentMemo,
   colors
 };

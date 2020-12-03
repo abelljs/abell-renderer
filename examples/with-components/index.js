@@ -8,6 +8,7 @@ const abellTemplate = fs.readFileSync(
   'utf-8'
 );
 
+const startTime = new Date().getTime();
 const { html } = abellRenderer.render(
   abellTemplate,
   {
@@ -20,5 +21,5 @@ const { html } = abellRenderer.render(
     basePath: __dirname
   }
 );
-
+console.log(new Date().getTime() - startTime);
 fs.writeFileSync(path.join(__dirname, 'out.html'), html);

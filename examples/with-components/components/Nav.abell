@@ -1,6 +1,12 @@
 <AbellComponent>
+{{
+  const Button = require('./Button.abell');
+}}
 <template>
-  <nav data-test="nav-component"> This is my Navbar {{ props.num + props.num2 }} </nav>
+  <nav data-test="nav-component"> 
+    This is my Navbar {{ props.num + props.num2 }} 
+    <Button props={text: 'New Button'} />
+  </nav>
 </template>
 <style>
   nav {

@@ -1,6 +1,11 @@
 # Changelog
 
-## v0.4.0 (Latest)
+## v0.5.0 (abell-renderer@next)
+
+- No user-facing changes.
+- Components are memoized internally
+
+## v0.4.0 (abell-renderer@latest)
 
 **Features**
 

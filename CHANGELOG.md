@@ -1,6 +1,10 @@
 # Changelog
 
-## v0.4.0 (Latest)
+## v0.4.1 (Latest)
+
+- Fix scopedSelector is already declared bug.
+
+## v0.4.0
 
 **Features**
 

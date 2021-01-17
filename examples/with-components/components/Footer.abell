@@ -15,6 +15,6 @@
   }
 </style>
 <script>
-  document.querySelector('nav').innerHTML = 'This is from JS';
+  scopedSelector('footer').innerHTML = 'This is from JS as well';
 </script>
 </AbellComponent>

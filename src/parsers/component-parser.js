@@ -173,8 +173,8 @@ function parseComponent(
       // if it is javascript then scope it by injecting scopedSelector functions
       // prettier-ignore
       content =
-        `const scopedSelector = (queryString) => document.querySelector(queryString + '[data-abell-${componentHash}]');` + // eslint-disable-line max-len
-        `const scopedSelectorAll = (queryString) => document.querySelectorAll(queryString + '[data-abell-${componentHash}]');` // eslint-disable-line max-len
+        `scopedSelector = (queryString) => document.querySelector(queryString + '[data-abell-${componentHash}]');` + // eslint-disable-line max-len
+        `scopedSelectorAll = (queryString) => document.querySelectorAll(queryString + '[data-abell-${componentHash}]');` // eslint-disable-line max-len
          + contentMatch[2];
     } else {
       content = contentMatch[2];

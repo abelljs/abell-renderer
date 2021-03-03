@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const { evaluateAbellBlock } = require('../src/compiler.js');
+const vm = require('vm');
 
 const {
   parseAttributes,
@@ -140,5 +142,43 @@ describe('parseComponent()', () => {
 
     expect(componentTree.styles.length).toBe(0);
     expect(componentTree.scripts.length).toBe(1);
+  });
+
+  it('should inject scopedSelector functions', () => {
+    const abellFile = 'a'; // the filename is used to generate hash while scoping
+    const abellContent = `
+    <AbellComponent>
+    <script>
+      scopedSelector('yay').innerHTML;
+    </script>
+    </AbellComponent>
+    `;
+
+    const componentTree = parseComponent(abellContent, abellFile, {
+      filename: 'component-parser.spec.js'
+    });
+
+    const mocks = {
+      document: {
+        querySelector: (selector) => {
+          return {
+            innerHTML: selector
+          };
+        },
+        querySelectorAll: () => []
+      }
+    };
+
+    const evaluatedValue = evaluateAbellBlock(
+      componentTree.scripts[0].content,
+      // eslint-disable-next-line new-cap
+      new vm.createContext(mocks),
+      0,
+      {
+        filename: 'component-parser.spec.js'
+      }
+    );
+
+    expect(evaluatedValue).toBe('yay[data-abell-bnJy]');
   });
 });

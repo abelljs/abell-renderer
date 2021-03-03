@@ -1,4 +1,4 @@
-<p align="center"><img alt="Abell renderer cover" src="https://res.cloudinary.com/saurabhdaware/image/upload/v1588856971/abell/abellrendererghhead.png"></p>
+<p align="center"><img alt="Abell renderer cover" src="https://res.cloudinary.com/saurabhdaware/image/upload/v1588856971/abell/abellrendererghhead.jpg"></p>
 
 <p align="center"><b>NOT READY FOR PRODUCTION USE</b></p>
 

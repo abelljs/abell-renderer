@@ -172,10 +172,10 @@ function parseComponent(
     } else if (!isCss && contentMatch[2].includes('scopedSelector')) {
       // if it is javascript then scope it by injecting scopedSelector functions
       // prettier-ignore
-      content =
-        `scopedSelector = (queryString) => document.querySelector(queryString + '[data-abell-${componentHash}]');` + // eslint-disable-line max-len
-        `scopedSelectorAll = (queryString) => document.querySelectorAll(queryString + '[data-abell-${componentHash}]');` // eslint-disable-line max-len
-         + contentMatch[2];
+      content = contentMatch[2].replace(
+        /scoped(Selector|SelectorAll)\((['"`].*?["'`])\)/g,
+        `document.query$1($2 + "[data-abell-${componentHash}]")`
+      );
     } else {
       content = contentMatch[2];
     }

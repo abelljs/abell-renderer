@@ -5,5 +5,5 @@ examples/
 .eslintignore
 .prettierrc
 .prettierignore
-vm.playground.js
+playground.js
 .vscode/

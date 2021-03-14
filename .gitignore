@@ -105,5 +105,5 @@ out.html
 .tern-port
 
 # playground of vm module
-vm.playground.js
+playground.js
 srcold/

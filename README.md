@@ -9,7 +9,9 @@
 
 <br/><br/>
 
-This repository is being moved to monorepo [abelljs/abell](https://github.com/abelljs/abell/tree/one). You can new release there [abell-renderer@v1.0.0-alpha.3](https://github.com/abelljs/abell/releases/tag/abell-renderer-v1.0.0-alpha.3).
+> **Warning**
+>
+> This package is deprecated and most of its code is moved inside the core package - [abelljs/abell](https://github.com/abelljs/abell/tree/one).
 
 <p align="left">A template parser that lets you use JavaScript syntax to render loops, conditions, do maths, and require JSONs from HTML. Low level library used in <a href="https://github.com/abelljs/abell">abelljs/abell<a></p>
 
